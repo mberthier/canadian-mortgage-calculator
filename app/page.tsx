@@ -104,36 +104,21 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 lg:py-10">
-          <div className="grid grid-cols-1 lg:grid-cols-[380px,1fr] xl:grid-cols-[420px,1fr] gap-8 items-start">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 lg:py-10">
+          <div className="grid grid-cols-1 lg:grid-cols-[360px,1fr] gap-8 items-start">
 
             {/* ── Left: Form ── */}
             <aside>
               <div className="mb-6">
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-6 h-6 rounded-md flex items-center justify-center shrink-0" style={{ background: "var(--green)" }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white"
-                      strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                      <circle cx="8" cy="11" r="4"/>
-                      <path d="M12 11h8M18 11v3M15 11v2"/>
-                    </svg>
-                  </div>
-                  <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--green)" }}>CrystalKey</span>
-                </div>
-                <h1 className="font-display text-3xl leading-tight" style={{ color: "var(--ink)" }}>
-                  Canadian<br />Mortgage Calculator
+                <h1 className="font-display text-4xl leading-tight" style={{ color: "var(--ink)" }}>
+                  Canadian Mortgage Calculator
                 </h1>
-                <p className="text-sm mt-2 italic" style={{ color: "var(--ink-faint)" }}>
-                  Crystal clear mortgage calculations
+                <p className="text-lg mt-2" style={{ color: "var(--ink-muted)" }}>
+                  CMHC · Land transfer tax · GDS/TDS · Full amortization
                 </p>
-                <div className="flex flex-wrap gap-x-3 gap-y-1 mt-3">
-                  {["CMHC", "LTT", "GST/HST", "GDS/TDS", "Amortization"].map((f) => (
-                    <span key={f} className="text-xs font-medium" style={{ color: "var(--ink-faint)" }}>· {f}</span>
-                  ))}
-                </div>
               </div>
 
-              <div className="rounded-2xl bg-white p-6 shadow-sm" style={{ border: "1px solid var(--cream-dark)" }}>
+              <div className="rounded-2xl bg-white p-5 shadow-sm" style={{ border: "1px solid var(--cream-dark)" }}>
                 <div className="mb-6">
                   <ModeSelector mode={inputs.mortgageMode} onChange={setMode} />
                 </div>
@@ -188,10 +173,10 @@ export default function Home() {
               {outputs.amortizationSchedule.length > 0 && (
                 <>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div className="bg-white rounded-2xl p-5 shadow-sm" style={{ border: "1px solid var(--cream-dark)" }}>
+                    <div className="bg-white rounded-2xl p-5 border border-stone-100">
                       <PaymentBreakdownChart outputs={outputs} inputs={inputs} />
                     </div>
-                    <div className="bg-white rounded-2xl p-5 shadow-sm" style={{ border: "1px solid var(--cream-dark)" }}>
+                    <div className="bg-white rounded-2xl p-5 border border-stone-100">
                       <AmortizationChart
                         schedule={outputs.amortizationSchedule}
                         amortizationYears={inputs.amortizationYears}
@@ -201,7 +186,7 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="bg-white rounded-2xl p-5 shadow-sm" style={{ border: "1px solid var(--cream-dark)" }}>
+                  <div className="bg-white rounded-2xl p-5 border border-stone-100">
                     <PrincipalInterestByYear
                       schedule={outputs.amortizationSchedule}
                       amortizationYears={inputs.amortizationYears}

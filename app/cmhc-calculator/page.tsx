@@ -27,9 +27,9 @@ const FAQ = [
 export default function CMHCPage() {
   return (
     <SiteLayout >
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
         <Breadcrumb crumbs={[{ label: "CrystalKey", href: "/" }, { label: "CMHC Calculator" }]} />
-        <div className="mt-6 mb-8">
+        <div className="mt-8 mb-10">
           <h1 className="font-display text-4xl leading-tight mb-3" style={{ color: "var(--ink)" }}>CMHC Mortgage Insurance Calculator</h1>
           <p className="text-lg" style={{ color: "var(--ink-muted)" }}>See exactly how much CMHC insurance adds to your mortgage and your monthly payment.</p>
         </div>

@@ -27,9 +27,9 @@ const FAQ = [
 export default function StressTestPage() {
   return (
     <SiteLayout >
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
         <Breadcrumb crumbs={[{ label: "CrystalKey", href: "/" }, { label: "Mortgage Stress Test" }]} />
-        <div className="mt-6 mb-8">
+        <div className="mt-8 mb-10">
           <h1 className="font-display text-4xl leading-tight mb-3" style={{ color: "var(--ink)" }}>
             Mortgage Stress Test Calculator
           </h1>

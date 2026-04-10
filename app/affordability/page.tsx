@@ -23,9 +23,9 @@ const FAQ = [
 export default function AffordabilityPage() {
   return (
     <SiteLayout >
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
         <Breadcrumb crumbs={[{ label: "CrystalKey", href: "/" }, { label: "Affordability Calculator" }]} />
-        <div className="mt-6 mb-8">
+        <div className="mt-8 mb-10">
           <h1 className="font-display text-4xl leading-tight mb-3" style={{ color: "var(--ink)" }}>Mortgage Affordability Calculator</h1>
           <p className="text-lg" style={{ color: "var(--ink-muted)" }}>Find out how much mortgage you can afford in Canada — using the same GDS and TDS ratios your lender will use.</p>
         </div>
