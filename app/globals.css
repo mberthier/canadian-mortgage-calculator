@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --cream:        #f7f5f0;
+  --cream-dark:   #ede9e1;
+  --green:        #1a4731;
+  --green-mid:    #2d6a4f;
+  --green-light:  #e8f2ec;
+  --green-border: #c3dece;
+  --ink:          #1c1917;
+  --ink-mid:      #44403c;
+  --ink-muted:    #78716c;
+  --ink-faint:    #a8a29e;
+  --white:        #ffffff;
+  --red:          #b91c1c;
+  --amber:        #92400e;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Outfit', system-ui, sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* DM Serif Display only for the hero payment number */
+.font-display { font-family: 'DM Serif Display', Georgia, serif; }
+
+input, select, textarea, button {
+  font-family: 'Outfit', system-ui, sans-serif;
+}
+input::placeholder { color: var(--ink-faint); }
+select option { background: #fff; color: var(--ink); }
+
+/* Range slider */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 3px;
+  background: var(--cream-dark);
+  border-radius: 999px;
+  outline: none;
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px; height: 16px;
+  background: var(--green);
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(26,71,49,0.3);
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--cream-dark); border-radius: 999px; }
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button { opacity: 0.4; }
