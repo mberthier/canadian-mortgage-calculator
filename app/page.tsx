@@ -113,7 +113,16 @@ export default function Home() {
                   Canadian Mortgage Calculator
                 </h1>
                 <p className="text-lg" style={{ color: "var(--ink-muted)" }}>
-                  Buying a home in Canada is complicated. We did the math so you don't have to guess.
+                  Understand what you can afford before you talk to a bank
+                </p>
+                <p className="text-lg" style={{ color: "var(--ink-muted)" }}>
+                  🔓 No email. No account. Just your answer.
+                </p>
+                <p className="text-lg" style={{ color: "var(--ink-muted)" }}>
+                  🇨🇦 Built for Canadian mortgage rules
+                </p>
+                <p className="text-lg" style={{ color: "var(--ink-muted)" }}>
+                  📊 Complete and accurate calculations
                 </p>
               </div>
               <div className="shrink-0 w-48 hidden sm:block">
