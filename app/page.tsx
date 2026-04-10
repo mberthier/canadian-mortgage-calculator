@@ -17,43 +17,65 @@ import StressTest              from "@/components/StressTest";
 import AffordabilityCalculator from "@/components/AffordabilityCalculator";
 import MortgageComparison      from "@/components/MortgageComparison";
 import BreakPenalty            from "@/components/BreakPenalty";
+import ShareButton             from "@/components/ShareButton";
+import Tooltip                 from "@/components/Tooltip";
 import { FREQUENCY_LABELS }    from "@/lib/constants";
 import { formatCurrency }      from "@/lib/formatters";
 
-// JSON-LD structured data for Google rich results
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
   "name": "CrystalKey — Canadian Mortgage Calculator",
   "url": "https://crystalkey.ca",
-  "description": "Canada's most comprehensive mortgage calculator. Calculate payments, CMHC insurance, land transfer tax, amortization schedule, and total upfront costs.",
+  "description": "Canada's most comprehensive mortgage calculator. CMHC, land transfer tax, GDS/TDS, amortization schedule, stress test, and total upfront costs.",
   "applicationCategory": "FinanceApplication",
   "operatingSystem": "Web",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "CAD",
-  },
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CAD" },
   "featureList": [
-    "Mortgage payment calculation",
-    "CMHC insurance calculation",
-    "Land transfer tax calculator",
-    "Amortization schedule",
-    "Mortgage stress test",
+    "Mortgage payment calculation with Canadian semi-annual compounding",
+    "CMHC mortgage default insurance calculator",
+    "Land transfer tax calculator for all provinces",
+    "Full amortization schedule with CSV export",
+    "Mortgage stress test scenarios",
     "GDS/TDS affordability calculator",
     "Purchase, Renewal, and Refinance modes",
   ],
   "inLanguage": "en-CA",
-  "publisher": {
-    "@type": "Organization",
-    "name": "CrystalKey",
-    "url": "https://crystalkey.ca",
-  },
+  "publisher": { "@type": "Organization", "name": "CrystalKey", "url": "https://crystalkey.ca" },
 };
+
+function ResultsNarrative({ outputs, inputs }: {
+  outputs: ReturnType<typeof useMortgageCalculator>["outputs"];
+  inputs: ReturnType<typeof useMortgageCalculator>["inputs"];
+}) {
+  const freq      = FREQUENCY_LABELS[inputs.paymentFrequency].toLowerCase();
+  const payment   = formatCurrency(outputs.periodicPayment, 0);
+  const balance   = formatCurrency(outputs.termEndBalance, 0, true);
+  const equity    = inputs.homePrice > 0
+    ? ((inputs.homePrice - outputs.termEndBalance) / inputs.homePrice * 100).toFixed(0)
+    : "0";
+  const isPurchase = inputs.mortgageMode === "purchase";
+
+  if (!isPurchase) return null;
+
+  return (
+    <div className="rounded-xl px-4 py-3.5 text-sm leading-relaxed border border-stone-100"
+      style={{ background: "var(--cream)", color: "var(--ink-mid)" }}>
+      <span className="font-semibold text-stone-700">Your snapshot: </span>
+      You'd pay <span className="font-semibold text-stone-900">{payment} {freq}</span> for
+      the first {inputs.termYears} years, with{" "}
+      <span className="font-semibold text-stone-900">{balance} still owing</span> at renewal.
+      {" "}Your equity would be <span className="font-semibold" style={{ color: "var(--green-mid)" }}>{equity}%</span>
+      {parseInt(equity) >= 20
+        ? " — enough to refinance or switch lenders without penalty."
+        : " — still below 20%, so CMHC rules would apply if you refinanced."}
+    </div>
+  );
+}
 
 export default function Home() {
   const {
-    inputs, outputs, errors,
+    inputs, outputs, errors, shareURL,
     setMode, setHomePrice, setDownPayment, setDownPaymentPercent,
     setLumpSumForYear, setField,
   } = useMortgageCalculator();
@@ -63,12 +85,8 @@ export default function Home() {
 
   return (
     <>
-      {/* JSON-LD structured data */}
-      <Script
-        id="json-ld"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <Script id="json-ld" type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <div className="min-h-screen" style={{ background: "var(--cream)" }}>
         {/* Header */}
@@ -76,8 +94,8 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: "var(--green)" }}>
-                {/* Key icon */}
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"
+                  stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="8" cy="11" r="4"/>
                   <path d="M12 11h8M18 11v3M15 11v2"/>
                 </svg>
@@ -88,9 +106,13 @@ export default function Home() {
                   style={{ background: "var(--green-light)", color: "var(--green)" }}>Canada</span>
               </div>
             </div>
-            <div className="hidden sm:flex items-center gap-2 text-xs" style={{ color: "var(--ink-faint)" }}>
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
-              Rates Apr 9, 2026 · Semi-annual compounding
+            <div className="flex items-center gap-3">
+              <div className="hidden sm:flex items-center gap-2 text-xs" style={{ color: "var(--ink-faint)" }}>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
+                Rates Apr 9, 2026
+                <Tooltip content="Canadian mortgage rates use semi-annual compounding by law (Interest Act). This means interest compounds twice per year — unlike the US where monthly compounding is standard. Our calculations correctly apply this Canadian convention." />
+              </div>
+              <ShareButton url={shareURL} />
             </div>
           </div>
         </header>
@@ -103,7 +125,8 @@ export default function Home() {
               <div className="mb-6">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-6 h-6 rounded-md flex items-center justify-center shrink-0" style={{ background: "var(--green)" }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white"
+                      strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                       <circle cx="8" cy="11" r="4"/>
                       <path d="M12 11h8M18 11v3M15 11v2"/>
                     </svg>
@@ -127,7 +150,6 @@ export default function Home() {
                 <div className="mb-6">
                   <ModeSelector mode={inputs.mortgageMode} onChange={setMode} />
                 </div>
-
                 <CalculatorForm
                   inputs={inputs} errors={errors}
                   setHomePrice={setHomePrice} setDownPayment={setDownPayment}
@@ -136,7 +158,6 @@ export default function Home() {
                   cmhcPremium={outputs.cmhcPremium}
                   ltv={outputs.ltv}
                 />
-
                 <div className="mt-6 space-y-0">
                   <LumpSumByYear
                     amortizationYears={inputs.amortizationYears}
@@ -151,13 +172,14 @@ export default function Home() {
               </div>
 
               <p className="text-xs text-stone-400 mt-4 leading-relaxed">
-                Estimates only · Not financial advice · Consult a licensed mortgage broker or financial advisor before making any real estate decisions.
+                These numbers are a starting point, not a contract. A good broker will get you closer.
               </p>
             </aside>
 
             {/* ── Right: Results ── */}
             <main className="space-y-5 pb-24 lg:pb-0">
               <SummaryCards outputs={outputs} inputs={inputs} />
+              <ResultsNarrative outputs={outputs} inputs={inputs} />
 
               {outputs.amortizationSchedule.length > 0 && (
                 <>
@@ -218,11 +240,14 @@ export default function Home() {
                 {formatCurrency(outputs.periodicPayment, 2)}
               </p>
             </div>
-            <div className="text-right">
-              <p className="text-xs" style={{ color: "var(--ink-faint)" }}>Monthly ownership</p>
-              <p className="text-sm font-medium text-stone-700">
-                {formatCurrency(outputs.totalMonthlyOwnership, 0)}
-              </p>
+            <div className="flex items-center gap-3">
+              <div className="text-right">
+                <p className="text-xs" style={{ color: "var(--ink-faint)" }}>Monthly ownership</p>
+                <p className="text-sm font-medium text-stone-700">
+                  {formatCurrency(outputs.totalMonthlyOwnership, 0)}
+                </p>
+              </div>
+              <ShareButton url={shareURL} />
             </div>
           </div>
         </div>

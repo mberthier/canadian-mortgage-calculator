@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import { formatCurrency } from "@/lib/formatters";
+import Tooltip from "./Tooltip";
 import { calculateMortgagePayment, calculateCMHCPremium } from "@/lib/mortgageMath";
 
 interface Props {
@@ -104,15 +105,15 @@ export default function AffordabilityCalculator({
 
           <div className="space-y-3">
             {[
-              { key: "GDS", label: "Gross Debt Service", sub: "P&I + taxes + heat + ½ condo", pct: gds, limit: GDS_LIMIT },
-              { key: "TDS", label: "Total Debt Service",  sub: "GDS + all monthly debts",       pct: tds, limit: TDS_LIMIT },
-            ].map(({ key, label, sub, pct, limit }) => {
+              { key: "GDS", label: "Gross Debt Service", tip: "GDS measures your housing costs as a percentage of income. Includes mortgage P&I, property taxes, heating, and 50% of condo fees. CMHC limit is 39%.", sub: "P&I + taxes + heat + ½ condo", pct: gds, limit: GDS_LIMIT },
+              { key: "TDS", label: "Total Debt Service", tip: "TDS measures all your debt obligations as a percentage of income. Includes GDS plus car loans, student loans, credit card minimums, and all other monthly debts. CMHC limit is 44%.", sub: "GDS + all monthly debts", pct: tds, limit: TDS_LIMIT },
+            ].map(({ key, label, tip, sub, pct, limit }) => {
               const color = pct > limit ? "var(--red)" : pct > limit * 0.9 ? "var(--amber)" : "var(--green)";
               return (
                 <div key={key} className="rounded-xl p-3 border border-stone-100" style={{ background: "var(--cream)" }}>
                   <div className="flex justify-between items-baseline">
                     <div>
-                      <p className="text-xs font-semibold text-stone-700">{key} — {label}</p>
+                      <p className="text-xs font-semibold text-stone-700 flex items-center">{key} — {label}{tip && <Tooltip content={tip} />}</p>
                       <p className="text-xs text-stone-400">{sub}</p>
                     </div>
                     <div className="text-right">

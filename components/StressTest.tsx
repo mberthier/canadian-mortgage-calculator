@@ -3,6 +3,7 @@
 import React from "react";
 import { MortgageOutputs, MortgageInputs } from "@/lib/types";
 import { formatCurrency } from "@/lib/formatters";
+import Tooltip from "./Tooltip";
 import { FREQUENCY_LABELS } from "@/lib/constants";
 import { calculateMortgagePayment } from "@/lib/mortgageMath";
 
@@ -30,9 +31,9 @@ export default function StressTest({ outputs, inputs }: Props) {
 
   return (
     <div className="rounded-2xl bg-white border border-stone-100 p-5">
-      <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: "var(--green)" }}>Renewal Stress Test</p>
+      <p className="text-xs font-semibold uppercase tracking-widest mb-1 flex items-center" style={{ color: "var(--green)" }}>What if rates go up at renewal?<Tooltip content="Canadian lenders must qualify you at the higher of your contract rate + 2% or 5.25% (the stress test). This shows what your payment would actually be if rates rise when your term ends — before you commit to anything." /></p>
       <p className="text-sm text-stone-500 mb-4">
-        If your rate changes at renewal, your {FREQUENCY_LABELS[inputs.paymentFrequency].toLowerCase()} payment would be:
+        If your rate changes when your {inputs.termYears}-year term ends, your {FREQUENCY_LABELS[inputs.paymentFrequency].toLowerCase()} payment on the {formatCurrency(outputs.termEndBalance, 0, true)} remaining balance would be:
       </p>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {scenarios.map((s) => {

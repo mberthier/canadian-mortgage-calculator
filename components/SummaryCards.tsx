@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { MortgageOutputs, MortgageInputs } from "@/lib/types";
 import { FREQUENCY_LABELS } from "@/lib/constants";
 import { formatCurrency } from "@/lib/formatters";
+import Tooltip from "./Tooltip";
 
 interface Props {
   outputs: MortgageOutputs;
