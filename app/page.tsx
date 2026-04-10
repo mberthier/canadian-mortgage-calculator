@@ -133,38 +133,22 @@ export default function Home() {
                   ))}
                 </div>
               </div>
-
-    <div className="hidden sm:flex justify-end shrink-0">
-      <div
-        className="rounded-2xl p-5 border"
-        style={{
-          background: "var(--cream)",
-          borderColor: "var(--cream-dark)",
-        }}
-      >
-        <div className="w-32 md:w-36">
-          <IllustrationHero />
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-    <div className="hidden sm:flex justify-end shrink-0">
-      <div
-        className="rounded-2xl p-5 border"
-        style={{
-          background: "var(--cream)",
-          borderColor: "var(--cream-dark)",
-        }}
-      >
-        <div className="w-32 md:w-36">
-          <IllustrationHero />
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+          
+              <div className="hidden sm:flex justify-end shrink-0">
+                <div
+                  className="rounded-2xl p-5 border"
+                  style={{
+                    background: "var(--cream)",
+                    borderColor: "var(--cream-dark)",
+                  }}
+                >
+                  <div className="w-32 md:w-36">
+                    <IllustrationHero />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-[380px,1fr] gap-8 items-start">
 
