@@ -40,7 +40,7 @@ export default function Home() {
                 <path d="M2 11L5 4.5l2.5 3.5L9.5 5l2.5 6H2z" fill="white"/>
               </svg>
             </div>
-            <span className="font-semibold text-stone-900 text-sm tracking-tight">MortgageCalc</span>
+            <span className="font-semibold text-stone-900 text-sm tracking-tight">CrystalKey</span>
             <span className="hidden sm:inline text-xs rounded-full px-2 py-0.5 font-medium"
               style={{ background: "var(--green-light)", color: "var(--green)" }}>Canada</span>
           </div>
@@ -66,7 +66,6 @@ export default function Home() {
             </div>
 
             <div className="rounded-2xl bg-white p-6 shadow-sm" style={{ border: "1px solid var(--cream-dark)" }}>
-              {/* Mode selector */}
               <div className="mb-6">
                 <ModeSelector mode={inputs.mortgageMode} onChange={setMode} />
               </div>
@@ -104,7 +103,6 @@ export default function Home() {
 
             {outputs.amortizationSchedule.length > 0 && (
               <>
-                {/* Charts */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div className="bg-white rounded-2xl p-5 shadow-sm" style={{ border: "1px solid var(--cream-dark)" }}>
                     <PaymentBreakdownChart outputs={outputs} inputs={inputs} />
@@ -127,14 +125,12 @@ export default function Home() {
                   />
                 </div>
 
-                {/* Amortization table */}
                 <AmortizationTable
                   schedule={outputs.amortizationSchedule}
                   frequency={inputs.paymentFrequency}
                   termYears={inputs.termYears}
                 />
 
-                {/* Analysis tools — below table */}
                 <StressTest outputs={outputs} inputs={inputs} />
                 <MortgageComparison inputs={inputs} loanAmount={outputs.loanAmount} />
                 <AffordabilityCalculator
