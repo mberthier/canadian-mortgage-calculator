@@ -95,15 +95,12 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <SiteLayout>
-        {/* Rate badge + share button injected into a top bar below the shared header */}
+        {/* Rates badge */}
         <div className="border-b bg-white" style={{ borderColor: "var(--cream-dark)" }}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 h-10 flex items-center justify-between">
-            <div className="flex items-center gap-2 text-xs" style={{ color: "var(--ink-faint)" }}>
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
-              Rates Apr 9, 2026
-              <Tooltip content="Canadian mortgage rates use semi-annual compounding by law (Interest Act). This means interest compounds twice per year — unlike the US where monthly compounding is standard. Our calculations correctly apply this Canadian convention." />
-            </div>
-            <ShareButton url={shareURL} />
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 h-10 flex items-center gap-2 text-xs" style={{ color: "var(--ink-faint)" }}>
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
+            Rates Apr 9, 2026
+            <Tooltip content="Canadian mortgage rates use semi-annual compounding by law (Interest Act). This means interest compounds twice per year — unlike the US where monthly compounding is standard. Our calculations correctly apply this Canadian convention." />
           </div>
         </div>
 
@@ -125,10 +122,10 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[360px,1fr] gap-8 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-[380px,1fr] gap-8 items-start">
 
             {/* ── Left: Form ── */}
-            <aside>
+            <aside className="lg:sticky lg:top-20 lg:self-start">
 
               <div className="rounded-2xl bg-white p-5 shadow-sm" style={{ border: "1px solid var(--cream-dark)" }}>
                 <div className="mb-6">
@@ -179,12 +176,13 @@ export default function Home() {
 
             {/* ── Right: Results ── */}
             <main className="space-y-5 pb-24 lg:pb-0">
-              <SummaryCards outputs={outputs} inputs={inputs} />
+              <SummaryCards outputs={outputs} inputs={inputs} shareURL={shareURL} />
               <ResultsNarrative outputs={outputs} inputs={inputs} />
               <FeatureDiscovery />
 
               {outputs.amortizationSchedule.length > 0 && (
                 <>
+                  {/* Charts — visual context */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div className="bg-white rounded-2xl p-5 border border-stone-100">
                       <PaymentBreakdownChart outputs={outputs} inputs={inputs} />
@@ -207,12 +205,17 @@ export default function Home() {
                     />
                   </div>
 
+                  {/* Feature discovery — before the detail tools */}
+                  <FeatureDiscovery />
+
+                  {/* Amortization table — collapsed by default */}
                   <AmortizationTable
                     schedule={outputs.amortizationSchedule}
                     frequency={inputs.paymentFrequency}
                     termYears={inputs.termYears}
                   />
 
+                  {/* Power tools */}
                   <div data-section="stress-test"><StressTest outputs={outputs} inputs={inputs} /></div>
                   <div data-section="scenario-comparison"><MortgageComparison inputs={inputs} loanAmount={outputs.loanAmount} /></div>
                   <div data-section="affordability"><AffordabilityCalculator
@@ -226,9 +229,11 @@ export default function Home() {
                   <div data-section="break-penalty"><BreakPenalty /></div>
                 </>
               )}
-              <AboutSection />
             </main>
           </div>
+
+          {/* About section — full width outside the grid */}
+          <AboutSection />
         </div>
 
         {/* Mobile sticky footer */}

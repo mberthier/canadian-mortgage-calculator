@@ -5,231 +5,197 @@ import { MortgageOutputs, MortgageInputs } from "@/lib/types";
 import { FREQUENCY_LABELS } from "@/lib/constants";
 import { formatCurrency } from "@/lib/formatters";
 import Tooltip from "./Tooltip";
+import ShareButton from "./ShareButton";
 
 interface Props {
   outputs: MortgageOutputs;
-  inputs: MortgageInputs;
+  inputs:  MortgageInputs;
+  shareURL?: string;
 }
 
-function MetricCard({ label, value, sub, valueColor }: {
-  label: string; value: string; sub?: string; valueColor?: string;
-}) {
+interface MetricProps {
+  label: string;
+  value: string;
+  sub?: string;
+  tip?: string;
+  highlight?: boolean;
+}
+
+function Metric({ label, value, sub, tip, highlight }: MetricProps) {
   return (
-    <div className="rounded-xl p-4 bg-white border border-stone-100">
-      <p className="text-xs font-medium uppercase tracking-wide mb-1.5" style={{ color: "var(--ink-faint)" }}>{label}</p>
-      <p className="text-xl font-semibold leading-tight" style={{ color: valueColor ?? "var(--ink)" }}>{value}</p>
-      {sub && <p className="text-xs mt-1" style={{ color: "var(--ink-faint)" }}>{sub}</p>}
+    <div className={`rounded-xl p-4 ${highlight ? "bg-white border border-stone-100" : ""}`}>
+      <p className="text-xs font-medium uppercase tracking-wide flex items-center gap-0.5 mb-1"
+        style={{ color: "var(--ink-faint)" }}>
+        {label}{tip && <Tooltip content={tip} />}
+      </p>
+      <p className="text-xl font-semibold text-stone-800">{value}</p>
+      {sub && <p className="text-xs mt-0.5" style={{ color: "var(--ink-faint)" }}>{sub}</p>}
     </div>
   );
 }
 
-export default function SummaryCards({ outputs, inputs }: Props) {
-  const [showUpfrontDetail, setShowUpfrontDetail] = useState(false);
-  const freqLabel  = FREQUENCY_LABELS[inputs.paymentFrequency];
-  const mode       = inputs.mortgageMode;
-  const isPurchase = mode === "purchase";
-  const downPct    = inputs.homePrice > 0 ? ((inputs.downPayment / inputs.homePrice) * 100).toFixed(1) : "0";
-  const equityPct  = inputs.homePrice > 0
-    ? ((inputs.homePrice - outputs.termEndBalance) / inputs.homePrice * 100).toFixed(1) : "0";
+export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
+  const [showUpfront, setShowUpfront] = useState(false);
   const hasCMHC    = outputs.cmhcPremium > 0;
-  const earlyPayoff = outputs.effectiveAmortizationYears < inputs.amortizationYears - 0.1;
+  const hasLTT     = outputs.ltt.net > 0;
+  const hasGST     = outputs.gstHst.net > 0;
+  const freq       = FREQUENCY_LABELS[inputs.paymentFrequency];
+  const isPurchase = inputs.mortgageMode === "purchase";
 
   return (
-    <div className="space-y-4">
-      {/* ── Hero payment ── */}
-      <div className="rounded-2xl p-6" style={{ background: "var(--green)" }}>
-        <p className="text-xs font-medium uppercase tracking-widest mb-1" style={{ color: "rgba(255,255,255,0.5)" }}>
-          {freqLabel} Payment
+    <div className="rounded-2xl overflow-hidden border border-stone-100 shadow-sm">
+
+      {/* Hero payment */}
+      <div className="px-6 pt-6 pb-5" style={{ background: "var(--green)" }}>
+        <p className="text-xs font-semibold uppercase tracking-widest mb-1"
+          style={{ color: "rgba(255,255,255,0.65)" }}>
+          {freq} Payment
         </p>
-        <p className="font-display leading-none text-white" style={{ fontSize: "clamp(2.75rem, 8vw, 4.5rem)" }}>
+        <p className="font-display leading-none mb-1" style={{ fontSize: 52, color: "#fff" }}>
           {formatCurrency(outputs.periodicPayment, 2)}
         </p>
-        <p className="text-sm mt-3" style={{ color: "rgba(255,255,255,0.55)" }}>
-          {inputs.interestRate}% · {inputs.amortizationYears}-yr amortization · {inputs.termYears}-yr term
-        </p>
-
-        {/* With/without CMHC comparison */}
-        {hasCMHC && outputs.paymentWithoutCMHC > 0 && (
-          <div className="mt-3 rounded-xl p-3" style={{ background: "rgba(255,255,255,0.1)" }}>
-            <p className="text-xs font-medium mb-2" style={{ color: "rgba(255,255,255,0.65)" }}>
-              Payment comparison
-            </p>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <p className="text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>Current ({downPct}% down + CMHC)</p>
-                <p className="text-lg font-semibold text-white">{formatCurrency(outputs.periodicPayment, 2)}</p>
-              </div>
-              <div>
-                <p className="text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>With 20% down (no CMHC)</p>
-                <p className="text-lg font-semibold text-white">{formatCurrency(outputs.paymentWithoutCMHC, 2)}</p>
-                <p className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>
-                  {outputs.periodicPayment > outputs.paymentWithoutCMHC
-                    ? `saves ${formatCurrency(outputs.periodicPayment - outputs.paymentWithoutCMHC, 0)}/payment`
-                    : ""}
-                </p>
-              </div>
+        {hasCMHC && (
+          <div className="flex flex-wrap gap-3 mt-3">
+            <div className="rounded-lg px-3 py-1.5 text-xs" style={{ background: "rgba(255,255,255,0.12)" }}>
+              <span style={{ color: "rgba(255,255,255,0.7)" }}>Without CMHC: </span>
+              <span className="font-semibold text-white">{formatCurrency(outputs.paymentWithoutCMHC, 2)}</span>
+            </div>
+            <div className="rounded-lg px-3 py-1.5 text-xs" style={{ background: "rgba(255,255,255,0.12)" }}>
+              <span style={{ color: "rgba(255,255,255,0.7)" }}>CMHC adds: </span>
+              <span className="font-semibold text-white">
+                {formatCurrency(outputs.periodicPayment - outputs.paymentWithoutCMHC, 2)}/{freq.toLowerCase().replace("ly","").replace("eekly","k").replace("monthly","mo").replace("bi-weekly","2wk")}
+              </span>
             </div>
           </div>
         )}
 
-        {earlyPayoff && (
-          <div className="mt-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium"
-            style={{ background: "rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.9)" }}>
-            Paid off in {outputs.effectiveAmortizationYears.toFixed(1)} yrs with prepayments
+        {/* Share button — prominent, in the hero */}
+        {shareURL && (
+          <div className="mt-4 pt-4 border-t" style={{ borderColor: "rgba(255,255,255,0.2)" }}>
+            <ShareButton url={shareURL} variant="hero" />
           </div>
         )}
       </div>
 
-      {/* ── Key metrics ── */}
-      <div className="grid grid-cols-2 gap-3">
-        <MetricCard label="Monthly ownership"
+      {/* Key metrics grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-y divide-stone-100"
+        style={{ background: "var(--cream)" }}>
+        <Metric label="Monthly ownership"
           value={formatCurrency(outputs.totalMonthlyOwnership, 0)}
-          sub="Mortgage + tax + insurance" />
-        <MetricCard label="Total interest"
+          sub="Mortgage + tax + heat"
+          tip="Your total monthly cost of ownership: mortgage payment, property tax, heating, home insurance, and condo fees (if applicable). This is the number that matters for budgeting." />
+        <Metric label="Total interest"
           value={formatCurrency(outputs.totalInterest, 0, true)}
           sub={`Over ${inputs.amortizationYears} years`}
-          valueColor="var(--red)" />
-
-        {/* Upfront cash — expandable, purchase mode only */}
-        {isPurchase && (
-          <div className="col-span-2 rounded-xl bg-white border border-stone-100 p-4">
-            <button className="w-full text-left" onClick={() => setShowUpfrontDetail((o) => !o)}>
-              <div className="flex items-center justify-between">
-                <p className="text-xs font-medium uppercase tracking-wide" style={{ color: "var(--ink-faint)" }}>
-                  Total Upfront Cash
-                </p>
-                <span className="text-xs" style={{ color: "var(--ink-faint)" }}>
-                  {showUpfrontDetail ? "▲ hide" : "▼ breakdown"}
-                </span>
-              </div>
-              <p className="text-xl font-semibold mt-1.5">{formatCurrency(outputs.totalUpfrontCash, 0)}</p>
-            </button>
-
-            {showUpfrontDetail && (
-              <div className="mt-3 pt-3 border-t border-stone-100 space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span style={{ color: "var(--ink-mid)" }}>Down payment ({downPct}%)</span>
-                  <span className="font-medium">{formatCurrency(inputs.downPayment)}</span>
-                </div>
-                {outputs.ltt.net > 0 && (
-                  <div className="flex justify-between">
-                    <span style={{ color: "var(--ink-mid)" }}>
-                      Land transfer tax
-                      {outputs.ltt.municipal > 0 && <span className="text-xs text-stone-400 ml-1">(prov + mun)</span>}
-                    </span>
-                    <span className="font-medium">{formatCurrency(outputs.ltt.net)}</span>
-                  </div>
-                )}
-                {outputs.ltt.firstTimeBuyerRebate > 0 && (
-                  <div className="flex justify-between text-xs" style={{ color: "var(--green-mid)" }}>
-                    <span>First-time buyer rebate</span>
-                    <span>− {formatCurrency(outputs.ltt.firstTimeBuyerRebate)}</span>
-                  </div>
-                )}
-                {outputs.cmhcProvincialTax > 0 && (
-                  <div className="flex justify-between">
-                    <span style={{ color: "var(--ink-mid)" }}>
-                      {inputs.province === "ON" ? "RST" : inputs.province === "QC" ? "QST" : "PST"} on CMHC premium
-                    </span>
-                    <span className="font-medium">{formatCurrency(outputs.cmhcProvincialTax)}</span>
-                  </div>
-                )}
-                {inputs.closingCosts > 0 && (
-                  <div className="flex justify-between">
-                    <span style={{ color: "var(--ink-mid)" }}>Closing costs</span>
-                    <span className="font-medium">{formatCurrency(inputs.closingCosts)}</span>
-                  </div>
-                )}
-                {outputs.gstHst.applies && (
-                  <>
-                    <div className="flex justify-between">
-                      <span style={{ color: "var(--ink-mid)" }}>
-                        {["ON","NS","NB","NL","PE"].includes(inputs.province) ? "HST" : "GST"} — new build
-                      </span>
-                      <span className="font-medium">{formatCurrency(outputs.gstHst.gross)}</span>
-                    </div>
-                    {outputs.gstHst.federalRebate > 0 && (
-                      <div className="flex justify-between text-xs" style={{ color: "var(--green-mid)" }}>
-                        <span>New housing rebate</span>
-                        <span>− {formatCurrency(outputs.gstHst.federalRebate)}</span>
-                      </div>
-                    )}
-                  </>
-                )}
-                {inputs.closingCosts === 0 && (
-                  <p className="text-xs pt-1" style={{ color: "var(--ink-faint)" }}>
-                    Add closing costs in Advanced Options (legal, inspection, title insurance)
-                  </p>
-                )}
-                <div className="flex justify-between font-semibold pt-2 border-t border-stone-100">
-                  <span>Total</span>
-                  <span>{formatCurrency(outputs.totalUpfrontCash, 0)}</span>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        <MetricCard label="Mortgage amount"
-          value={formatCurrency(outputs.insuredMortgage, 0, true)}
-          sub={hasCMHC ? `Incl. ${formatCurrency(outputs.cmhcPremium, 0)} CMHC` : "No CMHC required"} />
-        <MetricCard label="Balance at renewal"
+          tip="The total interest you'll pay over the full amortization period. This number shrinks significantly with accelerated payments or lump sum prepayments." />
+        <Metric label="Balance at renewal"
           value={formatCurrency(outputs.termEndBalance, 0, true)}
-          sub={`After ${inputs.termYears}-yr term`} />
+          sub={`After ${inputs.termYears}-yr term`}
+          tip="How much you'll still owe when your current term ends and you need to renew. This is the number your future rate will be applied to." />
+        <Metric label="Mortgage amount"
+          value={formatCurrency(outputs.insuredMortgage, 0, true)}
+          sub={hasCMHC ? `Incl. ${formatCurrency(outputs.cmhcPremium, 0)} CMHC` : "No CMHC required"}
+          tip={hasCMHC
+            ? "Your mortgage includes the CMHC insurance premium, which is added to your principal balance. You pay interest on this amount over your full amortization."
+            : "Your down payment is 20% or more — no CMHC mortgage default insurance required."} />
       </div>
 
-      {/* ── CMHC notice ── */}
+      {/* CMHC notice */}
       {hasCMHC && (
-        <div className="rounded-xl px-4 py-3 border" style={{ background: "#fffbeb", borderColor: "#fde68a" }}>
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--amber)" }}>
-                CMHC Mortgage Insurance
-              </p>
-              <p className="text-xs mt-0.5" style={{ color: "#a16207" }}>
-                Premium of {formatCurrency(outputs.cmhcPremium, 0)} added to mortgage
-                {outputs.cmhcProvincialTax > 0 && ` · ${inputs.province === "ON" ? "RST" : inputs.province === "QC" ? "QST" : "PST"} ${formatCurrency(outputs.cmhcProvincialTax, 0)} due at closing`}
-              </p>
-            </div>
-            <p className="text-xl font-semibold shrink-0" style={{ color: "var(--amber)" }}>
-              {formatCurrency(outputs.cmhcPremium, 0)}
-            </p>
-          </div>
+        <div className="px-5 py-3 border-t border-stone-100 flex items-start gap-2"
+          style={{ background: "#fffbeb" }}>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0 mt-0.5" aria-hidden="true">
+            <circle cx="7" cy="7" r="6" stroke="#d97706" strokeWidth="1.5"/>
+            <path d="M7 4v4M7 9.5v.5" stroke="#d97706" strokeWidth="1.5" strokeLinecap="round"/>
+          </svg>
+          <p className="text-xs leading-relaxed" style={{ color: "#92400e" }}>
+            <span className="font-semibold">CMHC mortgage insurance applies.</span>{" "}
+            Your {(inputs.downPaymentPercent).toFixed(1)}% down payment triggers a{" "}
+            {formatCurrency(outputs.cmhcPremium, 0)} premium added to your mortgage — not due at closing, but you'll pay interest on it for the full amortization period.
+            {outputs.cmhcProvincialTax > 0 && (
+              <span> Provincial tax on the premium ({formatCurrency(outputs.cmhcProvincialTax, 0)}) is due at closing.</span>
+            )}
+          </p>
         </div>
       )}
 
-      {/* ── Term summary ── */}
-      <div className="rounded-xl bg-white border border-stone-100 p-4">
-        <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: "var(--ink-faint)" }}>
-          After {inputs.termYears}-Year Term
-        </p>
-        <div className="grid grid-cols-3 gap-2 text-center mb-4">
-          {[
-            { label: "Balance owing",  value: formatCurrency(outputs.termEndBalance,    0, true), color: "var(--ink)"       },
-            { label: "Principal paid", value: formatCurrency(outputs.termPrincipalPaid, 0, true), color: "var(--green-mid)" },
-            { label: "Interest paid",  value: formatCurrency(outputs.termInterestPaid,  0, true), color: "var(--red)"       },
-          ].map(({ label, value, color }) => (
-            <div key={label}>
-              <p className="text-lg font-semibold" style={{ color }}>{value}</p>
-              <p className="text-xs mt-0.5" style={{ color: "var(--ink-faint)" }}>{label}</p>
+      {/* Upfront costs */}
+      {isPurchase && (
+        <div className="border-t border-stone-100">
+          <button onClick={() => setShowUpfront(o => !o)}
+            className="w-full flex items-center justify-between px-5 py-3.5 hover:bg-stone-50 transition-colors text-left"
+            aria-expanded={showUpfront}>
+            <div className="flex items-center gap-2">
+              <p className="text-sm font-semibold text-stone-700">Total upfront cash needed</p>
+              <Tooltip content="Everything you need to bring to closing day — down payment, land transfer tax, CMHC provincial tax (ON/QC/SK), closing costs (legal fees, title insurance, inspection), and GST/HST on new builds. This is the full number you need in your bank account." />
             </div>
-          ))}
+            <div className="flex items-center gap-3">
+              <p className="text-base font-semibold" style={{ color: "var(--green)" }}>
+                {formatCurrency(outputs.totalUpfrontCash, 0)}
+              </p>
+              <span className="text-stone-400 text-lg leading-none">{showUpfront ? "−" : "+"}</span>
+            </div>
+          </button>
+
+          {showUpfront && (
+            <div className="px-5 pb-5 border-t border-stone-50 pt-4 space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span style={{ color: "var(--ink-mid)" }}>Down payment</span>
+                <span className="font-medium text-stone-800">{formatCurrency(inputs.downPayment)}</span>
+              </div>
+              {hasLTT && (
+                <>
+                  <div className="flex justify-between">
+                    <span style={{ color: "var(--ink-mid)" }}>Land transfer tax</span>
+                    <span className="font-medium text-stone-800">{formatCurrency(outputs.ltt.provincial + outputs.ltt.municipal)}</span>
+                  </div>
+                  {outputs.ltt.firstTimeBuyerRebate > 0 && (
+                    <div className="flex justify-between" style={{ color: "var(--green-mid)" }}>
+                      <span>First-time buyer rebate</span>
+                      <span className="font-medium">− {formatCurrency(outputs.ltt.firstTimeBuyerRebate)}</span>
+                    </div>
+                  )}
+                </>
+              )}
+              {outputs.cmhcProvincialTax > 0 && (
+                <div className="flex justify-between">
+                  <span style={{ color: "var(--ink-mid)" }}>Provincial tax on CMHC</span>
+                  <span className="font-medium text-stone-800">{formatCurrency(outputs.cmhcProvincialTax)}</span>
+                </div>
+              )}
+              {inputs.closingCosts > 0 && (
+                <div className="flex justify-between">
+                  <span style={{ color: "var(--ink-mid)" }}>Closing costs (est.)</span>
+                  <span className="font-medium text-stone-800">{formatCurrency(inputs.closingCosts)}</span>
+                </div>
+              )}
+              {hasGST && (
+                <>
+                  <div className="flex justify-between">
+                    <span style={{ color: "var(--ink-mid)" }}>GST/HST (new build)</span>
+                    <span className="font-medium text-stone-800">{formatCurrency(outputs.gstHst.gross)}</span>
+                  </div>
+                  {outputs.gstHst.federalRebate > 0 && (
+                    <div className="flex justify-between" style={{ color: "var(--green-mid)" }}>
+                      <span>Federal new housing rebate</span>
+                      <span className="font-medium">− {formatCurrency(outputs.gstHst.federalRebate)}</span>
+                    </div>
+                  )}
+                </>
+              )}
+              <div className="flex justify-between font-semibold text-stone-900 border-t border-stone-100 pt-2 mt-1">
+                <span>Total upfront cash</span>
+                <span style={{ color: "var(--green)" }}>{formatCurrency(outputs.totalUpfrontCash, 0)}</span>
+              </div>
+              {!inputs.closingCosts && (
+                <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
+                  Add closing costs in "More options" for a complete picture.
+                </p>
+              )}
+            </div>
+          )}
         </div>
-        {isPurchase && inputs.homePrice > 0 && (
-          <div>
-            <div className="flex justify-between text-xs mb-1" style={{ color: "var(--ink-faint)" }}>
-              <span>Equity after term</span>
-              <span className="font-medium" style={{ color: "var(--green-mid)" }}>
-                {formatCurrency(inputs.homePrice - outputs.termEndBalance, 0, true)} ({equityPct}%)
-              </span>
-            </div>
-            <div className="w-full rounded-full h-1.5 overflow-hidden" style={{ background: "var(--cream-dark)" }}>
-              <div className="h-full rounded-full transition-all duration-500"
-                style={{ width: `${Math.min(parseFloat(equityPct), 100)}%`, background: "var(--green-mid)" }} />
-            </div>
-          </div>
-        )}
-      </div>
+      )}
     </div>
   );
 }
