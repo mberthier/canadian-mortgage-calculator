@@ -101,27 +101,20 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-8">
               <div className="max-w-2xl min-w-0">
                 <h1
-                  className="font-display text-4xl leading-tight mb-3"
+                  className="font-display text-4xl leading-tight mb-4"
                   style={{ color: "var(--ink)" }}
                 >
                   Canadian Mortgage Calculator
                 </h1>
           
                 <p
-                  className="text-xl sm:text-xl font-medium mb-4"
+                  className="text-xl font-medium mb-6 max-w-xl"
                   style={{ color: "var(--ink)" }}
                 >
                   Understand what you can afford before you talk to a bank
                 </p>
           
-                <p
-                  className="text-base mb-6"
-                  style={{ color: "var(--ink-muted)" }}
-                >
-                  Complete Canadian mortgage calculations with no sign-up required.
-                </p>
-          
-                <div className="flex flex-wrap gap-2.5">
+                <div className="grid grid-cols-1 sm:flex sm:flex-wrap gap-3 max-w-xl">
                   {[
                     "🔓 No email or account",
                     "🇨🇦 Canadian rules built in",
@@ -129,7 +122,7 @@ export default function Home() {
                   ].map((item) => (
                     <span
                       key={item}
-                      className="inline-flex max-w-full items-center rounded-full px-3 py-1.5 text-sm bg-white border"
+                      className="inline-flex justify-center sm:justify-start items-center rounded-full px-4 py-2 text-sm bg-white border"
                       style={{
                         color: "var(--ink-mid)",
                         borderColor: "var(--cream-dark)",
@@ -140,6 +133,22 @@ export default function Home() {
                   ))}
                 </div>
               </div>
+
+    <div className="hidden sm:flex justify-end shrink-0">
+      <div
+        className="rounded-2xl p-5 border"
+        style={{
+          background: "var(--cream)",
+          borderColor: "var(--cream-dark)",
+        }}
+      >
+        <div className="w-32 md:w-36">
+          <IllustrationHero />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
     <div className="hidden sm:flex justify-end shrink-0">
       <div
