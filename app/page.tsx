@@ -4,7 +4,6 @@ import React from "react";
 import Script from "next/script";
 import Breadcrumb from "@/components/Breadcrumb";
 import SiteLayout from "@/components/SiteLayout";
-import Tooltip from "@/components/Tooltip";
 import ModeSelector from "@/components/ModeSelector";
 import CalculatorForm from "@/components/CalculatorForm";
 import SummaryCards from "@/components/SummaryCards";
@@ -22,7 +21,6 @@ import BreakPenalty from "@/components/BreakPenalty";
 import ShareButton from "@/components/ShareButton";
 import FeatureDiscovery from "@/components/FeatureDiscovery";
 import AboutSection from "@/components/AboutSection";
-import IllustrationHero from "@/components/illustrations/IllustrationHero";
 import RateHistoryChart from "@/components/RateHistoryChart";
 import FirstTimeBuyerGuide from "@/components/FirstTimeBuyerGuide";
 import { useMortgageCalculator } from "@/hooks/useMortgageCalculator";
@@ -73,6 +71,7 @@ function ResultsNarrative({
           100
         ).toFixed(0)
       : "0";
+
   const isPurchase = inputs.mortgageMode === "purchase";
 
   if (!isPurchase) return null;
@@ -89,14 +88,11 @@ function ResultsNarrative({
       for the first {inputs.termYears} years, leaving{" "}
       <span className="font-semibold text-stone-900">{balance} owing</span> at
       renewal. Your equity at that point would be{" "}
-      <span
-        className="font-semibold"
-        style={{ color: "var(--green-mid)" }}
-      >
+      <span className="font-semibold" style={{ color: "var(--green-mid)" }}>
         {equity}%
       </span>
       {parseInt(equity) >= 20
-        ? ", enough to switch lenders or refinance without CMHC coming back into the picture."
+        ? " — enough to switch lenders or refinance without CMHC coming back into the picture."
         : ". Still below 20%, so if you refinanced you'd face CMHC rules again."}
     </div>
   );
@@ -128,20 +124,6 @@ export default function Home() {
       />
 
       <SiteLayout>
-        <div
-          className="border-b bg-white"
-          style={{ borderColor: "var(--cream-dark)" }}
-        >
-          <div
-            className="max-w-5xl mx-auto px-4 sm:px-6 h-10 flex items-center gap-2 text-xs"
-            style={{ color: "var(--ink-faint)" }}
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
-            Rates Apr 9, 2026
-            <Tooltip content="Canadian mortgage rates use semi-annual compounding by law (Interest Act). This means interest compounds twice per year, unlike the US where monthly compounding is standard. Our calculations correctly apply this Canadian convention." />
-          </div>
-        </div>
-
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
           <Breadcrumb
             crumbs={[
@@ -151,8 +133,8 @@ export default function Home() {
           />
 
           <div className="mt-8 mb-10">
-            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
-              <div className="min-w-0 max-w-3xl">
+            <div className="flex flex-col items-center text-center">
+              <div className="max-w-3xl">
                 <h1
                   className="font-display text-4xl leading-tight mb-3"
                   style={{ color: "var(--ink)" }}
@@ -168,7 +150,7 @@ export default function Home() {
                   picture so you don’t have to guess.
                 </p>
 
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap justify-center gap-3">
                   {[
                     "🔓 No email or account",
                     "🇨🇦 Canadian rules built in",
@@ -176,7 +158,7 @@ export default function Home() {
                   ].map((item) => (
                     <span
                       key={item}
-                      className="inline-flex items-center rounded-full px-4 py-2 text-sm bg-white border"
+                      className="inline-flex items-center justify-center rounded-full px-4 py-2 text-sm bg-white border"
                       style={{
                         color: "var(--ink-mid)",
                         borderColor: "var(--cream-dark)",
@@ -187,14 +169,10 @@ export default function Home() {
                   ))}
                 </div>
               </div>
-
-              <div className="shrink-0 w-48 hidden sm:block">
-                <IllustrationHero />
-              </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[340px,1fr] gap-8 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-[360px,1fr] gap-8 items-start">
             <aside className="lg:sticky lg:top-20 lg:self-start">
               <div
                 className="rounded-2xl bg-white p-5 shadow-sm"
@@ -350,10 +328,7 @@ export default function Home() {
         >
           <div className="flex items-center justify-between px-5 py-3">
             <div>
-              <p
-                className="text-xs"
-                style={{ color: "var(--ink-faint)" }}
-              >
+              <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
                 {FREQUENCY_LABELS[inputs.paymentFrequency]}
               </p>
               <p
@@ -366,10 +341,7 @@ export default function Home() {
 
             <div className="flex items-center gap-3">
               <div className="text-right">
-                <p
-                  className="text-xs"
-                  style={{ color: "var(--ink-faint)" }}
-                >
+                <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
                   Monthly ownership
                 </p>
                 <p className="text-sm font-medium text-stone-700">
