@@ -95,41 +95,67 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <SiteLayout>
-        {/* Rates badge */}
-        <div className="border-b bg-white" style={{ borderColor: "var(--cream-dark)" }}>
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 h-10 flex items-center gap-2 text-xs" style={{ color: "var(--ink-faint)" }}>
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
-            Rates Apr 9, 2026
-            <Tooltip content="Canadian mortgage rates use semi-annual compounding by law (Interest Act). This means interest compounds twice per year — unlike the US where monthly compounding is standard. Our calculations correctly apply this Canadian convention." />
-          </div>
-        </div>
-
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 lg:py-10">
           {/* Page header — identical structure to inner pages */}
           <div className="mt-8 mb-10">
-            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
-              <div>
-                <h1 className="font-display text-4xl leading-tight mb-3" style={{ color: "var(--ink)" }}>
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-8">
+              <div className="max-w-2xl min-w-0">
+                <h1
+                  className="font-display text-4xl leading-tight mb-3"
+                  style={{ color: "var(--ink)" }}
+                >
                   Canadian Mortgage Calculator
                 </h1>
-                <p className="text-lg" style={{ color: "var(--ink-muted)" }}>
+          
+                <p
+                  className="text-xl sm:text-xl font-medium mb-4"
+                  style={{ color: "var(--ink)" }}
+                >
                   Understand what you can afford before you talk to a bank
                 </p>
-                <p className="text-lg" style={{ color: "var(--ink-muted)" }}>
-                  🔓 No email. No account. Just your answer.
+          
+                <p
+                  className="text-base mb-6"
+                  style={{ color: "var(--ink-muted)" }}
+                >
+                  Complete Canadian mortgage calculations with no sign-up required.
                 </p>
-                <p className="text-lg" style={{ color: "var(--ink-muted)" }}>
-                  🇨🇦 Built for Canadian mortgage rules
-                </p>
-                <p className="text-lg" style={{ color: "var(--ink-muted)" }}>
-                  📊 Complete and accurate calculations
-                </p>
+          
+                <div className="flex flex-wrap gap-2.5">
+                  {[
+                    "🔓 No email or account",
+                    "🇨🇦 Canadian rules built in",
+                    "📊 Complete and accurate",
+                  ].map((item) => (
+                    <span
+                      key={item}
+                      className="inline-flex max-w-full items-center rounded-full px-3 py-1.5 text-sm bg-white border"
+                      style={{
+                        color: "var(--ink-mid)",
+                        borderColor: "var(--cream-dark)",
+                      }}
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
               </div>
-              <div className="shrink-0 w-48 hidden sm:block">
-                <IllustrationHero />
-              </div>
-            </div>
-          </div>
+
+    <div className="hidden sm:flex justify-end shrink-0">
+      <div
+        className="rounded-2xl p-5 border"
+        style={{
+          background: "var(--cream)",
+          borderColor: "var(--cream-dark)",
+        }}
+      >
+        <div className="w-32 md:w-36">
+          <IllustrationHero />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
           <div className="grid grid-cols-1 lg:grid-cols-[380px,1fr] gap-8 items-start">
 
