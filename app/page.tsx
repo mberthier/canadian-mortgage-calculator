@@ -21,6 +21,7 @@ import ShareButton             from "@/components/ShareButton";
 import RateHistoryChart        from "@/components/RateHistoryChart";
 import FirstTimeBuyerGuide     from "@/components/FirstTimeBuyerGuide";
 import Tooltip                 from "@/components/Tooltip";
+import SiteLayout             from "@/components/SiteLayout";
 import { FREQUENCY_LABELS }    from "@/lib/constants";
 import { formatCurrency }      from "@/lib/formatters";
 
@@ -90,34 +91,18 @@ export default function Home() {
       <Script id="json-ld" type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <div className="min-h-screen" style={{ background: "var(--cream)" }}>
-        {/* Header */}
-        <header className="border-b bg-white sticky top-0 z-20" style={{ borderColor: "var(--cream-dark)" }}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: "var(--green)" }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"
-                  stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="8" cy="11" r="4"/>
-                  <path d="M12 11h8M18 11v3M15 11v2"/>
-                </svg>
-              </div>
-              <div className="flex items-baseline gap-2">
-                <span className="font-semibold text-stone-900 tracking-tight" style={{ fontSize: "15px" }}>CrystalKey</span>
-                <span className="hidden sm:inline text-xs rounded-full px-2 py-0.5 font-medium"
-                  style={{ background: "var(--green-light)", color: "var(--green)" }}>Canada</span>
-              </div>
+      <SiteLayout>
+        {/* Rate badge + share button injected into a top bar below the shared header */}
+        <div className="border-b bg-white" style={{ borderColor: "var(--cream-dark)" }}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 h-10 flex items-center justify-between">
+            <div className="flex items-center gap-2 text-xs" style={{ color: "var(--ink-faint)" }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
+              Rates Apr 9, 2026
+              <Tooltip content="Canadian mortgage rates use semi-annual compounding by law (Interest Act). This means interest compounds twice per year — unlike the US where monthly compounding is standard. Our calculations correctly apply this Canadian convention." />
             </div>
-            <div className="flex items-center gap-3">
-              <div className="hidden sm:flex items-center gap-2 text-xs" style={{ color: "var(--ink-faint)" }}>
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
-                Rates Apr 9, 2026
-                <Tooltip content="Canadian mortgage rates use semi-annual compounding by law (Interest Act). This means interest compounds twice per year — unlike the US where monthly compounding is standard. Our calculations correctly apply this Canadian convention." />
-              </div>
-              <ShareButton url={shareURL} />
-            </div>
+            <ShareButton url={shareURL} />
           </div>
-        </header>
+        </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 lg:py-10">
           <div className="grid grid-cols-1 lg:grid-cols-[380px,1fr] xl:grid-cols-[420px,1fr] gap-8 items-start">
@@ -270,7 +255,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </div>
+      </SiteLayout>
     </>
   );
 }
