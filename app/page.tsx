@@ -98,8 +98,8 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 lg:py-10">
           {/* Page header — identical structure to inner pages */}
           <div className="mt-8 mb-10">
-            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-8">
-              <div className="max-w-2xl min-w-0">
+            <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_240px] gap-8 lg:gap-10 items-center">
+              <div className="min-w-0 max-w-3xl">
                 <h1
                   className="font-display text-4xl leading-tight mb-4"
                   style={{ color: "var(--ink)" }}
@@ -108,13 +108,13 @@ export default function Home() {
                 </h1>
           
                 <p
-                  className="text-xl font-medium mb-6 max-w-xl"
+                  className="text-xl md:text-2xl font-medium mb-6 max-w-2xl"
                   style={{ color: "var(--ink)" }}
                 >
                   Understand what you can afford before you talk to a bank
                 </p>
           
-                <div className="grid grid-cols-1 sm:flex sm:flex-wrap gap-3 max-w-xl">
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 max-w-4xl">
                   {[
                     "🔓 No email or account",
                     "🇨🇦 Canadian rules built in",
@@ -122,7 +122,7 @@ export default function Home() {
                   ].map((item) => (
                     <span
                       key={item}
-                      className="inline-flex justify-center sm:justify-start items-center rounded-full px-4 py-2 text-sm bg-white border"
+                      className="inline-flex justify-center lg:justify-start items-center rounded-full px-4 py-2 text-sm bg-white border whitespace-nowrap"
                       style={{
                         color: "var(--ink-mid)",
                         borderColor: "var(--cream-dark)",
@@ -134,22 +134,21 @@ export default function Home() {
                 </div>
               </div>
           
-              <div className="hidden sm:flex justify-end shrink-0">
+              <div className="hidden lg:flex justify-end">
                 <div
-                  className="rounded-2xl p-5 border"
+                  className="rounded-2xl p-6 border"
                   style={{
                     background: "var(--cream)",
                     borderColor: "var(--cream-dark)",
                   }}
                 >
-                  <div className="w-32 md:w-36">
+                  <div className="w-40">
                     <IllustrationHero />
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
           <div className="grid grid-cols-1 lg:grid-cols-[380px,1fr] gap-8 items-start">
 
             {/* ── Left: Form ── */}
