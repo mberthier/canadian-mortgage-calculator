@@ -10,10 +10,7 @@ const DESCRIPTION =
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: {
-    default: TITLE,
-    template: `%s | ${SITE_NAME}`,
-  },
+  title: { default: TITLE, template: `%s | ${SITE_NAME}` },
   description: DESCRIPTION,
   keywords: [
     "mortgage calculator canada",
@@ -44,9 +41,7 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: SITE_URL,
-    languages: {
-      "en-CA": SITE_URL,
-    },
+    languages: { "en-CA": SITE_URL },
   },
   openGraph: {
     type: "website",
@@ -55,14 +50,12 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     title: TITLE,
     description: DESCRIPTION,
-    images: [
-      {
-        url: `${SITE_URL}/og-image.png`,
-        width: 1200,
-        height: 630,
-        alt: "CrystalKey — Canadian Mortgage Calculator",
-      },
-    ],
+    images: [{
+      url: `${SITE_URL}/og-image.png`,
+      width: 1200,
+      height: 630,
+      alt: "CrystalKey — Canadian Mortgage Calculator",
+    }],
   },
   twitter: {
     card: "summary_large_image",
@@ -72,14 +65,18 @@ export const metadata: Metadata = {
     creator: "@crystalkey_ca",
   },
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-touch-icon.png",
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+    other: [
+      { rel: "mask-icon", url: "/favicon.svg", color: "#1a4731" },
+    ],
   },
   manifest: "/site.webmanifest",
-  verification: {
-    google: "", // add Google Search Console verification token later
-  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -88,10 +85,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <meta name="theme-color" content="#1a4731" />
       </head>
-      <body>
-        {children}
-      </body>
+      <body>{children}</body>
       <GoogleAnalytics gaId="G-JWCF7ERGJE" />
     </html>
   );

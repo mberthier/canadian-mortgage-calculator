@@ -75,14 +75,18 @@ export default function Home() {
         <header className="border-b bg-white sticky top-0 z-20" style={{ borderColor: "var(--cream-dark)" }}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "var(--green)" }}>
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                  <path d="M7 1L9.5 5H12L9.5 8.5 10.5 13 7 10.5 3.5 13 4.5 8.5 2 5H4.5L7 1Z" fill="white"/>
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: "var(--green)" }}>
+                {/* Key icon */}
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="8" cy="11" r="4"/>
+                  <path d="M12 11h8M18 11v3M15 11v2"/>
                 </svg>
               </div>
-              <span className="font-semibold text-stone-900 text-sm tracking-tight">CrystalKey</span>
-              <span className="hidden sm:inline text-xs rounded-full px-2 py-0.5 font-medium"
-                style={{ background: "var(--green-light)", color: "var(--green)" }}>Canada</span>
+              <div className="flex items-baseline gap-2">
+                <span className="font-semibold text-stone-900 tracking-tight" style={{ fontSize: "15px" }}>CrystalKey</span>
+                <span className="hidden sm:inline text-xs rounded-full px-2 py-0.5 font-medium"
+                  style={{ background: "var(--green-light)", color: "var(--green)" }}>Canada</span>
+              </div>
             </div>
             <div className="hidden sm:flex items-center gap-2 text-xs" style={{ color: "var(--ink-faint)" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
@@ -97,12 +101,26 @@ export default function Home() {
             {/* ── Left: Form ── */}
             <aside>
               <div className="mb-6">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-6 h-6 rounded-md flex items-center justify-center shrink-0" style={{ background: "var(--green)" }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <circle cx="8" cy="11" r="4"/>
+                      <path d="M12 11h8M18 11v3M15 11v2"/>
+                    </svg>
+                  </div>
+                  <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--green)" }}>CrystalKey</span>
+                </div>
                 <h1 className="font-display text-3xl leading-tight" style={{ color: "var(--ink)" }}>
                   Canadian<br />Mortgage Calculator
                 </h1>
-                <p className="text-sm mt-2" style={{ color: "var(--ink-muted)" }}>
-                  CMHC · LTT · GST/HST · GDS/TDS · Full amortization
+                <p className="text-sm mt-2 italic" style={{ color: "var(--ink-faint)" }}>
+                  Crystal clear mortgage calculations
                 </p>
+                <div className="flex flex-wrap gap-x-3 gap-y-1 mt-3">
+                  {["CMHC", "LTT", "GST/HST", "GDS/TDS", "Amortization"].map((f) => (
+                    <span key={f} className="text-xs font-medium" style={{ color: "var(--ink-faint)" }}>· {f}</span>
+                  ))}
+                </div>
               </div>
 
               <div className="rounded-2xl bg-white p-6 shadow-sm" style={{ border: "1px solid var(--cream-dark)" }}>
