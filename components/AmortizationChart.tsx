@@ -57,7 +57,7 @@ export default function AmortizationChart({ schedule, amortizationYears, frequen
 
   return (
     <div>
-      <h3 className="text-sm font-semibold text-slate-700 mb-3">Balance, Equity & Interest</h3>
+      <h3 className="text-sm font-semibold text-slate-700 mb-3">Your balance, equity & interest over time</h3>
       <div className="h-56">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={chartData} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>

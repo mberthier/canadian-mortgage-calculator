@@ -52,7 +52,7 @@ export default function PaymentBreakdownChart({ outputs, inputs }: Props) {
 
   return (
     <div>
-      <h3 className="text-sm font-semibold text-slate-700 mb-3">Monthly Cost Breakdown</h3>
+      <h3 className="text-sm font-semibold text-slate-700 mb-3">Where your money goes each month</h3>
       <div className="h-56">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>

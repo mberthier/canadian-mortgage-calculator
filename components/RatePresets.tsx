@@ -14,7 +14,7 @@ export default function RatePresets({ inputs, setField }: Props) {
     <div>
       <div className="flex items-center justify-between mb-2">
         <p className="text-xs font-medium uppercase tracking-wide" style={{ color: "var(--ink-faint)" }}>Today's best rates</p>
-        <span className="text-xs" style={{ color: "var(--ink-faint)" }}>Apr 9, 2026</span>
+        <span className="text-xs" style={{ color: "var(--ink-faint)" }}>via brokers · Apr 9, 2026</span>
       </div>
       <div className="flex flex-wrap gap-1.5">
         {RATE_PRESETS.map((p) => {

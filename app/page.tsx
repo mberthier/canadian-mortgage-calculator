@@ -18,6 +18,8 @@ import AffordabilityCalculator from "@/components/AffordabilityCalculator";
 import MortgageComparison      from "@/components/MortgageComparison";
 import BreakPenalty            from "@/components/BreakPenalty";
 import ShareButton             from "@/components/ShareButton";
+import FeatureDiscovery        from "@/components/FeatureDiscovery";
+import AboutSection            from "@/components/AboutSection";
 import RateHistoryChart        from "@/components/RateHistoryChart";
 import FirstTimeBuyerGuide     from "@/components/FirstTimeBuyerGuide";
 import Tooltip                 from "@/components/Tooltip";
@@ -105,18 +107,20 @@ export default function Home() {
         </div>
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 lg:py-10">
+          {/* Page header — identical structure to inner pages */}
+          <div className="mt-8 mb-10">
+            <h1 className="font-display text-4xl leading-tight mb-3" style={{ color: "var(--ink)" }}>
+              Canadian Mortgage Calculator
+            </h1>
+            <p className="text-lg" style={{ color: "var(--ink-muted)" }}>
+              Canada's most complete mortgage calculator — built for how mortgages actually work here.
+            </p>
+          </div>
+
           <div className="grid grid-cols-1 lg:grid-cols-[360px,1fr] gap-8 items-start">
 
             {/* ── Left: Form ── */}
             <aside>
-              <div className="mb-6">
-                <h1 className="font-display text-4xl leading-tight" style={{ color: "var(--ink)" }}>
-                  Canadian Mortgage Calculator
-                </h1>
-                <p className="text-lg mt-2" style={{ color: "var(--ink-muted)" }}>
-                  CMHC · Land transfer tax · GDS/TDS · Full amortization
-                </p>
-              </div>
 
               <div className="rounded-2xl bg-white p-5 shadow-sm" style={{ border: "1px solid var(--cream-dark)" }}>
                 <div className="mb-6">
@@ -169,6 +173,7 @@ export default function Home() {
             <main className="space-y-5 pb-24 lg:pb-0">
               <SummaryCards outputs={outputs} inputs={inputs} />
               <ResultsNarrative outputs={outputs} inputs={inputs} />
+              <FeatureDiscovery />
 
               {outputs.amortizationSchedule.length > 0 && (
                 <>
@@ -200,19 +205,20 @@ export default function Home() {
                     termYears={inputs.termYears}
                   />
 
-                  <StressTest outputs={outputs} inputs={inputs} />
-                  <MortgageComparison inputs={inputs} loanAmount={outputs.loanAmount} />
-                  <AffordabilityCalculator
+                  <div data-section="stress-test"><StressTest outputs={outputs} inputs={inputs} /></div>
+                  <div data-section="scenario-comparison"><MortgageComparison inputs={inputs} loanAmount={outputs.loanAmount} /></div>
+                  <div data-section="affordability"><AffordabilityCalculator
                     currentHomePrice={inputs.homePrice}
                     currentRate={inputs.interestRate}
                     currentAmortization={inputs.amortizationYears}
                     currentPropertyTax={inputs.propertyTax}
                     currentHeating={inputs.heatingCost}
                     currentCondoFees={inputs.condoFees}
-                  />
-                  <BreakPenalty />
+                  /></div>
+                  <div data-section="break-penalty"><BreakPenalty /></div>
                 </>
               )}
+              <AboutSection />
             </main>
           </div>
         </div>

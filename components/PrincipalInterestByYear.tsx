@@ -70,7 +70,7 @@ export default function PrincipalInterestByYear({ schedule, amortizationYears, f
 
   return (
     <div>
-      <h3 className="text-sm font-semibold text-slate-700 mb-3">Principal vs. Interest by Year</h3>
+      <h3 className="text-sm font-semibold text-slate-700 mb-3">How each payment splits over time</h3>
       <div className="h-56">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData} margin={{ top: 4, right: 8, left: 0, bottom: 0 }} barCategoryGap="20%">
