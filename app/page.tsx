@@ -107,12 +107,10 @@ export default function Home() {
                   Canadian Mortgage Calculator
                 </h1>
           
-                <p
-                  className="text-xl md:text-2xl font-medium mb-6 max-w-2xl"
-                  style={{ color: "var(--ink)" }}
-                >
-                  Understand what you can afford before you talk to a bank
+                <p className="text-lg" style={{ color: "var(--ink-muted)" }}>
+                  Buying a home in Canada is complicated. We give you the full picture so you don’t have to guess.
                 </p>
+
           
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 max-w-4xl">
                   {[
