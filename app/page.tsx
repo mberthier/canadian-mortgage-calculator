@@ -18,6 +18,8 @@ import AffordabilityCalculator from "@/components/AffordabilityCalculator";
 import MortgageComparison      from "@/components/MortgageComparison";
 import BreakPenalty            from "@/components/BreakPenalty";
 import ShareButton             from "@/components/ShareButton";
+import RateHistoryChart        from "@/components/RateHistoryChart";
+import FirstTimeBuyerGuide     from "@/components/FirstTimeBuyerGuide";
 import Tooltip                 from "@/components/Tooltip";
 import { FREQUENCY_LABELS }    from "@/lib/constants";
 import { formatCurrency }      from "@/lib/formatters";
@@ -168,6 +170,23 @@ export default function Home() {
                   />
                   <AdvancedOptions inputs={inputs} setField={setField} />
                   <LandTransferTax inputs={inputs} setField={setField} />
+                  <RateHistoryChart
+                    currentRate={inputs.interestRate}
+                    onSelectRate={(r) => setField("interestRate", r)}
+                  />
+                  {inputs.mortgageMode === "purchase" && (
+                    <FirstTimeBuyerGuide
+                      homePrice={inputs.homePrice}
+                      downPayment={inputs.downPayment}
+                      downPercent={inputs.downPaymentPercent}
+                      interestRate={inputs.interestRate}
+                      province={inputs.province}
+                      cmhcPremium={outputs.cmhcPremium}
+                      stressTestRate={outputs.stressTestRate}
+                      isFirstTimeBuyer={inputs.isFirstTimeBuyer}
+                      onToggle={() => setField("isFirstTimeBuyer", !inputs.isFirstTimeBuyer)}
+                    />
+                  )}
                 </div>
               </div>
 
