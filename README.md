@@ -1,12 +1,12 @@
-# Canadian Mortgage Calculator
+# CrystalKey — Canadian Mortgage Calculator
 
-A comprehensive, production-ready Canadian mortgage calculator built with Next.js, React, TypeScript, and Tailwind CSS.
+**[crystalkey.ca](https://crystalkey.ca)** — Canada's most comprehensive mortgage calculator.
 
 ## Features
 
 - **Purchase / Renewal / Refinance** modes
 - **Accurate Canadian math** — semi-annual compounding per the Interest Act
-- **CMHC insurance** — updated Dec 2024 rules, $1.5M limit, correct premium tiers
+- **CMHC insurance** — Dec 2024 rules, $1.5M limit, correct premium tiers
 - **Provincial PST/RST/QST** on CMHC premiums (ON, QC, SK)
 - **Land Transfer Tax** — all provinces, Toronto municipal LTT, first-time buyer rebates
 - **GST/HST on new builds** with federal new housing rebate

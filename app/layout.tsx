@@ -1,68 +1,36 @@
 import type { Metadata } from "next";
-import { GoogleAnalytics } from "@next/third-parties/google";
-import StructuredData from "@/components/StructuredData";
 import "./globals.css";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
-const DOMAIN = "https://crystalkey.ca";
+const SITE_URL = "https://crystalkey.ca";
+const SITE_NAME = "CrystalKey";
+const TITLE = "Canadian Mortgage Calculator | CrystalKey";
+const DESCRIPTION =
+  "Canada's most comprehensive mortgage calculator. Calculate payments, CMHC insurance, land transfer tax, amortization schedule, stress test, and total upfront costs — free and accurate.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(DOMAIN),
-
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Canadian Mortgage Calculator — CrystalKey",
-    template: "%s | CrystalKey",
+    default: TITLE,
+    template: `%s | ${SITE_NAME}`,
   },
-  description:
-    "Canada's most complete mortgage calculator. Instantly calculate payments, CMHC insurance, land transfer tax, amortization schedule, GDS/TDS qualification, and stress test. Free, accurate, and built for Canadians.",
-
+  description: DESCRIPTION,
   keywords: [
     "mortgage calculator canada",
     "canadian mortgage calculator",
-    "CMHC calculator",
     "mortgage payment calculator",
+    "CMHC calculator",
     "land transfer tax calculator",
-    "mortgage amortization canada",
-    "GDS TDS calculator",
-    "mortgage stress test canada",
-    "home buying calculator canada",
-    "calculateur hypothèque canada",
+    "mortgage amortization calculator",
+    "mortgage stress test",
+    "calculatrice hypothèque canada",
+    "hypothèque calculateur",
+    "mortgage affordability calculator canada",
+    "crystalkey mortgage",
   ],
-
-  authors: [{ name: "CrystalKey", url: DOMAIN }],
+  authors: [{ name: "CrystalKey", url: SITE_URL }],
   creator: "CrystalKey",
   publisher: "CrystalKey",
-
-  alternates: {
-    canonical: "/",
-    languages: { "en-CA": "/" },
-  },
-
-  openGraph: {
-    type: "website",
-    locale: "en_CA",
-    url: DOMAIN,
-    siteName: "CrystalKey",
-    title: "Canadian Mortgage Calculator — CrystalKey",
-    description:
-      "Calculate your Canadian mortgage payment in seconds. Includes CMHC, land transfer tax, amortization schedule, stress test, and GDS/TDS qualification.",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "CrystalKey — Canadian Mortgage Calculator",
-      },
-    ],
-  },
-
-  twitter: {
-    card: "summary_large_image",
-    title: "Canadian Mortgage Calculator — CrystalKey",
-    description:
-      "Calculate your Canadian mortgage payment in seconds. CMHC, LTT, amortization schedule, stress test and more.",
-    images: ["/og-image.png"],
-  },
-
   robots: {
     index: true,
     follow: true,
@@ -74,9 +42,43 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-
+  alternates: {
+    canonical: SITE_URL,
+    languages: {
+      "en-CA": SITE_URL,
+    },
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_CA",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: TITLE,
+    description: DESCRIPTION,
+    images: [
+      {
+        url: `${SITE_URL}/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: "CrystalKey — Canadian Mortgage Calculator",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+    images: [`${SITE_URL}/og-image.png`],
+    creator: "@crystalkey_ca",
+  },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon-16x16.png",
+    apple: "/apple-touch-icon.png",
+  },
+  manifest: "/site.webmanifest",
   verification: {
-    google: "", // Add Google Search Console verification token here when ready
+    google: "", // add Google Search Console verification token later
   },
 };
 
@@ -86,12 +88,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/manifest.json" />
-        <StructuredData />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+      </body>
       <GoogleAnalytics gaId="G-JWCF7ERGJE" />
     </html>
   );
