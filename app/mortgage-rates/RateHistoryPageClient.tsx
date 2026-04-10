@@ -82,8 +82,8 @@ export default function RateHistoryPageClient() {
                   <stop offset="95%" stopColor="var(--green)" stopOpacity={0} />
                 </linearGradient>
                 <linearGradient id="fGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.15} />
-                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                  <stop offset="5%" stopColor="#a8a29e" stopOpacity={0.15} />
+                  <stop offset="95%" stopColor="#a8a29e" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
@@ -97,7 +97,7 @@ export default function RateHistoryPageClient() {
               <Area type="monotone" dataKey="overnight" name="BoC Overnight"
                 stroke="var(--green)" strokeWidth={2.5} fill="url(#oGrad)" dot={false} activeDot={{ r: 5 }} />
               <Area type="monotone" dataKey="fiveYearFixed" name="5yr Fixed Rate"
-                stroke="#3b82f6" strokeWidth={2.5} fill="url(#fGrad)" dot={false} activeDot={{ r: 5 }} />
+                stroke="#a8a29e" strokeWidth={2.5} fill="url(#fGrad)" dot={false} activeDot={{ r: 5 }} />
             </AreaChart>
           </ResponsiveContainer>
         </div>
@@ -105,7 +105,7 @@ export default function RateHistoryPageClient() {
         <div className="flex flex-wrap gap-4 mt-3 pt-3 border-t border-stone-50">
           {[
             { color: "var(--green)", label: "BoC Overnight Rate" },
-            { color: "#3b82f6", label: "5-Year Fixed Mortgage Rate" },
+            { color: "#a8a29e", label: "5-Year Fixed Mortgage Rate" },
           ].map(({ color, label }) => (
             <div key={label} className="flex items-center gap-2 text-xs text-stone-500">
               <span className="w-3 h-0.5 rounded-full inline-block" style={{ background: color }} />

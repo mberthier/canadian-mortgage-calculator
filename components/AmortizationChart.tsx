@@ -63,12 +63,12 @@ export default function AmortizationChart({ schedule, amortizationYears, frequen
           <AreaChart data={chartData} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id="balGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.15} />
-                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                <stop offset="5%" stopColor="var(--green)" stopOpacity={0.15} />
+                <stop offset="95%" stopColor="var(--green)" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="eqGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10b981" stopOpacity={0.15} />
-                <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                <stop offset="5%" stopColor="#2d6a4f" stopOpacity={0.15} />
+                <stop offset="95%" stopColor="#2d6a4f" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="intGrad" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.15} />
@@ -85,9 +85,9 @@ export default function AmortizationChart({ schedule, amortizationYears, frequen
             <Legend iconType="circle" iconSize={8}
               formatter={(v) => <span className="text-xs text-slate-600">{v}</span>} />
             <Area type="monotone" dataKey="balance" name="Remaining Balance"
-              stroke="#3b82f6" strokeWidth={2} fill="url(#balGrad)" />
+              stroke="var(--green)" strokeWidth={2} fill="url(#balGrad)" />
             <Area type="monotone" dataKey="equity" name="Home Equity"
-              stroke="#10b981" strokeWidth={2} fill="url(#eqGrad)" />
+              stroke="#2d6a4f" strokeWidth={2} fill="url(#eqGrad)" />
             <Area type="monotone" dataKey="cumulativeInterest" name="Cumulative Interest"
               stroke="#f43f5e" strokeWidth={2} fill="url(#intGrad)" />
           </AreaChart>

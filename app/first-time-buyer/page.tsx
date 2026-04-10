@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import IllustrationFirstTimeBuyer from "@/components/illustrations/IllustrationFirstTimeBuyer";
 import Link from "next/link";
 import SiteLayout from "@/components/SiteLayout";
 import Breadcrumb from "@/components/Breadcrumb";
@@ -39,12 +40,13 @@ export default function FirstTimeBuyerPage() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
         <Breadcrumb crumbs={[{ label: "CrystalKey", href: "/" }, { label: "First-Time Buyer Guide" }]} />
         <div className="mt-8 mb-10">
-          <h1 className="font-display text-4xl leading-tight mb-3" style={{ color: "var(--ink)" }}>
-            First-Time Home Buyer Guide — Canada 2026
-          </h1>
-          <p className="text-lg" style={{ color: "var(--ink-muted)" }}>
-            Everything you need to know before buying your first home — programs, costs, and the math explained clearly.
-          </p>
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
+            <div>
+              <h1 className="font-display text-4xl leading-tight mb-3" style={{ color: "var(--ink)" }}>First-Time Home Buyer Guide</h1>
+              <p className="text-lg" style={{ color: "var(--ink-muted)" }}>Buying your first home is the most financially complex thing most people ever do. Here's the part nobody explains clearly.</p>
+            </div>
+            <div className="shrink-0 w-48 hidden sm:block"><IllustrationFirstTimeBuyer /></div>
+          </div>
         </div>
 
         <div className="rounded-2xl p-6 mb-8 border" style={{ background: "var(--green-light)", borderColor: "var(--green-border)" }}>

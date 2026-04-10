@@ -111,8 +111,8 @@ export default function RateHistoryChart({ currentRate, onSelectRate }: Props) {
                     <stop offset="95%" stopColor="var(--green)" stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="fixedGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.15} />
-                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#a8a29e" stopOpacity={0.15} />
+                    <stop offset="95%" stopColor="#a8a29e" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
@@ -136,7 +136,7 @@ export default function RateHistoryChart({ currentRate, onSelectRate }: Props) {
                   stroke="var(--green)" strokeWidth={2}
                   fill="url(#overnightGrad)" dot={false} activeDot={{ r: 4 }} />
                 <Area type="monotone" dataKey="fiveYearFixed" name="5yr Fixed"
-                  stroke="#3b82f6" strokeWidth={2}
+                  stroke="#a8a29e" strokeWidth={2}
                   fill="url(#fixedGrad)" dot={false} activeDot={{ r: 4 }} />
               </AreaChart>
             </ResponsiveContainer>

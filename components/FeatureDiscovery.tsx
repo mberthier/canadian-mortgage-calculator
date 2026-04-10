@@ -4,8 +4,8 @@ import React from "react";
 
 const FEATURES = [
   {
-    label: "Stress test",
-    sub: "What if rates rise?",
+    label: "What if rates rise?",
+    sub: "At renewal",
     anchor: "stress-test",
     icon: (
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -15,8 +15,8 @@ const FEATURES = [
     ),
   },
   {
-    label: "Compare scenarios",
-    sub: "Rate A vs Rate B",
+    label: "What if you got a better rate?",
+    sub: "Compare two scenarios",
     anchor: "scenario-comparison",
     icon: (
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -26,8 +26,8 @@ const FEATURES = [
     ),
   },
   {
-    label: "Affordability",
-    sub: "GDS / TDS check",
+    label: "Can you actually qualify?",
+    sub: "GDS & TDS check",
     anchor: "affordability",
     icon: (
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -38,8 +38,8 @@ const FEATURES = [
     ),
   },
   {
-    label: "Break penalty",
-    sub: "Cost to exit early",
+    label: "What does leaving cost?",
+    sub: "Break penalty estimate",
     anchor: "break-penalty",
     icon: (
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"

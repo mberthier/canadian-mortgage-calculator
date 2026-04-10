@@ -25,7 +25,7 @@ export default function BreakPenalty() {
         className="w-full flex items-center justify-between px-5 py-4 hover:bg-stone-50 transition-colors"
         aria-expanded={open}>
         <div className="flex items-center gap-2">
-          <p className="text-sm font-semibold text-stone-800">Mortgage Break Penalty</p>
+          <p className="text-sm font-semibold text-stone-800">What it costs to walk away early</p>
           <span className="text-xs rounded-full px-2 py-0.5 font-medium"
             style={{ background: "#fef3c7", color: "var(--amber)" }}>Estimate</span>
         </div>

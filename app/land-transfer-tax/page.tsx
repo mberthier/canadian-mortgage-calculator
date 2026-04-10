@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import IllustrationLTT from "@/components/illustrations/IllustrationLTT";
 import Link from "next/link";
 import SiteLayout from "@/components/SiteLayout";
 import Breadcrumb from "@/components/Breadcrumb";
@@ -31,12 +32,13 @@ export default function LTTPage() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
         <Breadcrumb crumbs={[{ label: "CrystalKey", href: "/" }, { label: "Land Transfer Tax" }]} />
         <div className="mt-8 mb-10">
-          <h1 className="font-display text-4xl leading-tight mb-3" style={{ color: "var(--ink)" }}>
-            Land Transfer Tax Calculator
-          </h1>
-          <p className="text-lg" style={{ color: "var(--ink-muted)" }}>
-            Calculate land transfer tax for every Canadian province. First-time buyer rebates applied automatically.
-          </p>
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
+            <div>
+              <h1 className="font-display text-4xl leading-tight mb-3" style={{ color: "var(--ink)" }}>Land Transfer Tax Calculator</h1>
+              <p className="text-lg" style={{ color: "var(--ink-muted)" }}>The biggest closing cost most people forget to plan for. Every province calculated, rebates included.</p>
+            </div>
+            <div className="shrink-0 w-48 hidden sm:block"><IllustrationLTT /></div>
+          </div>
         </div>
 
         <LTTCalculatorClient />

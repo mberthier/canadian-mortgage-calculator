@@ -164,8 +164,8 @@ export default function CalculatorForm({
               <span>
                 {formatCurrency(inputs.downPayment)} ·{" "}
                 {inputs.downPaymentPercent < 20
-                  ? <span style={{ color: "var(--amber)" }}>CMHC: {formatCurrency(cmhcPremium, 0)}<Tooltip content={TIPS.cmhc} /></span>
-                  : <span style={{ color: "var(--green-mid)" }}>No CMHC required ✓</span>}
+                  ? <span style={{ color: "var(--amber)" }}>+{formatCurrency(cmhcPremium, 0)} CMHC added to your mortgage<Tooltip content={TIPS.cmhc} /></span>
+                  : <span style={{ color: "var(--green-mid)" }}>20%+ down — no CMHC ✓</span>}
               </span>
             </div>
             {errors.downPayment && <p className="text-xs text-red-600 mt-0.5">{errors.downPayment}</p>}

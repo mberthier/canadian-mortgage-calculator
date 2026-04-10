@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const NAV_LINKS = [
-  { href: "/",                     label: "Calculator"    },
+  { href: "/",                     label: "Mortgage Calculator" },
   { href: "/affordability",        label: "Affordability" },
   { href: "/cmhc-calculator",      label: "CMHC"          },
   { href: "/land-transfer-tax",    label: "Land Transfer" },

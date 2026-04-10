@@ -20,6 +20,7 @@ import BreakPenalty            from "@/components/BreakPenalty";
 import ShareButton             from "@/components/ShareButton";
 import FeatureDiscovery        from "@/components/FeatureDiscovery";
 import AboutSection            from "@/components/AboutSection";
+import IllustrationHero        from "@/components/illustrations/IllustrationHero";
 import RateHistoryChart        from "@/components/RateHistoryChart";
 import FirstTimeBuyerGuide     from "@/components/FirstTimeBuyerGuide";
 import Tooltip                 from "@/components/Tooltip";
@@ -66,14 +67,14 @@ function ResultsNarrative({ outputs, inputs }: {
   return (
     <div className="rounded-xl px-4 py-3.5 text-sm leading-relaxed border border-stone-100"
       style={{ background: "var(--cream)", color: "var(--ink-mid)" }}>
-      <span className="font-semibold text-stone-700">Your snapshot: </span>
-      You'd pay <span className="font-semibold text-stone-900">{payment} {freq}</span> for
-      the first {inputs.termYears} years, with{" "}
-      <span className="font-semibold text-stone-900">{balance} still owing</span> at renewal.
-      {" "}Your equity would be <span className="font-semibold" style={{ color: "var(--green-mid)" }}>{equity}%</span>
+      At this rate, you'd pay{" "}
+      <span className="font-semibold text-stone-900">{payment} {freq}</span> for the first {inputs.termYears} years,
+      leaving <span className="font-semibold text-stone-900">{balance} owing</span> at renewal.
+      {" "}Your equity at that point would be{" "}
+      <span className="font-semibold" style={{ color: "var(--green-mid)" }}>{equity}%</span>
       {parseInt(equity) >= 20
-        ? " — enough to refinance or switch lenders without penalty."
-        : " — still below 20%, so CMHC rules would apply if you refinanced."}
+        ? " — enough to switch lenders or refinance without CMHC coming back into the picture."
+        : ". Still below 20%, so if you refinanced you'd face CMHC rules again."}
     </div>
   );
 }
@@ -109,12 +110,19 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 lg:py-10">
           {/* Page header — identical structure to inner pages */}
           <div className="mt-8 mb-10">
-            <h1 className="font-display text-4xl leading-tight mb-3" style={{ color: "var(--ink)" }}>
-              Canadian Mortgage Calculator
-            </h1>
-            <p className="text-lg" style={{ color: "var(--ink-muted)" }}>
-              Canada's most complete mortgage calculator — built for how mortgages actually work here.
-            </p>
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
+              <div>
+                <h1 className="font-display text-4xl leading-tight mb-3" style={{ color: "var(--ink)" }}>
+                  Canadian Mortgage Calculator
+                </h1>
+                <p className="text-lg" style={{ color: "var(--ink-muted)" }}>
+                  Buying a home in Canada is complicated. We did the math so you don't have to guess.
+                </p>
+              </div>
+              <div className="shrink-0 w-48 hidden sm:block">
+                <IllustrationHero />
+              </div>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-[360px,1fr] gap-8 items-start">

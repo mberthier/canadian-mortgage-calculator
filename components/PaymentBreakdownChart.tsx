@@ -17,7 +17,7 @@ interface Props {
   inputs: MortgageInputs;
 }
 
-const COLORS = ["#2563eb", "#f43f5e", "#f59e0b", "#10b981"];
+const COLORS = ["var(--green)", "#2d6a4f", "#c3dece", "#a8a29e", "#ede9e1"];
 
 export default function PaymentBreakdownChart({ outputs, inputs }: Props) {
   const monthlyMortgage = outputs.monthlyPayment;

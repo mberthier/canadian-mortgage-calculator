@@ -71,7 +71,7 @@ export default function AffordabilityCalculator({
         className="w-full flex items-center justify-between px-5 py-4 hover:bg-stone-50 transition-colors"
         aria-expanded={open}>
         <div className="flex items-center gap-2">
-          <p className="text-sm font-semibold text-stone-800">Affordability & Qualification</p>
+          <p className="text-sm font-semibold text-stone-800">Can you actually afford this?</p>
           <span className="text-xs rounded-full px-2 py-0.5 font-medium"
             style={{ background: "var(--green-light)", color: "var(--green)" }}>GDS · TDS</span>
         </div>

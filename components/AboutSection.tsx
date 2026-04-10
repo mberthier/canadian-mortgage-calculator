@@ -1,31 +1,37 @@
 import Link from "next/link";
+import { IllustrationFormula, IllustrationReceipt, IllustrationCalendar } from "./illustrations/IllustrationAbout";
 
 export default function AboutSection() {
   return (
     <section className="rounded-2xl bg-white border border-stone-100 p-8 mt-6">
-      <h2 className="font-display text-2xl mb-6" style={{ color: "var(--ink)" }}>
+      <h2 className="font-display text-2xl mb-2" style={{ color: "var(--ink)" }}>
         Why CrystalKey is different
       </h2>
+      <p className="text-sm mb-8" style={{ color: "var(--ink-muted)" }}>
+        Most mortgage calculators are close enough. We wanted exact.
+      </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-8">
         {[
           {
-            title: "Correct Canadian math",
-            body: "Canadian mortgages compound semi-annually by law — not monthly like in the US. Most calculators get this wrong. Ours correctly converts quoted rates to effective periodic rates using the Interest Act formula.",
+            Illustration: IllustrationFormula,
+            title: "Most calculators use the wrong formula",
+            body: "Canadian mortgages compound semi-annually by law — not monthly like in the US. That difference quietly inflates your estimated payment on most sites. Ours applies the correct Interest Act formula so the numbers you see are the numbers you'll actually pay.",
           },
           {
-            title: "Every upfront cost included",
-            body: "Down payment is just the start. We calculate CMHC insurance, provincial land transfer tax (all 13 provinces and territories), Toronto's municipal LTT, GST/HST on new builds, and closing costs — all in one place.",
+            Illustration: IllustrationReceipt,
+            title: "The number that matters is bigger than your down payment",
+            body: "By the time you close, you've paid your down payment, CMHC insurance (if applicable), land transfer tax for your province, GST on a new build, legal fees, and title insurance. We show all of it — not just the easy part.",
           },
           {
-            title: "Rules updated for 2026",
-            body: "The December 2024 rule changes matter: CMHC insured limit raised to $1.5M, GDS limit raised to 39%, minimum down payment thresholds updated. We track every change so you don't have to.",
+            Illustration: IllustrationCalendar,
+            title: "The rules changed last year. We noticed.",
+            body: "December 2024 brought the biggest mortgage rule update in years: the insured limit went from $1M to $1.5M, GDS limits were raised to 39%, and minimum down payment thresholds shifted. We track every change so you're always working with current rules.",
           },
-        ].map(({ title, body }) => (
+        ].map(({ Illustration, title, body }) => (
           <div key={title}>
-            <div className="w-8 h-8 rounded-lg mb-3 flex items-center justify-center"
-              style={{ background: "var(--green-light)" }}>
-              <div className="w-2 h-2 rounded-full" style={{ background: "var(--green)" }} />
+            <div className="mb-4">
+              <Illustration />
             </div>
             <h3 className="text-sm font-semibold text-stone-800 mb-2">{title}</h3>
             <p className="text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>{body}</p>

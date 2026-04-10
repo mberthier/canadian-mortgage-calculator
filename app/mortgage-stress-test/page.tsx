@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import IllustrationStressTest from "@/components/illustrations/IllustrationStressTest";
 import Link from "next/link";
 import SiteLayout from "@/components/SiteLayout";
 import Breadcrumb from "@/components/Breadcrumb";
@@ -30,12 +31,13 @@ export default function StressTestPage() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
         <Breadcrumb crumbs={[{ label: "CrystalKey", href: "/" }, { label: "Mortgage Stress Test" }]} />
         <div className="mt-8 mb-10">
-          <h1 className="font-display text-4xl leading-tight mb-3" style={{ color: "var(--ink)" }}>
-            Mortgage Stress Test Calculator
-          </h1>
-          <p className="text-lg" style={{ color: "var(--ink-muted)" }}>
-            Find your qualifying rate, see if you pass, and calculate your maximum mortgage under Canada's stress test rules.
-          </p>
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
+            <div>
+              <h1 className="font-display text-4xl leading-tight mb-3" style={{ color: "var(--ink)" }}>Mortgage Stress Test Calculator</h1>
+              <p className="text-lg" style={{ color: "var(--ink-muted)" }}>Lenders won't approve you at your actual rate. They'll test you at a higher one. Here's how that changes your numbers.</p>
+            </div>
+            <div className="shrink-0 w-48 hidden sm:block"><IllustrationStressTest /></div>
+          </div>
         </div>
 
         <StressTestClient />
