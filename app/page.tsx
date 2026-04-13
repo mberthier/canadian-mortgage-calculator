@@ -131,7 +131,7 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-[360px,1fr] gap-8 items-start">
 
             {/* Left — guided inputs only */}
-            <aside className="lg:sticky lg:top-20 lg:self-start">
+            <aside>
               <div className="rounded-2xl bg-white p-5 shadow-sm"
                 style={{ border: "1px solid var(--cream-dark)" }}>
                 <div className="mb-5">
@@ -142,6 +142,7 @@ export default function Home() {
                   setHomePrice={setHomePrice}
                   setDownPayment={setDownPayment}
                   setDownPaymentPercent={setDownPaymentPercent}
+                  setLumpSumForYear={setLumpSumForYear}
                   setField={setField}
                   minimumDownPayment={outputs.minimumDownPayment}
                   cmhcPremium={outputs.cmhcPremium}
