@@ -5,14 +5,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const NAV_LINKS = [
-  { href: "/",                     label: "Mortgage Calculator" },
-  { href: "/affordability",        label: "Affordability" },
-  { href: "/cmhc-calculator",      label: "CMHC"          },
-  { href: "/land-transfer-tax",    label: "Land Transfer" },
-  { href: "/mortgage-stress-test", label: "Stress Test"   },
-  { href: "/first-time-buyer",     label: "First-Time"    },
-  { href: "/mortgage-rates",       label: "Rates"         },
-  { href: "/glossary",             label: "Glossary"      },
+  { href: "/",                        label: "Mortgage Calculator" },
+  { href: "/affordability",           label: "Affordability"       },
+  { href: "/cmhc-calculator",         label: "CMHC"                },
+  { href: "/land-transfer-tax",       label: "Land Transfer"       },
+  { href: "/mortgage-break-penalty",  label: "Break Penalty"       },
+  { href: "/first-time-buyer",        label: "First-Time"          },
+  { href: "/mortgage-rates",          label: "Rates"               },
+  { href: "/glossary",                label: "Glossary"            },
 ];
 
 interface Props {
@@ -113,7 +113,7 @@ export default function SiteLayout({ children }: Props) {
               <ul className="space-y-2">
                 {[
                   { href: "/first-time-buyer", label: "First-Time Buyers" },
-                  { href: "/mortgage-stress-test", label: "Stress Test" },
+                  { href: "/mortgage-break-penalty", label: "Break Penalty" },
                   { href: "/mortgage-rates", label: "Rate History" },
                   { href: "/glossary", label: "Glossary" },
                 ].map(({ href, label }) => (

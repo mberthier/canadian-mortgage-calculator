@@ -8,7 +8,7 @@ const LINKS = [
   { label: "Land transfer tax", sub: "All provinces",          href: "/land-transfer-tax",    color: "green" },
   { label: "Affordability",     sub: "How much can I borrow?", href: "/affordability",        color: "green" },
   { label: "Rate history",      sub: "BoC 2023–2026",          href: "/mortgage-rates",       color: "green" },
-  { label: "Stress test",       sub: "Will you qualify?",      href: "/mortgage-stress-test", color: "stone" },
+  { label: "Break penalty",     sub: "Cost to exit early",      href: "/mortgage-break-penalty", color: "stone" },
   { label: "First-time buyer",  sub: "Programs & rebates",     href: "/first-time-buyer",     color: "stone" },
   { label: "Glossary",          sub: "Every term explained",   href: "/glossary",             color: "stone" },
   { label: "Current rates",     sub: "Best available today",   href: "/mortgage-rates",       color: "stone" },

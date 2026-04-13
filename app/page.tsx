@@ -16,7 +16,6 @@ import AmortizationTable from "@/components/AmortizationTable";
 import StressTest from "@/components/StressTest";
 import AffordabilityCalculator from "@/components/AffordabilityCalculator";
 import MortgageComparison from "@/components/MortgageComparison";
-import BreakPenalty from "@/components/BreakPenalty";
 import ShareButton from "@/components/ShareButton";
 import FeatureDiscovery from "@/components/FeatureDiscovery";
 import { useMortgageCalculator } from "@/hooks/useMortgageCalculator";
@@ -216,9 +215,7 @@ export default function Home() {
                     />
                   </div>
 
-                  {/* Feature discovery + power tools */}
-                  <FeatureDiscovery />
-
+                  {/* Amortization table — above explore more */}
                   <div data-section="amortization-table">
                     <AmortizationTable
                       schedule={outputs.amortizationSchedule}
@@ -226,6 +223,9 @@ export default function Home() {
                       termYears={inputs.termYears}
                     />
                   </div>
+
+                  {/* Explore more */}
+                  <FeatureDiscovery />
 
                   <div data-section="stress-test">
                     <StressTest outputs={outputs} inputs={inputs} />
@@ -244,9 +244,7 @@ export default function Home() {
                       currentDownPayment={inputs.downPayment}
                     />
                   </div>
-                  <div data-section="break-penalty">
-                    <BreakPenalty />
-                  </div>
+
                 </>
               )}
             </main>

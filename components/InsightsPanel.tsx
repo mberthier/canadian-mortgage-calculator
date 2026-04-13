@@ -225,7 +225,7 @@ export default function InsightsPanel({ inputs, outputs }: Props) {
   if (insights.length === 0) return null;
 
   return (
-    <div className="rounded-2xl border border-stone-100 bg-white">
+    <div className="rounded-2xl border border-stone-100 bg-white overflow-hidden">
       <div className="px-5 py-3.5 border-b border-stone-100 flex items-center gap-2 rounded-t-2xl"
         style={{ background: "var(--cream)" }}>
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
