@@ -75,6 +75,22 @@ function getInsights(inputs: MortgageInputs, outputs: MortgageOutputs): Insight[
       }
     }
 
+    // Extra payment savings
+    if (inputs.extraPayment > 0 && outputs.amortizationSchedule.length > 0) {
+      const baseScheduleLength = inputs.amortizationYears * 12;
+      const actualLength = outputs.amortizationSchedule.length;
+      const monthsSavedExtra = Math.max(0, baseScheduleLength - actualLength);
+      const yrsSaved = Math.floor(monthsSavedExtra / 12);
+      const msSaved = monthsSavedExtra % 12;
+      const timeStr = [yrsSaved > 0 ? `${yrsSaved} yr` : "", msSaved > 0 ? `${msSaved} mo` : ""].filter(Boolean).join(" ");
+      if (monthsSavedExtra > 0) {
+        insights.push({
+          type: "positive",
+          text: `Your extra ${formatCurrency(inputs.extraPayment, 0)}/payment cuts ${timeStr} off your amortization.`,
+        });
+      }
+    }
+
     // Lump sum savings
     const totalLumps = Object.values(inputs.lumpSumsByYear).reduce((s, v) => s + (v || 0), 0);
     if (totalLumps > 0 && outputs.interestSavedByLumpSums > 0) {
@@ -180,17 +196,6 @@ function getInsights(inputs: MortgageInputs, outputs: MortgageOutputs): Insight[
     }
   }
 
-  // Lump sum savings
-  if (outputs.interestSavedByLumpSums > 0) {
-    const yrs = Math.floor(outputs.paymentsSavedByLumpSums / 12);
-    const mos = outputs.paymentsSavedByLumpSums % 12;
-    const timeSaved = [yrs > 0 ? `${yrs} yr` : "", mos > 0 ? `${mos} mo` : ""].filter(Boolean).join(" ");
-    insights.push({
-      type: "positive",
-      text: `Your lump sum payments save ${formatCurrency(outputs.interestSavedByLumpSums, 0)} in interest${timeSaved ? ` and pay off the mortgage ${timeSaved} early` : ""}.`,
-    });
-  }
-
   return insights.slice(0, 4); // max 4 insights at once
 }
 
@@ -220,8 +225,8 @@ export default function InsightsPanel({ inputs, outputs }: Props) {
   if (insights.length === 0) return null;
 
   return (
-    <div className="rounded-2xl border border-stone-100 bg-white overflow-hidden">
-      <div className="px-5 py-3.5 border-b border-stone-100 flex items-center gap-2"
+    <div className="rounded-2xl border border-stone-100 bg-white">
+      <div className="px-5 py-3.5 border-b border-stone-100 flex items-center gap-2 rounded-t-2xl"
         style={{ background: "var(--cream)" }}>
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
           <path d="M7 1l1.5 3h3l-2.5 2 1 3L7 7.5 4 9l1-3L2.5 4h3L7 1z"

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { MortgageInputs, ValidationErrors, PaymentFrequency } from "@/lib/types";
 import { AMORTIZATION_OPTIONS, TERM_OPTIONS, FREQUENCY_LABELS, PROVINCES } from "@/lib/constants";
 import { parseCurrency, formatCurrency } from "@/lib/formatters";
+import Link from "next/link";
 import { calculateMortgagePayment, calculateLandTransferTax } from "@/lib/mortgageMath";
 import Tooltip from "./Tooltip";
 
@@ -293,8 +294,8 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
           </button>
           {showCosts && (
             <div className="space-y-3 pl-3 border-l-2" style={{ borderColor: "var(--green-light)" }}>
-              <CurrencyInput id="heat" label="Monthly heating"
-                tip="Lenders default to $150/mo if not provided. Include your actual cost for a more accurate GDS."
+              <CurrencyInput id="heat" label="Monthly heating costs"
+                tip="Lenders include your monthly heating cost in the GDS ratio. This covers gas, oil, and electric heating specifically — not general electricity, internet, or water. If unknown, lenders use $150/mo as a default."
                 value={inputs.heatingCost} onChange={(v) => setField("heatingCost", v)} suffix="/mo" />
               <CurrencyInput id="insurance" label="Home insurance"
                 tip="Required by your lender. Typically $1,000–$3,000/year."
@@ -311,7 +312,11 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
               style={{ background: "var(--cream)", borderColor: "var(--cream-dark)" }}>
               {(outputs.ltt.provincial > 0 || outputs.ltt.municipal > 0) && (
                 <div className="flex justify-between">
-                  <span style={{ color: "var(--ink-mid)" }}>Land transfer tax</span>
+                  <span className="flex items-center gap-1" style={{ color: "var(--ink-mid)" }}>
+                    Land transfer tax
+                    <Tooltip content="A provincial tax paid on closing day when purchasing real estate. Most provinces charge 0.5%–2.5% of the purchase price. Toronto adds a municipal LTT on top. First-time buyers may be eligible for a rebate." />
+                    <Link href="/land-transfer-tax" className="underline text-xs" style={{ color: "var(--green)" }}>details →</Link>
+                  </span>
                   <span className="font-medium text-stone-700">
                     {formatCurrency(outputs.ltt.provincial + outputs.ltt.municipal, 0)}
                   </span>
@@ -351,10 +356,25 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
                   <option key={k} value={k}>{v}</option>
                 ))}
               </SelectField>
+              {(inputs.paymentFrequency === "accelerated-biweekly" || inputs.paymentFrequency === "accelerated-weekly") && (
+                <p className="text-xs" style={{ color: "var(--green-mid)" }}>
+                  ✓ Accelerated payments add one extra monthly payment per year, reducing your amortization without feeling the difference.
+                </p>
+              )}
+              {inputs.paymentFrequency !== "monthly" && inputs.paymentFrequency !== "accelerated-biweekly" && inputs.paymentFrequency !== "accelerated-weekly" && (
+                <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
+                  More frequent payments reduce your outstanding balance faster, saving a small amount of interest each period.
+                </p>
+              )}
 
               <CurrencyInput id="extra" label="Extra payment per period"
                 tip="Added to every payment. Even $200 extra/month can shave years off your amortization."
                 value={inputs.extraPayment} onChange={(v) => setField("extraPayment", v)} />
+              {inputs.extraPayment > 0 && (
+                <p className="text-xs" style={{ color: "var(--green-mid)" }}>
+                  ✓ Adding {formatCurrency(inputs.extraPayment, 0)}/payment — see projected savings in the Insights panel.
+                </p>
+              )}
 
               {/* Lump sum */}
               <div>
@@ -366,7 +386,23 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
                 </button>
                 {showLumpSum && (
                   <div className="space-y-2">
-                    {Array.from({ length: Math.min(inputs.amortizationYears, 10) }, (_, i) => i + 1).map((year) => {
+                    {outputs.interestSavedByLumpSums > 0 && (
+                      <div className="rounded-lg px-3 py-2 text-xs border"
+                        style={{ background: "var(--green-light)", borderColor: "var(--green-border)" }}>
+                        <p className="font-semibold" style={{ color: "var(--green)" }}>
+                          Saves {formatCurrency(outputs.interestSavedByLumpSums, 0)} in interest
+                        </p>
+                        {outputs.paymentsSavedByLumpSums > 0 && (
+                          <p style={{ color: "var(--green-mid)" }}>
+                            Pays off {yearsSaved > 0 ? `${yearsSaved}yr ` : ""}{monthsSaved > 0 ? `${monthsSaved}mo ` : ""}earlier
+                          </p>
+                        )}
+                      </div>
+                    )}
+                    <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
+                      Applied on your anniversary date. Most mortgages allow 10–20% of original principal/year penalty-free.
+                    </p>
+                    {Array.from({ length: inputs.amortizationYears }, (_, i) => i + 1).map((year) => {
                       const val = inputs.lumpSumsByYear[year] ?? 0;
                       return (
                         <div key={year} className="flex items-center gap-2">
@@ -382,20 +418,6 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
                         </div>
                       );
                     })}
-                    {/* Savings summary */}
-                    {outputs.interestSavedByLumpSums > 0 && (
-                      <div className="rounded-lg px-3 py-2 mt-1 text-xs border"
-                        style={{ background: "var(--green-light)", borderColor: "var(--green-border)" }}>
-                        <p className="font-semibold" style={{ color: "var(--green)" }}>
-                          Saves {formatCurrency(outputs.interestSavedByLumpSums, 0)} in interest
-                        </p>
-                        {outputs.paymentsSavedByLumpSums > 0 && (
-                          <p style={{ color: "var(--green-mid)" }}>
-                            Pays off {yearsSaved > 0 ? `${yearsSaved}yr ` : ""}{monthsSaved > 0 ? `${monthsSaved}mo ` : ""}earlier
-                          </p>
-                        )}
-                      </div>
-                    )}
                   </div>
                 )}
               </div>
@@ -467,7 +489,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
                 </button>
                 {showLumpSum && (
                   <div className="space-y-2">
-                    {Array.from({ length: Math.min(inputs.amortizationYears, 10) }, (_, i) => i + 1).map((year) => {
+                    {Array.from({ length: inputs.amortizationYears }, (_, i) => i + 1).map((year) => {
                       const val = inputs.lumpSumsByYear[year] ?? 0;
                       return (
                         <div key={year} className="flex items-center gap-2">

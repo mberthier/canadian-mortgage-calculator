@@ -40,7 +40,7 @@ export default function CashSummary({ inputs, outputs }: Props) {
   }
 
   return (
-    <div className="rounded-2xl border border-stone-100 bg-white overflow-hidden">
+    <div className="rounded-2xl border border-stone-100 bg-white">
       <div className="px-5 py-3.5 border-b border-stone-100 flex items-center justify-between"
         style={{ background: "var(--cream)" }}>
         <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--ink-faint)" }}>
