@@ -1,12 +1,21 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { calculateBreakPenalty } from "@/lib/mortgageMath";
 import { formatCurrency } from "@/lib/formatters";
 
 export default function BreakPenalty() {
   const [open, setOpen]           = useState(false);
-  const [balance, setBalance]     = useState(400_000);
+
+  // Auto-open when FeatureDiscovery pill is clicked
+  const sectionRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const handler = () => setOpen(true);
+    el.addEventListener("open-section", handler);
+    return () => el.removeEventListener("open-section", handler);
+  }, []);  const [balance, setBalance]     = useState(400_000);
   const [originalRate, setOrig]   = useState(4.5);
   const [currentRate, setCurrent] = useState(3.89);
   const [remainingMonths, setMonths] = useState(36);
@@ -20,7 +29,7 @@ export default function BreakPenalty() {
   const inp = "w-full px-3 py-2 rounded-lg border border-stone-200 bg-white text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-green-700/20 focus:border-green-700 transition-colors";
 
   return (
-    <div className="rounded-2xl bg-white border border-stone-100 overflow-hidden">
+    <div ref={sectionRef} className="rounded-2xl bg-white border border-stone-100 overflow-hidden">
       <button onClick={() => setOpen((o) => !o)}
         className="w-full flex items-center justify-between px-5 py-4 hover:bg-stone-50 transition-colors"
         aria-expanded={open}>

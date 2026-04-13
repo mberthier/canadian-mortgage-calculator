@@ -45,7 +45,7 @@ export default function FirstTimeBuyerPage() {
               <h1 className="font-display text-4xl leading-tight mb-3" style={{ color: "var(--ink)" }}>First-Time Home Buyer Guide</h1>
               <p className="text-lg" style={{ color: "var(--ink-muted)" }}>Buying your first home is the most financially complex thing most people ever do. Here's the part nobody explains clearly.</p>
             </div>
-            <div className="shrink-0 w-48 hidden sm:block"><IllustrationFirstTimeBuyer /></div>
+            <div className="shrink-0 w-32 hidden sm:block"><IllustrationFirstTimeBuyer /></div>
           </div>
         </div>
 

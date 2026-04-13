@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
-import { MortgageInputs, PaymentFrequency } from "@/lib/types";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import { MortgageInputs } from "@/lib/types";
 import { AMORTIZATION_OPTIONS, RATE_PRESETS } from "@/lib/constants";
 import { calculateMortgagePayment, generateAmortizationSchedule } from "@/lib/mortgageMath";
 import { formatCurrency } from "@/lib/formatters";
@@ -13,33 +13,55 @@ interface Props {
 
 export default function MortgageComparison({ inputs, loanAmount }: Props) {
   const [open, setOpen] = useState(false);
-  const [rateB, setRateB] = useState(() => inputs.interestRate + 0.5);
-  const [amortB, setAmortB] = useState(() => inputs.amortizationYears);
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const handler = () => setOpen(true);
+    el.addEventListener("open-section", handler);
+    return () => el.removeEventListener("open-section", handler);
+  }, []);
+
+  const [rateBRaw, setRateBRaw] = useState(() => (inputs.interestRate + 0.5).toFixed(2));
+  const [amortB, setAmortB]     = useState(() => inputs.amortizationYears);
+  const rateB = parseFloat(rateBRaw) || 0;
 
   const inp = "w-full px-3 py-2 rounded-lg border border-stone-200 bg-white text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-green-700/20 focus:border-green-700 transition-colors";
   const sel = "w-full px-3 py-2 rounded-lg border border-stone-200 bg-white text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-green-700/20 focus:border-green-700 transition-colors appearance-none cursor-pointer";
 
-  const scenarioA = useMemo(() => {
-    const payment  = calculateMortgagePayment(loanAmount, inputs.interestRate, inputs.amortizationYears, inputs.paymentFrequency);
-    const schedule = generateAmortizationSchedule(loanAmount, inputs.interestRate, inputs.amortizationYears, inputs.paymentFrequency, payment, 0, {});
-    const totalInterest = schedule[schedule.length - 1]?.cumulativeInterest ?? 0;
-    return { payment, totalInterest, years: schedule.length / 12 };
-  }, [loanAmount, inputs.interestRate, inputs.amortizationYears, inputs.paymentFrequency]);
+  const buildScenario = (rate: number, amortYears: number) => {
+    if (loanAmount <= 0 || rate <= 0) return null;
+    const payment  = calculateMortgagePayment(loanAmount, rate, amortYears, inputs.paymentFrequency);
+    const schedule = generateAmortizationSchedule(
+      loanAmount, rate, amortYears, inputs.paymentFrequency,
+      payment, inputs.extraPayment, inputs.lumpSumsByYear
+    );
+    const termPayments     = inputs.termYears * { monthly:12,"semi-monthly":24,"biweekly":26,"accelerated-biweekly":26,"weekly":52,"accelerated-weekly":52 }[inputs.paymentFrequency];
+    const termSlice        = schedule.slice(0, termPayments);
+    const termInterest     = termSlice.reduce((s, e) => s + e.interest, 0);
+    const termEndBalance   = termSlice.length > 0 ? termSlice[termSlice.length - 1].balance : loanAmount;
+    const totalInterest    = schedule.reduce((s, e) => s + e.interest, 0);
+    const actualAmortYears = schedule.length / { monthly:12,"semi-monthly":24,"biweekly":26,"accelerated-biweekly":26,"weekly":52,"accelerated-weekly":52 }[inputs.paymentFrequency];
+    return { payment, totalInterest, termInterest, termEndBalance, actualAmortYears };
+  };
 
-  const scenarioB = useMemo(() => {
-    const payment  = calculateMortgagePayment(loanAmount, rateB, amortB, inputs.paymentFrequency);
-    const schedule = generateAmortizationSchedule(loanAmount, rateB, amortB, inputs.paymentFrequency, payment, 0, {});
-    const totalInterest = schedule[schedule.length - 1]?.cumulativeInterest ?? 0;
-    return { payment, totalInterest, years: schedule.length / 12 };
-  }, [loanAmount, rateB, amortB, inputs.paymentFrequency]);
+  const scenarioA = useMemo(() => buildScenario(inputs.interestRate, inputs.amortizationYears),
+    [loanAmount, inputs.interestRate, inputs.amortizationYears, inputs.paymentFrequency, inputs.extraPayment, inputs.lumpSumsByYear]);
+  const scenarioB = useMemo(() => buildScenario(rateB, amortB),
+    [loanAmount, rateB, amortB, inputs.paymentFrequency, inputs.extraPayment, inputs.lumpSumsByYear]);
 
-  const paymentDiff  = scenarioB.payment - scenarioA.payment;
-  const interestDiff = scenarioB.totalInterest - scenarioA.totalInterest;
-  const betterB      = interestDiff < 0;
+  if (!scenarioA || !scenarioB) return null;
+
+  const paymentDiff      = scenarioB.payment - scenarioA.payment;
+  const totalIntDiff     = scenarioB.totalInterest - scenarioA.totalInterest;
+  const termIntDiff      = scenarioB.termInterest - scenarioA.termInterest;
+  const termBalDiff      = scenarioB.termEndBalance - scenarioA.termEndBalance;
+  const betterB          = totalIntDiff < 0;
 
   return (
-    <div className="rounded-2xl bg-white border border-stone-100 overflow-hidden">
-      <button onClick={() => setOpen((o) => !o)}
+    <div ref={sectionRef} className="rounded-2xl bg-white border border-stone-100 overflow-hidden">
+      <button onClick={() => setOpen(o => !o)}
         className="w-full flex items-center justify-between px-5 py-4 hover:bg-stone-50 transition-colors"
         aria-expanded={open}>
         <div className="flex items-center gap-2">
@@ -53,29 +75,35 @@ export default function MortgageComparison({ inputs, loanAmount }: Props) {
       {open && (
         <div className="px-5 pb-5 border-t border-stone-100 pt-4 space-y-5">
           <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
-            Compare your current setup (Scenario A) against a different rate or amortization (Scenario B). Both use the same mortgage amount of {formatCurrency(loanAmount, 0)}.
+            Compare your current setup against a different rate or amortization.
+            Both use {formatCurrency(loanAmount, 0)} mortgage amount
+            {inputs.extraPayment > 0 ? `, ${formatCurrency(inputs.extraPayment, 0)} extra/period` : ""}
+            {Object.values(inputs.lumpSumsByYear).some(v => v > 0) ? ", with lump sums" : ""}.
           </p>
 
-          {/* Scenario controls */}
+          {/* Scenario inputs */}
           <div className="grid grid-cols-2 gap-4">
-            {/* Scenario A — read only */}
             <div className="rounded-xl p-4 border-2" style={{ borderColor: "var(--green)", background: "var(--green-light)" }}>
               <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "var(--green)" }}>Scenario A (current)</p>
               <p className="text-xs text-stone-500 mb-0.5">Rate</p>
-              <p className="text-base font-semibold text-stone-900">{inputs.interestRate}%</p>
+              <p className="text-base font-semibold text-stone-900">{inputs.interestRate.toFixed(2)}%</p>
               <p className="text-xs text-stone-500 mb-0.5 mt-2">Amortization</p>
               <p className="text-base font-semibold text-stone-900">{inputs.amortizationYears} years</p>
             </div>
 
-            {/* Scenario B — editable */}
             <div className="rounded-xl p-4 border border-stone-200">
               <p className="text-xs font-bold uppercase tracking-widest mb-3 text-stone-500">Scenario B</p>
               <div className="space-y-2">
                 <div>
                   <label className="text-xs text-stone-500">Rate</label>
                   <div className="relative mt-0.5">
-                    <input type="number" min="0.1" max="20" step="0.05" value={rateB}
-                      onChange={(e) => setRateB(parseFloat(e.target.value) || 0)}
+                    <input type="text" inputMode="decimal"
+                      value={rateBRaw}
+                      onChange={(e) => setRateBRaw(e.target.value.replace(/[^0-9.]/g, ""))}
+                      onBlur={(e) => {
+                        const v = parseFloat(e.target.value);
+                        if (!isNaN(v) && v > 0) setRateBRaw(v.toFixed(2));
+                      }}
                       className={`${inp} pr-8`} />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 text-xs">%</span>
                   </div>
@@ -90,12 +118,11 @@ export default function MortgageComparison({ inputs, loanAmount }: Props) {
                   </div>
                 </div>
               </div>
-              {/* Quick rate presets for B */}
               <div className="flex flex-wrap gap-1 mt-2">
                 {RATE_PRESETS.slice(0, 3).map((p) => (
-                  <button key={p.label} onClick={() => { setRateB(p.rate); setAmortB(inputs.amortizationYears); }}
+                  <button key={p.label} onClick={() => { setRateBRaw(p.rate.toFixed(2)); setAmortB(inputs.amortizationYears); }}
                     className="text-xs px-2 py-0.5 rounded border border-stone-200 text-stone-500 hover:bg-stone-50 transition-colors">
-                    {p.rate}%
+                    {p.rate.toFixed(2)}%
                   </button>
                 ))}
               </div>
@@ -108,43 +135,61 @@ export default function MortgageComparison({ inputs, loanAmount }: Props) {
               <thead>
                 <tr style={{ background: "var(--cream)" }}>
                   <th className="px-4 py-2.5 text-left text-xs font-semibold text-stone-500 uppercase tracking-wide"></th>
-                  <th className="px-4 py-2.5 text-right text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--green)" }}>Scenario A</th>
-                  <th className="px-4 py-2.5 text-right text-xs font-semibold text-stone-500 uppercase tracking-wide">Scenario B</th>
-                  <th className="px-4 py-2.5 text-right text-xs font-semibold text-stone-500 uppercase tracking-wide">Difference</th>
+                  <th className="px-4 py-2.5 text-right text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--green)" }}>A</th>
+                  <th className="px-4 py-2.5 text-right text-xs font-semibold text-stone-500 uppercase tracking-wide">B</th>
+                  <th className="px-4 py-2.5 text-right text-xs font-semibold text-stone-500 uppercase tracking-wide">Diff</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-stone-50">
+              <tbody className="divide-y divide-stone-50 text-xs">
                 <tr>
-                  <td className="px-4 py-3 text-xs text-stone-600 font-medium">Payment</td>
-                  <td className="px-4 py-3 text-right font-semibold tabular-nums" style={{ color: "var(--green)" }}>
-                    {formatCurrency(scenarioA.payment, 2)}
-                  </td>
-                  <td className="px-4 py-3 text-right text-stone-700 tabular-nums">{formatCurrency(scenarioB.payment, 2)}</td>
-                  <td className="px-4 py-3 text-right tabular-nums text-xs font-medium"
-                    style={{ color: paymentDiff > 0 ? "var(--red)" : "var(--green-mid)" }}>
+                  <td className="px-4 py-2.5 font-medium text-stone-600">Payment</td>
+                  <td className="px-4 py-2.5 text-right font-semibold tabular-nums" style={{ color: "var(--green)" }}>{formatCurrency(scenarioA.payment, 2)}</td>
+                  <td className="px-4 py-2.5 text-right text-stone-700 tabular-nums">{formatCurrency(scenarioB.payment, 2)}</td>
+                  <td className="px-4 py-2.5 text-right tabular-nums font-medium"
+                    style={{ color: paymentDiff > 0 ? "#ef4444" : "var(--green-mid)" }}>
                     {paymentDiff >= 0 ? "+" : ""}{formatCurrency(paymentDiff, 2)}
                   </td>
                 </tr>
+                <tr style={{ background: "var(--cream)" }}>
+                  <td className="px-4 py-2.5 font-semibold text-stone-700" colSpan={4}>After {inputs.termYears}-year term</td>
+                </tr>
                 <tr>
-                  <td className="px-4 py-3 text-xs text-stone-600 font-medium">Total Interest</td>
-                  <td className="px-4 py-3 text-right font-semibold tabular-nums" style={{ color: "var(--green)" }}>
-                    {formatCurrency(scenarioA.totalInterest, 0, true)}
-                  </td>
-                  <td className="px-4 py-3 text-right text-stone-700 tabular-nums">{formatCurrency(scenarioB.totalInterest, 0, true)}</td>
-                  <td className="px-4 py-3 text-right tabular-nums text-xs font-medium"
-                    style={{ color: interestDiff > 0 ? "var(--red)" : "var(--green-mid)" }}>
-                    {interestDiff >= 0 ? "+" : ""}{formatCurrency(interestDiff, 0, true)}
+                  <td className="px-4 py-2.5 text-stone-600">Interest paid</td>
+                  <td className="px-4 py-2.5 text-right font-semibold tabular-nums" style={{ color: "var(--green)" }}>{formatCurrency(scenarioA.termInterest, 0)}</td>
+                  <td className="px-4 py-2.5 text-right text-stone-700 tabular-nums">{formatCurrency(scenarioB.termInterest, 0)}</td>
+                  <td className="px-4 py-2.5 text-right tabular-nums font-medium"
+                    style={{ color: termIntDiff > 0 ? "#ef4444" : "var(--green-mid)" }}>
+                    {termIntDiff >= 0 ? "+" : ""}{formatCurrency(termIntDiff, 0)}
                   </td>
                 </tr>
                 <tr>
-                  <td className="px-4 py-3 text-xs text-stone-600 font-medium">Amortization</td>
-                  <td className="px-4 py-3 text-right font-semibold" style={{ color: "var(--green)" }}>
-                    {inputs.amortizationYears} yrs
+                  <td className="px-4 py-2.5 text-stone-600">Balance at renewal</td>
+                  <td className="px-4 py-2.5 text-right font-semibold tabular-nums" style={{ color: "var(--green)" }}>{formatCurrency(scenarioA.termEndBalance, 0, true)}</td>
+                  <td className="px-4 py-2.5 text-right text-stone-700 tabular-nums">{formatCurrency(scenarioB.termEndBalance, 0, true)}</td>
+                  <td className="px-4 py-2.5 text-right tabular-nums font-medium"
+                    style={{ color: termBalDiff > 0 ? "#ef4444" : "var(--green-mid)" }}>
+                    {termBalDiff >= 0 ? "+" : ""}{formatCurrency(termBalDiff, 0, true)}
                   </td>
-                  <td className="px-4 py-3 text-right text-stone-700">{amortB} yrs</td>
-                  <td className="px-4 py-3 text-right text-xs font-medium text-stone-400">
-                    {amortB - inputs.amortizationYears !== 0
-                      ? `${amortB - inputs.amortizationYears > 0 ? "+" : ""}${amortB - inputs.amortizationYears} yrs`
+                </tr>
+                <tr style={{ background: "var(--cream)" }}>
+                  <td className="px-4 py-2.5 font-semibold text-stone-700" colSpan={4}>Full amortization</td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-2.5 text-stone-600">Total interest</td>
+                  <td className="px-4 py-2.5 text-right font-semibold tabular-nums" style={{ color: "var(--green)" }}>{formatCurrency(scenarioA.totalInterest, 0, true)}</td>
+                  <td className="px-4 py-2.5 text-right text-stone-700 tabular-nums">{formatCurrency(scenarioB.totalInterest, 0, true)}</td>
+                  <td className="px-4 py-2.5 text-right tabular-nums font-medium"
+                    style={{ color: totalIntDiff > 0 ? "#ef4444" : "var(--green-mid)" }}>
+                    {totalIntDiff >= 0 ? "+" : ""}{formatCurrency(totalIntDiff, 0, true)}
+                  </td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-2.5 text-stone-600">Paid off in</td>
+                  <td className="px-4 py-2.5 text-right font-semibold" style={{ color: "var(--green)" }}>{scenarioA.actualAmortYears.toFixed(1)} yrs</td>
+                  <td className="px-4 py-2.5 text-right text-stone-700">{scenarioB.actualAmortYears.toFixed(1)} yrs</td>
+                  <td className="px-4 py-2.5 text-right text-xs font-medium text-stone-400">
+                    {(scenarioB.actualAmortYears - scenarioA.actualAmortYears) !== 0
+                      ? `${(scenarioB.actualAmortYears - scenarioA.actualAmortYears) > 0 ? "+" : ""}${(scenarioB.actualAmortYears - scenarioA.actualAmortYears).toFixed(1)} yrs`
                       : "—"}
                   </td>
                 </tr>
@@ -152,22 +197,21 @@ export default function MortgageComparison({ inputs, loanAmount }: Props) {
             </table>
           </div>
 
-          {/* Verdict */}
-          {Math.abs(interestDiff) > 100 && (
+          {Math.abs(totalIntDiff) > 100 && (
             <div className="rounded-xl p-3 border"
               style={betterB
                 ? { background: "var(--green-light)", borderColor: "var(--green-border)" }
                 : { background: "#fef2f2", borderColor: "#fecaca" }}>
-              <p className="text-sm font-semibold" style={{ color: betterB ? "var(--green)" : "var(--red)" }}>
+              <p className="text-sm font-semibold" style={{ color: betterB ? "var(--green)" : "#ef4444" }}>
                 {betterB
-                  ? `Scenario B saves ${formatCurrency(Math.abs(interestDiff), 0)} in total interest`
-                  : `Scenario A saves ${formatCurrency(Math.abs(interestDiff), 0)} in total interest`}
+                  ? `Scenario B saves ${formatCurrency(Math.abs(totalIntDiff), 0)} in total interest`
+                  : `Scenario A saves ${formatCurrency(Math.abs(totalIntDiff), 0)} in total interest`}
               </p>
-              <p className="text-xs mt-0.5" style={{ color: betterB ? "var(--green-mid)" : "#991b1b" }}>
-                {Math.abs(paymentDiff) > 0.5
-                  ? `${betterB ? "Higher" : "Lower"} payment of ${formatCurrency(Math.abs(paymentDiff), 2)}/period`
-                  : "Same payment amount"}
-              </p>
+              {Math.abs(paymentDiff) > 0.5 && (
+                <p className="text-xs mt-0.5" style={{ color: betterB ? "var(--green-mid)" : "#991b1b" }}>
+                  {betterB ? "Higher" : "Lower"} payment of {formatCurrency(Math.abs(paymentDiff), 2)}/period
+                </p>
+              )}
             </div>
           )}
         </div>

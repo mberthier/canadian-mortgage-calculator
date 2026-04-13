@@ -51,32 +51,36 @@ const FEATURES = [
 ];
 
 export default function FeatureDiscovery() {
-  const scrollTo = (anchor: string) => {
-    // The sections are rendered below — we scroll the page to the relevant component
-    // by looking for a data-section attribute we'll add to each
+  const scrollAndOpen = (anchor: string) => {
     const el = document.querySelector(`[data-section="${anchor}"]`);
-    if (el) {
+    if (!el) return;
+
+    // Dispatch a custom event to tell the section to open itself
+    el.dispatchEvent(new CustomEvent("open-section", { bubbles: true }));
+
+    // Small delay so the section expands before we scroll to it
+    setTimeout(() => {
       el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+    }, 100);
   };
 
   return (
     <div className="rounded-xl border border-stone-100 bg-white p-4">
       <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "var(--ink-faint)" }}>
-        Also included below ↓
+        More tools below
       </p>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
         {FEATURES.map(({ label, sub, anchor, icon }) => (
           <button
             key={anchor}
-            onClick={() => scrollTo(anchor)}
-            className="flex items-start gap-2.5 px-3 py-2.5 rounded-lg text-left transition-all hover:scale-[1.02]"
+            onClick={() => scrollAndOpen(anchor)}
+            className="flex items-start gap-2.5 px-3 py-2.5 rounded-lg text-left transition-all hover:scale-[1.02] active:scale-[0.98]"
             style={{ background: "var(--green-light)", border: "1px solid var(--green-border)" }}
           >
             <span className="mt-0.5 shrink-0" style={{ color: "var(--green)" }}>{icon}</span>
             <div>
-              <p className="text-xs font-semibold" style={{ color: "var(--green)" }}>{label}</p>
-              <p className="text-xs" style={{ color: "var(--green-mid)" }}>{sub}</p>
+              <p className="text-xs font-semibold leading-tight" style={{ color: "var(--green)" }}>{label}</p>
+              <p className="text-xs mt-0.5" style={{ color: "var(--green-mid)" }}>{sub}</p>
             </div>
           </button>
         ))}

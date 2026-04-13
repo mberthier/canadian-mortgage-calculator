@@ -36,7 +36,7 @@ export default function StressTestPage() {
               <h1 className="font-display text-4xl leading-tight mb-3" style={{ color: "var(--ink)" }}>Mortgage Stress Test Calculator</h1>
               <p className="text-lg" style={{ color: "var(--ink-muted)" }}>Lenders won't approve you at your actual rate. They'll test you at a higher one. Here's how that changes your numbers.</p>
             </div>
-            <div className="shrink-0 w-48 hidden sm:block"><IllustrationStressTest /></div>
+            <div className="shrink-0 w-32 hidden sm:block"><IllustrationStressTest /></div>
           </div>
         </div>
 

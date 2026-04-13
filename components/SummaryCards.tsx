@@ -35,7 +35,6 @@ function Metric({ label, value, sub, tip, highlight }: MetricProps) {
 }
 
 export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
-  const [showUpfront, setShowUpfront] = useState(false);
   const hasCMHC    = outputs.cmhcPremium > 0;
   const hasLTT     = outputs.ltt.net > 0;
   const hasGST     = outputs.gstHst.net > 0;
@@ -43,7 +42,7 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
   const isPurchase = inputs.mortgageMode === "purchase";
 
   return (
-    <div className="rounded-2xl overflow-hidden border border-stone-100 shadow-sm">
+    <div className="rounded-2xl border border-stone-100 shadow-sm overflow-hidden">
 
       {/* Hero payment */}
       <div className="px-6 pt-6 pb-5" style={{ background: "var(--green)" }}>
@@ -119,83 +118,7 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
         </div>
       )}
 
-      {/* Upfront costs */}
-      {isPurchase && (
-        <div className="border-t border-stone-100">
-          <button onClick={() => setShowUpfront(o => !o)}
-            className="w-full flex items-center justify-between px-5 py-3.5 hover:bg-stone-50 transition-colors text-left"
-            aria-expanded={showUpfront}>
-            <div className="flex items-center gap-2">
-              <p className="text-sm font-semibold text-stone-700">Total upfront cash needed</p>
-              <Tooltip content="Everything you need to bring to closing day — down payment, land transfer tax, CMHC provincial tax (ON/QC/SK), closing costs (legal fees, title insurance, inspection), and GST/HST on new builds. This is the full number you need in your bank account." />
-            </div>
-            <div className="flex items-center gap-3">
-              <p className="text-base font-semibold" style={{ color: "var(--green)" }}>
-                {formatCurrency(outputs.totalUpfrontCash, 0)}
-              </p>
-              <span className="text-stone-400 text-lg leading-none">{showUpfront ? "−" : "+"}</span>
-            </div>
-          </button>
 
-          {showUpfront && (
-            <div className="px-5 pb-5 border-t border-stone-50 pt-4 space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span style={{ color: "var(--ink-mid)" }}>Down payment</span>
-                <span className="font-medium text-stone-800">{formatCurrency(inputs.downPayment)}</span>
-              </div>
-              {hasLTT && (
-                <>
-                  <div className="flex justify-between">
-                    <span style={{ color: "var(--ink-mid)" }}>Land transfer tax</span>
-                    <span className="font-medium text-stone-800">{formatCurrency(outputs.ltt.provincial + outputs.ltt.municipal)}</span>
-                  </div>
-                  {outputs.ltt.firstTimeBuyerRebate > 0 && (
-                    <div className="flex justify-between" style={{ color: "var(--green-mid)" }}>
-                      <span>First-time buyer rebate</span>
-                      <span className="font-medium">− {formatCurrency(outputs.ltt.firstTimeBuyerRebate)}</span>
-                    </div>
-                  )}
-                </>
-              )}
-              {outputs.cmhcProvincialTax > 0 && (
-                <div className="flex justify-between">
-                  <span style={{ color: "var(--ink-mid)" }}>Provincial tax on CMHC</span>
-                  <span className="font-medium text-stone-800">{formatCurrency(outputs.cmhcProvincialTax)}</span>
-                </div>
-              )}
-              {inputs.closingCosts > 0 && (
-                <div className="flex justify-between">
-                  <span style={{ color: "var(--ink-mid)" }}>Closing costs (est.)</span>
-                  <span className="font-medium text-stone-800">{formatCurrency(inputs.closingCosts)}</span>
-                </div>
-              )}
-              {hasGST && (
-                <>
-                  <div className="flex justify-between">
-                    <span style={{ color: "var(--ink-mid)" }}>GST/HST (new build)</span>
-                    <span className="font-medium text-stone-800">{formatCurrency(outputs.gstHst.gross)}</span>
-                  </div>
-                  {outputs.gstHst.federalRebate > 0 && (
-                    <div className="flex justify-between" style={{ color: "var(--green-mid)" }}>
-                      <span>Federal new housing rebate</span>
-                      <span className="font-medium">− {formatCurrency(outputs.gstHst.federalRebate)}</span>
-                    </div>
-                  )}
-                </>
-              )}
-              <div className="flex justify-between font-semibold text-stone-900 border-t border-stone-100 pt-2 mt-1">
-                <span>Total upfront cash</span>
-                <span style={{ color: "var(--green)" }}>{formatCurrency(outputs.totalUpfrontCash, 0)}</span>
-              </div>
-              {!inputs.closingCosts && (
-                <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
-                  Add closing costs in "More options" for a complete picture.
-                </p>
-              )}
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 }

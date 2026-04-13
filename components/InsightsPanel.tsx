@@ -75,6 +75,19 @@ function getInsights(inputs: MortgageInputs, outputs: MortgageOutputs): Insight[
       }
     }
 
+    // Lump sum savings
+    const totalLumps = Object.values(inputs.lumpSumsByYear).reduce((s, v) => s + (v || 0), 0);
+    if (totalLumps > 0 && outputs.interestSavedByLumpSums > 0) {
+      const months = outputs.paymentsSavedByLumpSums;
+      const years  = Math.floor(months / 12);
+      const rem    = months % 12;
+      const timeStr = years > 0 && rem > 0 ? `${years}yr ${rem}mo` : years > 0 ? `${years} years` : `${rem} months`;
+      insights.push({
+        type: "positive",
+        text: `Your lump sum payments save ${formatCurrency(outputs.interestSavedByLumpSums, 0)} in interest and cut ${timeStr} off your amortization.`,
+      });
+    }
+
     // New build GST
     if (inputs.isNewBuild && outputs.gstHst.net > 0) {
       insights.push({
@@ -165,6 +178,17 @@ function getInsights(inputs: MortgageInputs, outputs: MortgageOutputs): Insight[
         text: "Refinancing at this LTV doesn't require CMHC insurance.",
       });
     }
+  }
+
+  // Lump sum savings
+  if (outputs.interestSavedByLumpSums > 0) {
+    const yrs = Math.floor(outputs.paymentsSavedByLumpSums / 12);
+    const mos = outputs.paymentsSavedByLumpSums % 12;
+    const timeSaved = [yrs > 0 ? `${yrs} yr` : "", mos > 0 ? `${mos} mo` : ""].filter(Boolean).join(" ");
+    insights.push({
+      type: "positive",
+      text: `Your lump sum payments save ${formatCurrency(outputs.interestSavedByLumpSums, 0)} in interest${timeSaved ? ` and pay off the mortgage ${timeSaved} early` : ""}.`,
+    });
   }
 
   return insights.slice(0, 4); // max 4 insights at once

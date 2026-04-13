@@ -4,20 +4,25 @@ import React, { useState } from "react";
 import { MortgageInputs, ValidationErrors, PaymentFrequency } from "@/lib/types";
 import { AMORTIZATION_OPTIONS, TERM_OPTIONS, FREQUENCY_LABELS, PROVINCES } from "@/lib/constants";
 import { parseCurrency, formatCurrency } from "@/lib/formatters";
-import { calculateMortgagePayment } from "@/lib/mortgageMath";
+import { calculateMortgagePayment, calculateLandTransferTax } from "@/lib/mortgageMath";
 import Tooltip from "./Tooltip";
 
 interface Props {
   inputs: MortgageInputs;
   errors: ValidationErrors;
+  outputs: {
+    cmhcPremium: number;
+    ltv: number;
+    interestSavedByLumpSums: number;
+    paymentsSavedByLumpSums: number;
+    ltt: { net: number; provincial: number; municipal: number; firstTimeBuyerRebate: number };
+    gstHst: { net: number };
+  };
   setHomePrice: (v: number) => void;
   setDownPayment: (v: number) => void;
   setDownPaymentPercent: (v: number) => void;
   setLumpSumForYear: (year: number, amount: number) => void;
   setField: <K extends keyof MortgageInputs>(key: K, value: MortgageInputs[K]) => void;
-  minimumDownPayment: number;
-  cmhcPremium: number;
-  ltv: number;
 }
 
 const inp = "w-full px-3 py-2.5 rounded-lg border border-stone-200 bg-white text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-green-700/20 focus:border-green-700 transition-colors";
@@ -27,9 +32,7 @@ const lbl = "block text-xs font-medium text-stone-500 uppercase tracking-wide mb
 function Divider({ label }: { label: string }) {
   return (
     <div className="flex items-center gap-2 pt-1 pb-0.5">
-      <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--ink-faint)" }}>
-        {label}
-      </span>
+      <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--ink-faint)" }}>{label}</span>
       <div className="flex-1 h-px" style={{ background: "var(--cream-dark)" }} />
     </div>
   );
@@ -45,9 +48,7 @@ function TogglePair({ label, value, onChange, tip }: {
         {([true, false] as const).map((opt) => (
           <button key={String(opt)} type="button" onClick={() => onChange(opt)}
             className="px-4 py-2 text-sm font-medium transition-colors"
-            style={value === opt
-              ? { background: "var(--green)", color: "#fff" }
-              : { background: "#fff", color: "var(--ink-mid)" }}>
+            style={value === opt ? { background: "var(--green)", color: "#fff" } : { background: "#fff", color: "var(--ink-mid)" }}>
             {opt ? "Yes" : "No"}
           </button>
         ))}
@@ -73,12 +74,23 @@ function SelectField({ id, label, tip, value, onChange, children }: {
   );
 }
 
-function CurrencyInput({ id, label, tip, value, onChange, placeholder, suffix }: {
+function CurrencyInput({ id, label, tip, value, onChange, placeholder, suffix, readOnly }: {
   id: string; label: string; tip?: string; value: number;
-  onChange: (v: number) => void; placeholder?: string; suffix?: string;
+  onChange?: (v: number) => void; placeholder?: string; suffix?: string; readOnly?: boolean;
 }) {
   const [focused, setFocused] = useState(false);
   const [raw, setRaw]         = useState("");
+  if (readOnly) {
+    return (
+      <div>
+        <label className={`${lbl} flex items-center`}>{label}{tip && <Tooltip content={tip} />}</label>
+        <div className="relative">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm">$</span>
+          <div className={`${inp} pl-7 bg-stone-50 text-stone-500`}>{value > 0 ? value.toLocaleString("en-CA") : "—"}</div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div>
       <label htmlFor={id} className={`${lbl} flex items-center`}>{label}{tip && <Tooltip content={tip} />}</label>
@@ -88,7 +100,7 @@ function CurrencyInput({ id, label, tip, value, onChange, placeholder, suffix }:
           value={focused ? raw : value > 0 ? value.toLocaleString("en-CA") : ""}
           onChange={(e) => setRaw(e.target.value.replace(/[^0-9.]/g, ""))}
           onFocus={() => { setFocused(true); setRaw(value > 0 ? String(value) : ""); }}
-          onBlur={() => { setFocused(false); onChange(Math.max(0, parseCurrency(raw))); }}
+          onBlur={() => { setFocused(false); onChange!(Math.max(0, parseCurrency(raw))); }}
           placeholder={placeholder ?? "0"}
           className={`${inp} pl-7 ${suffix ? "pr-16" : ""}`} />
         {suffix && (
@@ -114,70 +126,61 @@ function RateInput({ id, label, tip, value, onChange, showSlider, sliderNote }: 
           value={focused ? raw : value > 0 ? value.toFixed(2) : ""}
           onChange={(e) => setRaw(e.target.value)}
           onFocus={() => { setFoc(true); setRaw(value > 0 ? String(value) : ""); }}
-          onBlur={() => {
-            setFoc(false);
-            const v = parseFloat(raw);
-            if (!isNaN(v) && v > 0) onChange(v);
-          }}
-          placeholder="0.00"
-          className={`${inp} pr-8`} />
+          onBlur={() => { setFoc(false); const v = parseFloat(raw); if (!isNaN(v) && v > 0) onChange(v); }}
+          placeholder="0.00" className={`${inp} pr-8`} />
         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm">%</span>
       </div>
       {showSlider && (
         <>
-          <input type="range" min="0.5" max="10" step="0.05" value={Math.min(value, 10)}
-            onChange={(e) => onChange(parseFloat(e.target.value))}
-            className="w-full mt-2" />
-          {sliderNote && (
-            <p className="text-xs mt-0.5 text-center" style={{ color: "var(--ink-faint)" }}>{sliderNote}</p>
-          )}
+          <input type="range" min="0.5" max="10" step="0.05" value={Math.min(value || 0.5, 10)}
+            onChange={(e) => onChange(parseFloat(e.target.value))} className="w-full mt-2" />
+          {sliderNote && <p className="text-xs mt-0.5 text-center" style={{ color: "var(--ink-faint)" }}>{sliderNote}</p>}
         </>
       )}
     </div>
   );
 }
 
-function AdvancedToggle({ open, onToggle }: { open: boolean; onToggle: () => void }) {
+function MoreToggle({ open, onToggle, label = "More options" }: { open: boolean; onToggle: () => void; label?: string }) {
   return (
     <button type="button" onClick={onToggle}
       className="w-full flex items-center justify-between rounded-lg px-3 py-2.5 text-xs font-medium border transition-colors"
       style={open
         ? { background: "var(--cream-dark)", color: "var(--ink-mid)", borderColor: "var(--cream-dark)" }
         : { background: "var(--green-light)", color: "var(--green)", borderColor: "var(--green-border)" }}>
-      <span>{open ? "Hide" : "More options"}</span>
+      <span>{open ? `Hide ${label.toLowerCase()}` : label}</span>
       <span>{open ? "−" : "+"}</span>
     </button>
   );
 }
 
-export default function GuidedForm({
-  inputs, errors,
-  setHomePrice, setDownPayment, setDownPaymentPercent,
-  setLumpSumForYear, setField,
-  cmhcPremium, ltv,
-}: Props) {
+export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setDownPayment, setDownPaymentPercent, setLumpSumForYear, setField }: Props) {
   const [dpMode, setDpMode]             = useState<"%" | "$">("%");
   const [showCosts, setShowCosts]       = useState(false);
-  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [showRepay, setShowRepay]       = useState(false);
   const [showLumpSum, setShowLumpSum]   = useState(false);
+  // For renewal/refinance: track current (old) rate separately from new rate
+  const [currentRate, setCurrentRate]   = useState(inputs.interestRate);
   const mode = inputs.mortgageMode;
   const stressRate = Math.max(inputs.interestRate + 2, 5.25);
 
-  // For renewal: show current payment estimate
-  const currentPayment = inputs.currentBalance > 0 && inputs.interestRate > 0
-    ? calculateMortgagePayment(inputs.currentBalance, inputs.interestRate, inputs.amortizationYears, inputs.paymentFrequency)
+  const currentPayment = inputs.currentBalance > 0 && currentRate > 0
+    ? calculateMortgagePayment(inputs.currentBalance, currentRate, inputs.amortizationYears, inputs.paymentFrequency)
     : 0;
+
+  const lumpSumTotal = Object.values(inputs.lumpSumsByYear).reduce((s, v) => s + (v || 0), 0);
+  const yearsSaved = Math.floor(outputs.paymentsSavedByLumpSums / 12);
+  const monthsSaved = outputs.paymentsSavedByLumpSums % 12;
 
   return (
     <div className="space-y-4">
 
-      {/* Province — all modes */}
-      <SelectField id="province" label="Province" value={inputs.province}
-        onChange={(v) => setField("province", v)}>
+      {/* Province */}
+      <SelectField id="province" label="Province" value={inputs.province} onChange={(v) => setField("province", v)}>
         {PROVINCES.map((p) => <option key={p.code} value={p.code}>{p.name}</option>)}
       </SelectField>
 
-      {/* ══════════════════ PURCHASE ══════════════════ */}
+      {/* ══════════════ PURCHASE ══════════════ */}
       {mode === "purchase" && (
         <>
           <Divider label="Property" />
@@ -196,26 +199,18 @@ export default function GuidedForm({
                 {(["%", "$"] as const).map((m) => (
                   <button key={m} type="button" onClick={() => setDpMode(m)}
                     className="px-2.5 py-1 font-medium transition-colors"
-                    style={dpMode === m
-                      ? { background: "var(--green)", color: "#fff" }
-                      : { background: "#fff", color: "var(--ink-mid)" }}>
+                    style={dpMode === m ? { background: "var(--green)", color: "#fff" } : { background: "#fff", color: "var(--ink-mid)" }}>
                     {m}
                   </button>
                 ))}
               </div>
             </div>
-
             {dpMode === "%" ? (
               <div className="relative">
                 <input type="text" inputMode="decimal"
                   value={inputs.downPaymentPercent > 0 ? inputs.downPaymentPercent : ""}
-                  onChange={(e) => {
-                    const v = parseFloat(e.target.value.replace(/[^0-9.]/g, ""));
-                    if (!isNaN(v)) setDownPaymentPercent(v);
-                    else if (e.target.value === "") setDownPaymentPercent(0);
-                  }}
-                  placeholder="20"
-                  className={`${errors.downPayment ? inp + " border-red-300" : inp} pr-8`} />
+                  onChange={(e) => { const v = parseFloat(e.target.value.replace(/[^0-9.]/g, "")); if (!isNaN(v)) setDownPaymentPercent(v); else if (!e.target.value) setDownPaymentPercent(0); }}
+                  placeholder="20" className={`${errors.downPayment ? inp + " border-red-300" : inp} pr-8`} />
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm">%</span>
               </div>
             ) : (
@@ -227,16 +222,13 @@ export default function GuidedForm({
                   className={`${errors.downPayment ? inp + " border-red-300" : inp} pl-7`} />
               </div>
             )}
-
             <div className="flex gap-1.5 mt-2">
               {[5, 10, 20, 35].map((pct) => {
                 const active = Math.abs(inputs.downPaymentPercent - pct) < 0.3;
                 return (
                   <button key={pct} type="button" onClick={() => setDownPaymentPercent(pct)}
                     className="px-3 py-1 rounded-full text-xs font-medium transition-colors border"
-                    style={active
-                      ? { background: "var(--green)", color: "#fff", borderColor: "var(--green)" }
-                      : { background: "#fff", color: "var(--ink-mid)", borderColor: "var(--cream-dark)" }}>
+                    style={active ? { background: "var(--green)", color: "#fff", borderColor: "var(--green)" } : { background: "#fff", color: "var(--ink-mid)", borderColor: "var(--cream-dark)" }}>
                     {pct}%
                   </button>
                 );
@@ -245,10 +237,9 @@ export default function GuidedForm({
             {errors.downPayment && <p className="text-xs text-red-600 mt-1">{errors.downPayment}</p>}
             {inputs.homePrice > 0 && (
               <p className="text-xs mt-1.5">
-                {cmhcPremium > 0
-                  ? <span style={{ color: "var(--amber)" }}>CMHC applies — {formatCurrency(cmhcPremium, 0)} added to mortgage</span>
-                  : <span style={{ color: "var(--green-mid)" }}>20%+ down — no CMHC required ✓</span>
-                }
+                {outputs.cmhcPremium > 0
+                  ? <span style={{ color: "var(--amber)" }}>CMHC applies — {formatCurrency(outputs.cmhcPremium, 0)} added to mortgage</span>
+                  : <span style={{ color: "var(--green-mid)" }}>20%+ down — no CMHC required ✓</span>}
               </p>
             )}
           </div>
@@ -283,7 +274,8 @@ export default function GuidedForm({
             </SelectField>
           </div>
 
-          <Divider label="Monthly costs" />
+          {/* Other costs */}
+          <Divider label="Other costs" />
 
           <CurrencyInput id="tax" label="Annual property tax"
             tip="Typically 0.5%–1.5% of assessed value. Included in your GDS ratio by lenders."
@@ -310,11 +302,49 @@ export default function GuidedForm({
             </div>
           )}
 
-          <AdvancedToggle open={showAdvanced} onToggle={() => setShowAdvanced(o => !o)} />
-          {showAdvanced && (
+          {/* Closing costs section */}
+          <Divider label="Closing costs" />
+
+          {/* LTT — read-only calculated */}
+          {inputs.homePrice > 0 && (
+            <div className="rounded-lg px-3 py-2.5 text-xs space-y-1.5 border"
+              style={{ background: "var(--cream)", borderColor: "var(--cream-dark)" }}>
+              {(outputs.ltt.provincial > 0 || outputs.ltt.municipal > 0) && (
+                <div className="flex justify-between">
+                  <span style={{ color: "var(--ink-mid)" }}>Land transfer tax</span>
+                  <span className="font-medium text-stone-700">
+                    {formatCurrency(outputs.ltt.provincial + outputs.ltt.municipal, 0)}
+                  </span>
+                </div>
+              )}
+              {outputs.ltt.firstTimeBuyerRebate > 0 && (
+                <div className="flex justify-between" style={{ color: "var(--green-mid)" }}>
+                  <span>First-time buyer rebate</span>
+                  <span className="font-medium">− {formatCurrency(outputs.ltt.firstTimeBuyerRebate, 0)}</span>
+                </div>
+              )}
+              {outputs.gstHst.net > 0 && (
+                <div className="flex justify-between">
+                  <span style={{ color: "var(--ink-mid)" }}>GST/HST (new build, net)</span>
+                  <span className="font-medium text-stone-700">{formatCurrency(outputs.gstHst.net, 0)}</span>
+                </div>
+              )}
+              {outputs.ltt.provincial === 0 && outputs.ltt.municipal === 0 && outputs.gstHst.net === 0 && (
+                <span style={{ color: "var(--ink-faint)" }}>No LTT or GST in this province</span>
+              )}
+            </div>
+          )}
+
+          <CurrencyInput id="closing" label="Other closing costs"
+            tip="Legal fees, title insurance, home inspection, adjustments. Typically $3,000–$5,000."
+            value={inputs.closingCosts} onChange={(v) => setField("closingCosts", v)} />
+
+          {/* Repay faster */}
+          <MoreToggle open={showRepay} onToggle={() => setShowRepay(o => !o)} label="Repay faster" />
+          {showRepay && (
             <div className="space-y-4 pl-3 border-l-2" style={{ borderColor: "var(--green-light)" }}>
               <SelectField id="freq" label="Payment frequency"
-                tip="Accelerated bi-weekly = 26 half-monthly payments/year — equivalent to one extra monthly payment. Saves significant interest."
+                tip="Accelerated bi-weekly = 26 half-monthly payments/year — equivalent to one extra monthly payment per year."
                 value={inputs.paymentFrequency}
                 onChange={(v) => setField("paymentFrequency", v as PaymentFrequency)}>
                 {(Object.entries(FREQUENCY_LABELS) as [PaymentFrequency, string][]).map(([k, v]) => (
@@ -326,31 +356,25 @@ export default function GuidedForm({
                 tip="Added to every payment. Even $200 extra/month can shave years off your amortization."
                 value={inputs.extraPayment} onChange={(v) => setField("extraPayment", v)} />
 
-              <CurrencyInput id="closing" label="Closing costs"
-                tip="Legal fees, title insurance, home inspection. Typically $3,000–$5,000."
-                value={inputs.closingCosts} onChange={(v) => setField("closingCosts", v)} />
-
-              {/* Lump sum payments */}
+              {/* Lump sum */}
               <div>
                 <button type="button" onClick={() => setShowLumpSum(o => !o)}
                   className="text-xs font-medium flex items-center gap-1 mb-2"
                   style={{ color: showLumpSum ? "var(--ink-mid)" : "var(--green)" }}>
                   {showLumpSum ? "− Hide" : "+ Add"} annual lump sum payments
+                  <Tooltip content="Applied on your mortgage anniversary date each year. Most mortgages allow 10–20% of original principal/year penalty-free." />
                 </button>
                 {showLumpSum && (
                   <div className="space-y-2">
-                    <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
-                      Applied on your anniversary date. Most mortgages allow 10–20% of original principal/year penalty-free.
-                    </p>
                     {Array.from({ length: Math.min(inputs.amortizationYears, 10) }, (_, i) => i + 1).map((year) => {
-                      const value = inputs.lumpSumsByYear[year] ?? 0;
+                      const val = inputs.lumpSumsByYear[year] ?? 0;
                       return (
                         <div key={year} className="flex items-center gap-2">
                           <span className="text-xs text-stone-500 w-12 shrink-0">Year {year}</span>
                           <div className="relative flex-1">
                             <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-stone-400 text-xs">$</span>
                             <input type="text" inputMode="numeric"
-                              value={value > 0 ? value.toLocaleString("en-CA") : ""}
+                              value={val > 0 ? val.toLocaleString("en-CA") : ""}
                               onChange={(e) => setLumpSumForYear(year, parseCurrency(e.target.value))}
                               placeholder="0"
                               className="w-full pl-6 pr-2 py-1.5 rounded-lg border border-stone-200 bg-white text-xs text-stone-900 focus:outline-none focus:ring-1 focus:ring-green-700/20 focus:border-green-700" />
@@ -358,6 +382,20 @@ export default function GuidedForm({
                         </div>
                       );
                     })}
+                    {/* Savings summary */}
+                    {outputs.interestSavedByLumpSums > 0 && (
+                      <div className="rounded-lg px-3 py-2 mt-1 text-xs border"
+                        style={{ background: "var(--green-light)", borderColor: "var(--green-border)" }}>
+                        <p className="font-semibold" style={{ color: "var(--green)" }}>
+                          Saves {formatCurrency(outputs.interestSavedByLumpSums, 0)} in interest
+                        </p>
+                        {outputs.paymentsSavedByLumpSums > 0 && (
+                          <p style={{ color: "var(--green-mid)" }}>
+                            Pays off {yearsSaved > 0 ? `${yearsSaved}yr ` : ""}{monthsSaved > 0 ? `${monthsSaved}mo ` : ""}earlier
+                          </p>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -366,7 +404,7 @@ export default function GuidedForm({
         </>
       )}
 
-      {/* ══════════════════ RENEWAL ══════════════════ */}
+      {/* ══════════════ RENEWAL ══════════════ */}
       {mode === "renewal" && (
         <>
           <Divider label="Current mortgage" />
@@ -377,8 +415,8 @@ export default function GuidedForm({
           {errors.currentBalance && <p className="text-xs text-red-600 -mt-2">{errors.currentBalance}</p>}
 
           <RateInput id="current-rate" label="Current rate"
-            tip="Your expiring contracted rate. Used to calculate what you're paying now for comparison."
-            value={inputs.interestRate} onChange={(v) => setField("interestRate", v)} />
+            tip="Your expiring contracted rate — used to calculate what you pay now for comparison."
+            value={currentRate} onChange={setCurrentRate} />
 
           <SelectField id="amort-renewal" label="Remaining amortization"
             tip="Years left on your original amortization schedule."
@@ -397,7 +435,7 @@ export default function GuidedForm({
           {currentPayment > 0 && (
             <div className="rounded-lg px-3 py-2.5 text-sm flex justify-between border"
               style={{ background: "var(--cream)", borderColor: "var(--cream-dark)" }}>
-              <span style={{ color: "var(--ink-mid)" }}>Current payment</span>
+              <span style={{ color: "var(--ink-mid)" }}>Current payment at {currentRate.toFixed(2)}%</span>
               <span className="font-semibold text-stone-800">{formatCurrency(currentPayment, 2)}</span>
             </div>
           )}
@@ -405,9 +443,10 @@ export default function GuidedForm({
           <Divider label="New terms" />
 
           <RateInput id="new-rate" label="New interest rate"
-            tip="The rate you expect at renewal. Check broker rates for the best available."
+            tip="The rate you expect at renewal. Check broker rates for best available."
             value={inputs.interestRate} onChange={(v) => setField("interestRate", v)}
             showSlider sliderNote={`Qualifying (stress test): ${stressRate.toFixed(2)}%`} />
+          {errors.interestRate && <p className="text-xs text-red-600 -mt-2">{errors.interestRate}</p>}
 
           <SelectField id="new-term" label="New term"
             tip="The length of the new contract you're renewing into."
@@ -415,8 +454,8 @@ export default function GuidedForm({
             {TERM_OPTIONS.map((y) => <option key={y} value={y}>{y} yr{y !== 1 ? "s" : ""}</option>)}
           </SelectField>
 
-          <AdvancedToggle open={showAdvanced} onToggle={() => setShowAdvanced(o => !o)} />
-          {showAdvanced && (
+          <MoreToggle open={showRepay} onToggle={() => setShowRepay(o => !o)} label="Repay faster" />
+          {showRepay && (
             <div className="space-y-3 pl-3 border-l-2" style={{ borderColor: "var(--green-light)" }}>
               <CurrencyInput id="extra-renewal" label="Extra payment per period"
                 value={inputs.extraPayment} onChange={(v) => setField("extraPayment", v)} />
@@ -429,14 +468,14 @@ export default function GuidedForm({
                 {showLumpSum && (
                   <div className="space-y-2">
                     {Array.from({ length: Math.min(inputs.amortizationYears, 10) }, (_, i) => i + 1).map((year) => {
-                      const value = inputs.lumpSumsByYear[year] ?? 0;
+                      const val = inputs.lumpSumsByYear[year] ?? 0;
                       return (
                         <div key={year} className="flex items-center gap-2">
                           <span className="text-xs text-stone-500 w-12 shrink-0">Year {year}</span>
                           <div className="relative flex-1">
                             <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-stone-400 text-xs">$</span>
                             <input type="text" inputMode="numeric"
-                              value={value > 0 ? value.toLocaleString("en-CA") : ""}
+                              value={val > 0 ? val.toLocaleString("en-CA") : ""}
                               onChange={(e) => setLumpSumForYear(year, parseCurrency(e.target.value))}
                               placeholder="0"
                               className="w-full pl-6 pr-2 py-1.5 rounded-lg border border-stone-200 bg-white text-xs text-stone-900 focus:outline-none focus:ring-1 focus:ring-green-700/20" />
@@ -444,6 +483,14 @@ export default function GuidedForm({
                         </div>
                       );
                     })}
+                    {outputs.interestSavedByLumpSums > 0 && (
+                      <div className="rounded-lg px-3 py-2 text-xs border"
+                        style={{ background: "var(--green-light)", borderColor: "var(--green-border)" }}>
+                        <p className="font-semibold" style={{ color: "var(--green)" }}>
+                          Saves {formatCurrency(outputs.interestSavedByLumpSums, 0)} in interest
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -452,7 +499,7 @@ export default function GuidedForm({
         </>
       )}
 
-      {/* ══════════════════ REFINANCE ══════════════════ */}
+      {/* ══════════════ REFINANCE ══════════════ */}
       {mode === "refinance" && (
         <>
           <Divider label="Current situation" />
@@ -467,12 +514,12 @@ export default function GuidedForm({
 
           {inputs.homeValue > 0 && inputs.currentBalance > 0 && (
             <div className="rounded-lg px-3 py-2.5 text-xs flex justify-between border"
-              style={{ background: "var(--cream)", borderColor: ltv > 0.8 ? "#fecaca" : "var(--cream-dark)" }}>
+              style={{ background: "var(--cream)", borderColor: outputs.ltv > 0.8 ? "#fecaca" : "var(--cream-dark)" }}>
               <span style={{ color: "var(--ink-mid)" }}>Estimated equity</span>
-              <span className="font-semibold" style={{ color: ltv > 0.8 ? "var(--red, #ef4444)" : "var(--green)" }}>
+              <span className="font-semibold" style={{ color: outputs.ltv > 0.8 ? "#ef4444" : "var(--green)" }}>
                 {formatCurrency(Math.max(0, inputs.homeValue - inputs.currentBalance), 0)}
-                {" "}({(Math.max(0, 1 - ltv) * 100).toFixed(0)}%)
-                {ltv > 0.8 && " — above 80% LTV cap"}
+                {" "}({(Math.max(0, 1 - outputs.ltv) * 100).toFixed(0)}%)
+                {outputs.ltv > 0.8 && " — above 80% LTV cap"}
               </span>
             </div>
           )}
@@ -480,7 +527,15 @@ export default function GuidedForm({
 
           <RateInput id="current-rate-refi" label="Current rate"
             tip="Your existing contracted rate — used to compare current vs new payment."
-            value={inputs.interestRate} onChange={(v) => setField("interestRate", v)} />
+            value={currentRate} onChange={setCurrentRate} />
+
+          {currentPayment > 0 && (
+            <div className="rounded-lg px-3 py-2.5 text-sm flex justify-between border"
+              style={{ background: "var(--cream)", borderColor: "var(--cream-dark)" }}>
+              <span style={{ color: "var(--ink-mid)" }}>Current payment at {currentRate.toFixed(2)}%</span>
+              <span className="font-semibold text-stone-800">{formatCurrency(currentPayment, 2)}</span>
+            </div>
+          )}
 
           <Divider label="New mortgage" />
 
@@ -488,6 +543,7 @@ export default function GuidedForm({
             tip="The rate on the refinanced mortgage."
             value={inputs.interestRate} onChange={(v) => setField("interestRate", v)}
             showSlider sliderNote={`Qualifying (stress test): ${stressRate.toFixed(2)}%`} />
+          {errors.interestRate && <p className="text-xs text-red-600 -mt-2">{errors.interestRate}</p>}
 
           <div className="grid grid-cols-2 gap-3">
             <SelectField id="new-term-refi" label="New term"
@@ -502,11 +558,11 @@ export default function GuidedForm({
           </div>
 
           <CurrencyInput id="cash-out" label="Cash-out amount"
-            tip="Additional equity you want to access. Total loan cannot exceed 80% of home value."
+            tip="Additional equity to access. Total loan cannot exceed 80% of home value."
             value={inputs.cashOutAmount} onChange={(v) => setField("cashOutAmount", v)} />
 
-          <AdvancedToggle open={showAdvanced} onToggle={() => setShowAdvanced(o => !o)} />
-          {showAdvanced && (
+          <MoreToggle open={showRepay} onToggle={() => setShowRepay(o => !o)} label="Repay faster" />
+          {showRepay && (
             <div className="space-y-3 pl-3 border-l-2" style={{ borderColor: "var(--green-light)" }}>
               <SelectField id="freq-refi" label="Payment frequency"
                 value={inputs.paymentFrequency}

@@ -37,7 +37,7 @@ export default function LTTPage() {
               <h1 className="font-display text-4xl leading-tight mb-3" style={{ color: "var(--ink)" }}>Land Transfer Tax Calculator</h1>
               <p className="text-lg" style={{ color: "var(--ink-muted)" }}>The biggest closing cost most people forget to plan for. Every province calculated, rebates included.</p>
             </div>
-            <div className="shrink-0 w-48 hidden sm:block"><IllustrationLTT /></div>
+            <div className="shrink-0 w-32 hidden sm:block"><IllustrationLTT /></div>
           </div>
         </div>
 

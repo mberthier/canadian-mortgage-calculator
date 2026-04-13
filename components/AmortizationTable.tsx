@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { AmortizationEntry, PaymentFrequency } from "@/lib/types";
 import { PAYMENTS_PER_YEAR } from "@/lib/constants";
 import { formatCurrency } from "@/lib/formatters";
@@ -34,7 +34,15 @@ function downloadCSV(schedule: AmortizationEntry[], frequency: PaymentFrequency)
 
 export default function AmortizationTable({ schedule, frequency, termYears }: Props) {
   const [expanded, setExpanded] = useState(false);
-  const [viewMode, setViewMode] = useState<"yearly" | "payments">("yearly");
+
+  const sectionRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const handler = () => setExpanded(true);
+    el.addEventListener("open-section", handler);
+    return () => el.removeEventListener("open-section", handler);
+  }, []);  const [viewMode, setViewMode] = useState<"yearly" | "payments">("yearly");
   const [page, setPage]         = useState(0);
 
   const ppy          = PAYMENTS_PER_YEAR[frequency];
@@ -75,12 +83,14 @@ export default function AmortizationTable({ schedule, frequency, termYears }: Pr
 
   if (!expanded) {
     return (
+      <div ref={sectionRef}>
       <button onClick={() => setExpanded(true)}
         className="w-full flex items-center justify-between px-4 py-3.5 rounded-xl border border-stone-200 bg-white text-sm font-semibold text-stone-700 hover:bg-stone-50 transition-colors shadow-sm"
         aria-expanded={false}>
         <span>View Full Amortization Schedule</span>
         <span className="text-xs text-stone-400">{schedule.length.toLocaleString()} payments · ↓ expand</span>
-      </button>
+        </button>
+      </div>
     );
   }
 

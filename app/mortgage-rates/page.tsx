@@ -36,7 +36,7 @@ export default function MortgageRatesPage() {
               <h1 className="font-display text-4xl leading-tight mb-3" style={{ color: "var(--ink)" }}>Canadian Mortgage Rate History</h1>
               <p className="text-lg" style={{ color: "var(--ink-muted)" }}>The Bank of Canada raised rates to 5% in 2023, then cut nine times. Here's what that actually looked like — and where things stand now.</p>
             </div>
-            <div className="shrink-0 w-48 hidden sm:block"><IllustrationRates /></div>
+            <div className="shrink-0 w-32 hidden sm:block"><IllustrationRates /></div>
           </div>
         </div>
 

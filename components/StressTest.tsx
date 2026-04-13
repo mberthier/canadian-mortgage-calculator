@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { MortgageOutputs, MortgageInputs } from "@/lib/types";
 import { formatCurrency } from "@/lib/formatters";
 import Tooltip from "./Tooltip";
@@ -13,6 +13,17 @@ interface Props {
 }
 
 export default function StressTest({ outputs, inputs }: Props) {
+  const [open, setOpen] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const handler = () => setOpen(true);
+    el.addEventListener("open-section", handler);
+    return () => el.removeEventListener("open-section", handler);
+  }, []);
+
   const balance = outputs.termEndBalance;
   const remaining = inputs.amortizationYears - inputs.termYears;
   if (balance <= 0 || remaining <= 0) return null;
@@ -30,8 +41,15 @@ export default function StressTest({ outputs, inputs }: Props) {
   const base = scenarios[0].payment;
 
   return (
-    <div className="rounded-2xl bg-white border border-stone-100 p-5">
-      <p className="text-xs font-semibold uppercase tracking-widest mb-1 flex items-center" style={{ color: "var(--green)" }}>What if rates go up at renewal?<Tooltip content="Canadian lenders must qualify you at the higher of your contract rate + 2% or 5.25% (the stress test). This shows what your payment would actually be if rates rise when your term ends — before you commit to anything." /></p>
+    <div ref={sectionRef} className="rounded-2xl bg-white border border-stone-100 overflow-hidden">
+      <button onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center justify-between px-5 py-4 hover:bg-stone-50 transition-colors"
+        aria-expanded={open}>
+        <p className="text-sm font-semibold text-stone-800">What if rates go up at renewal?</p>
+        <span className="text-stone-400 text-lg">{open ? "−" : "+"}</span>
+      </button>
+      {open && (
+      <div className="px-5 pb-5 border-t border-stone-100 pt-4">
       <p className="text-sm text-stone-500 mb-4">
         If your rate changes when your {inputs.termYears}-year term ends, your {FREQUENCY_LABELS[inputs.paymentFrequency].toLowerCase()} payment on the {formatCurrency(outputs.termEndBalance, 0, true)} remaining balance would be:
       </p>
@@ -64,6 +82,8 @@ export default function StressTest({ outputs, inputs }: Props) {
       <p className="text-xs text-stone-400 mt-3">
         Stress test qualifying rate: {outputs.stressTestRate.toFixed(2)}% (contract rate + 2%, minimum 5.25%)
       </p>
+      </div>
+      )}
     </div>
   );
 }

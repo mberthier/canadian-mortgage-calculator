@@ -36,7 +36,7 @@ export default function CMHCPage() {
               <h1 className="font-display text-4xl leading-tight mb-3" style={{ color: "var(--ink)" }}>CMHC Mortgage Insurance Calculator</h1>
               <p className="text-lg" style={{ color: "var(--ink-muted)" }}>Your lender requires this insurance when you put down less than 20%. Here's what it'll actually cost you.</p>
             </div>
-            <div className="shrink-0 w-48 hidden sm:block"><IllustrationCMHC /></div>
+            <div className="shrink-0 w-32 hidden sm:block"><IllustrationCMHC /></div>
           </div>
         </div>
         <CMHCCalculatorClient />

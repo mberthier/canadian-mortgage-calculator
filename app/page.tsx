@@ -19,7 +19,6 @@ import MortgageComparison from "@/components/MortgageComparison";
 import BreakPenalty from "@/components/BreakPenalty";
 import ShareButton from "@/components/ShareButton";
 import FeatureDiscovery from "@/components/FeatureDiscovery";
-import AboutSection from "@/components/AboutSection";
 import { useMortgageCalculator } from "@/hooks/useMortgageCalculator";
 import { FREQUENCY_LABELS } from "@/lib/constants";
 import { formatCurrency } from "@/lib/formatters";
@@ -139,14 +138,19 @@ export default function Home() {
                 </div>
                 <GuidedForm
                   inputs={inputs} errors={errors}
+                  outputs={{
+                    cmhcPremium: outputs.cmhcPremium,
+                    ltv: outputs.ltv,
+                    interestSavedByLumpSums: outputs.interestSavedByLumpSums,
+                    paymentsSavedByLumpSums: outputs.paymentsSavedByLumpSums,
+                    ltt: outputs.ltt,
+                    gstHst: outputs.gstHst,
+                  }}
                   setHomePrice={setHomePrice}
                   setDownPayment={setDownPayment}
                   setDownPaymentPercent={setDownPaymentPercent}
                   setLumpSumForYear={setLumpSumForYear}
                   setField={setField}
-                  minimumDownPayment={outputs.minimumDownPayment}
-                  cmhcPremium={outputs.cmhcPremium}
-                  ltv={outputs.ltv}
                 />
               </div>
               <p className="text-xs text-stone-400 mt-4 leading-relaxed">
@@ -167,6 +171,25 @@ export default function Home() {
 
               {/* Cash at closing — purchase only */}
               <CashSummary inputs={inputs} outputs={outputs} />
+
+              {/* View amortization shortcut — above charts */}
+              {outputs.amortizationSchedule.length > 0 && (
+                <button
+                  onClick={() => {
+                    const el = document.querySelector("[data-section=\"amortization-table\"]");
+                    if (el) {
+                      el.dispatchEvent(new CustomEvent("open-section", { bubbles: true }));
+                      setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
+                    }
+                  }}
+                  className="text-xs font-medium flex items-center gap-1.5 self-start"
+                  style={{ color: "var(--green)" }}>
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                    <path d="M2 3h8M2 6h8M2 9h5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                  View full amortization schedule ↓
+                </button>
+              )}
 
               {/* Charts */}
               {outputs.amortizationSchedule.length > 0 && (
@@ -196,11 +219,13 @@ export default function Home() {
                   {/* Feature discovery + power tools */}
                   <FeatureDiscovery />
 
-                  <AmortizationTable
-                    schedule={outputs.amortizationSchedule}
-                    frequency={inputs.paymentFrequency}
-                    termYears={inputs.termYears}
-                  />
+                  <div data-section="amortization-table">
+                    <AmortizationTable
+                      schedule={outputs.amortizationSchedule}
+                      frequency={inputs.paymentFrequency}
+                      termYears={inputs.termYears}
+                    />
+                  </div>
 
                   <div data-section="stress-test">
                     <StressTest outputs={outputs} inputs={inputs} />
@@ -216,6 +241,7 @@ export default function Home() {
                       currentPropertyTax={inputs.propertyTax}
                       currentHeating={inputs.heatingCost}
                       currentCondoFees={inputs.condoFees}
+                      currentDownPayment={inputs.downPayment}
                     />
                   </div>
                   <div data-section="break-penalty">
@@ -226,8 +252,6 @@ export default function Home() {
             </main>
           </div>
 
-          {/* About — full width below grid */}
-          <AboutSection />
         </div>
 
         {/* Mobile sticky footer */}

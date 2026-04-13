@@ -275,7 +275,7 @@ export default function GlossaryPage() {
               <h1 className="font-display text-4xl leading-tight mb-3" style={{ color: "var(--ink)" }}>Canadian Mortgage Glossary</h1>
               <p className="text-lg" style={{ color: "var(--ink-muted)" }}>Every term you'll encounter when getting a mortgage in Canada — explained like a knowledgeable friend, not a legal document.</p>
             </div>
-            <div className="shrink-0 w-48 hidden sm:block"><IllustrationGlossary /></div>
+            <div className="shrink-0 w-32 hidden sm:block"><IllustrationGlossary /></div>
           </div>
         </div>
 

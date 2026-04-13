@@ -32,7 +32,7 @@ export default function AffordabilityPage() {
               <h1 className="font-display text-4xl leading-tight mb-3" style={{ color: "var(--ink)" }}>Mortgage Affordability Calculator</h1>
               <p className="text-lg" style={{ color: "var(--ink-muted)" }}>Your lender will run these exact numbers before saying yes. Find out where you stand before you walk in.</p>
             </div>
-            <div className="shrink-0 w-48 hidden sm:block"><IllustrationAffordability /></div>
+            <div className="shrink-0 w-32 hidden sm:block"><IllustrationAffordability /></div>
           </div>
         </div>
         <AffordabilityClient />
