@@ -127,36 +127,18 @@ export default function Home() {
 
       <SiteLayout>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10">
-          {/* ── Hero header — your design, preserved exactly ── */}
-          <div className="mt-8 mb-10">
-            <div className="flex flex-col items-center text-center">
-              <div className="max-w-3xl">
-                <h1 className="text-4xl font-bold leading-tight mb-3 tracking-tight" style={{ color: "var(--ink)" }}>
-                  Canadian Mortgage Calculator
-                </h1>
-                <p className="text-lg mb-5" style={{ color: "var(--ink-muted)" }}>
-                  Buying a home in Canada is complicated. We give you the full picture so you don't have to guess.
-                </p>
-                <div className="flex flex-wrap justify-center gap-3">
-                  {[
-                    { icon: "M9 12l2 2 4-4", label: "No account needed" },
-                    { icon: "M3 12h18M12 3l7 9-7 9-7-9 7-9z", label: "Canadian rules built in" },
-                    { icon: "M3 3v18h18M7 16l4-4 4 4 4-8", label: "Complete & accurate" },
-                  ].map(({ icon, label }) => (
-                    <span key={label}
-                      className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm bg-white border"
-                      style={{ color: "var(--ink-mid)", borderColor: "#e8e8e8" }}>
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
-                        stroke="var(--green)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                        <path d={icon}/>
-                      </svg>
-                      {label}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
+          {/* ── Hero header ── */}
+          <div className="mt-8 mb-8 text-center">
+            <h1 className="text-4xl font-bold leading-tight mb-3 tracking-tight" style={{ color: "var(--ink)" }}>
+              Canadian Mortgage Calculator
+            </h1>
+            <p className="text-lg" style={{ color: "var(--ink-muted)" }}>
+              Crystal clear numbers for one of the biggest financial decisions you'll make.
+            </p>
           </div>
+
+          {/* ── Mode selector — above everything ── */}
+          <ModeSelector mode={inputs.mortgageMode} onChange={setMode} />
 
           {/* ── Two-column layout ── */}
           <div className="grid grid-cols-1 lg:grid-cols-[360px,1fr] gap-8 items-start">
@@ -165,9 +147,6 @@ export default function Home() {
             <aside>
               <div className="rounded-2xl bg-white p-5"
                 style={{ border: "1px solid #e8e8e8" }}>
-                <div className="mb-5">
-                  <ModeSelector mode={inputs.mortgageMode} onChange={setMode} />
-                </div>
                 <GuidedForm
                   inputs={inputs} errors={errors}
                   outputs={{
