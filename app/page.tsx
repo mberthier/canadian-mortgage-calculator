@@ -54,26 +54,60 @@ function ResultsNarrative({
   const freq    = FREQUENCY_LABELS[inputs.paymentFrequency].toLowerCase();
   const payment = formatCurrency(outputs.periodicPayment, 0);
   const balance = formatCurrency(outputs.termEndBalance, 0, true);
-  const equity  = inputs.homePrice > 0
-    ? (((inputs.homePrice - outputs.termEndBalance) / inputs.homePrice) * 100).toFixed(0)
-    : "0";
+  const mode    = inputs.mortgageMode;
 
-  if (inputs.mortgageMode !== "purchase") return null;
+  if (mode === "purchase" && inputs.homePrice > 0) {
+    const equity = (((inputs.homePrice - outputs.termEndBalance) / inputs.homePrice) * 100).toFixed(0);
+    return (
+      <div className="pl-4 py-1 text-sm leading-relaxed"
+        style={{ borderLeft: "3px solid var(--brand-teal)", color: "var(--ink-mid)" }}>
+        At {inputs.interestRate}%, you pay{" "}
+        <span className="font-semibold text-neutral-900">{payment} {freq}</span>{" "}
+        for {inputs.termYears} years, leaving{" "}
+        <span className="font-semibold text-neutral-900">{balance}</span> at renewal.
+        {" "}Equity at renewal:{" "}
+        <span className="font-semibold" style={{ color: "var(--green)" }}>{equity}%</span>
+        {parseInt(equity) >= 20
+          ? " — above 20%, so you can switch lenders freely at renewal."
+          : " — below 20%, CMHC rules would apply if you refinanced."}
+      </div>
+    );
+  }
 
-  return (
-    <div className="pl-4 py-1 text-sm leading-relaxed"
-      style={{ borderLeft: "3px solid var(--brand-teal)", color: "var(--ink-mid)" }}>
-      At this rate, you'd pay{" "}
-      <span className="font-semibold text-neutral-900">{payment} {freq}</span>{" "}
-      for the first {inputs.termYears} years, leaving{" "}
-      <span className="font-semibold text-neutral-900">{balance} owing</span> at renewal.
-      {" "}Your equity at that point would be{" "}
-      <span className="font-semibold" style={{ color: "var(--green-mid)" }}>{equity}%</span>
-      {parseInt(equity) >= 20
-        ? " — enough to switch lenders or refinance without CMHC coming back into the picture."
-        : ". Still below 20%, so if you refinanced you'd face CMHC rules again."}
-    </div>
-  );
+  if (mode === "renewal" && inputs.currentBalance > 0) {
+    const termInt = formatCurrency(outputs.termInterestPaid, 0, true);
+    return (
+      <div className="pl-4 py-1 text-sm leading-relaxed"
+        style={{ borderLeft: "3px solid var(--brand-teal)", color: "var(--ink-mid)" }}>
+        At {inputs.interestRate}%, your new payment is{" "}
+        <span className="font-semibold text-neutral-900">{payment} {freq}</span>.{" "}
+        You'll pay{" "}
+        <span className="font-semibold text-neutral-900">{termInt} in interest</span>{" "}
+        this term and owe{" "}
+        <span className="font-semibold text-neutral-900">{balance}</span> at your next renewal.
+      </div>
+    );
+  }
+
+  if (mode === "refinance" && inputs.currentBalance > 0) {
+    const equity = inputs.homeValue > 0
+      ? (((inputs.homeValue - outputs.loanAmount) / inputs.homeValue) * 100).toFixed(0)
+      : null;
+    return (
+      <div className="pl-4 py-1 text-sm leading-relaxed"
+        style={{ borderLeft: "3px solid var(--brand-teal)", color: "var(--ink-mid)" }}>
+        Your new mortgage is{" "}
+        <span className="font-semibold text-neutral-900">{formatCurrency(outputs.loanAmount, 0, true)}</span>{" "}
+        at {inputs.interestRate}%{inputs.cashOutAmount > 0 ? `, including ${formatCurrency(inputs.cashOutAmount, 0)} cash-out` : ""}.
+        {equity && (
+          <>{" "}Remaining equity after refinancing:{" "}
+          <span className="font-semibold" style={{ color: "var(--green)" }}>{equity}%</span>.</>
+        )}
+      </div>
+    );
+  }
+
+  return null;
 }
 
 export default function Home() {
@@ -190,32 +224,82 @@ export default function Home() {
                 </button>
               )}
 
-              {/* Charts */}
+              {/* Charts — fully mode-aware */}
               {outputs.amortizationSchedule.length > 0 && (
                 <>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  {/* PURCHASE: full chart suite */}
+                  {isPurchase && (
+                    <>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div className="bg-white rounded-2xl p-5 border border-neutral-100">
+                          <PaymentBreakdownChart outputs={outputs} inputs={inputs} />
+                        </div>
+                        <div className="bg-white rounded-2xl p-5 border border-neutral-100">
+                          <AmortizationChart
+                            schedule={outputs.amortizationSchedule}
+                            amortizationYears={inputs.amortizationYears}
+                            frequency={inputs.paymentFrequency}
+                            homePrice={inputs.homePrice}
+                            showEquity={true}
+                          />
+                        </div>
+                      </div>
+                      <div className="bg-white rounded-2xl p-5 border border-neutral-100">
+                        <PrincipalInterestByYear
+                          schedule={outputs.amortizationSchedule}
+                          amortizationYears={inputs.amortizationYears}
+                          frequency={inputs.paymentFrequency}
+                        />
+                      </div>
+                    </>
+                  )}
+
+                  {/* RENEWAL: principal/interest split only — no fabricated equity */}
+                  {inputs.mortgageMode === "renewal" && (
                     <div className="bg-white rounded-2xl p-5 border border-neutral-100">
-                      <PaymentBreakdownChart outputs={outputs} inputs={inputs} />
-                    </div>
-                    <div className="bg-white rounded-2xl p-5 border border-neutral-100">
-                      <AmortizationChart
+                      <PrincipalInterestByYear
                         schedule={outputs.amortizationSchedule}
-                        amortizationYears={inputs.amortizationYears}
+                        amortizationYears={inputs.renewalAmortization || inputs.amortizationYears}
                         frequency={inputs.paymentFrequency}
-                        homePrice={homePrice}
                       />
                     </div>
-                  </div>
+                  )}
 
-                  <div className="bg-white rounded-2xl p-5 border border-neutral-100">
-                    <PrincipalInterestByYear
-                      schedule={outputs.amortizationSchedule}
-                      amortizationYears={inputs.amortizationYears}
-                      frequency={inputs.paymentFrequency}
-                    />
-                  </div>
+                  {/* REFINANCE: balance chart with real starting equity, plus principal/interest */}
+                  {inputs.mortgageMode === "refinance" && (
+                    <>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        {/* Ownership pie only if costs were entered */}
+                        {(inputs.propertyTax > 0 || inputs.heatingCost > 0 || inputs.condoFees > 0) && (
+                          <div className="bg-white rounded-2xl p-5 border border-neutral-100">
+                            <PaymentBreakdownChart outputs={outputs} inputs={inputs} />
+                          </div>
+                        )}
+                        <div className="bg-white rounded-2xl p-5 border border-neutral-100">
+                          <AmortizationChart
+                            schedule={outputs.amortizationSchedule}
+                            amortizationYears={inputs.amortizationYears}
+                            frequency={inputs.paymentFrequency}
+                            homePrice={inputs.homeValue > 0 ? inputs.homeValue : inputs.currentBalance}
+                            initialEquity={inputs.homeValue > 0
+                              ? Math.max(0, inputs.homeValue - inputs.currentBalance)
+                              : 0}
+                            showEquity={inputs.homeValue > 0}
+                            title="Balance & equity over remaining amortization"
+                          />
+                        </div>
+                      </div>
+                      <div className="bg-white rounded-2xl p-5 border border-neutral-100">
+                        <PrincipalInterestByYear
+                          schedule={outputs.amortizationSchedule}
+                          amortizationYears={inputs.amortizationYears}
+                          frequency={inputs.paymentFrequency}
+                        />
+                      </div>
+                    </>
+                  )}
 
-                  {/* Amortization table — above explore more */}
+                  {/* Amortization table — all modes */}
                   <div data-section="amortization-table">
                     <AmortizationTable
                       schedule={outputs.amortizationSchedule}
@@ -224,23 +308,30 @@ export default function Home() {
                     />
                   </div>
 
+                  {/* Renewal rate scenarios — all modes */}
                   <div data-section="stress-test">
                     <StressTest outputs={outputs} inputs={inputs} />
                   </div>
+
+                  {/* Scenario comparison — all modes */}
                   <div data-section="scenario-comparison">
                     <MortgageComparison inputs={inputs} loanAmount={outputs.loanAmount} />
                   </div>
-                  <div data-section="affordability">
-                    <AffordabilityCalculator
-                      currentHomePrice={inputs.homePrice}
-                      currentRate={inputs.interestRate}
-                      currentAmortization={inputs.amortizationYears}
-                      currentPropertyTax={inputs.propertyTax}
-                      currentHeating={inputs.heatingCost}
-                      currentCondoFees={inputs.condoFees}
-                      currentDownPayment={inputs.downPayment}
-                    />
-                  </div>
+
+                  {/* Can you afford this? — purchase only */}
+                  {isPurchase && (
+                    <div data-section="affordability">
+                      <AffordabilityCalculator
+                        currentHomePrice={inputs.homePrice}
+                        currentRate={inputs.interestRate}
+                        currentAmortization={inputs.amortizationYears}
+                        currentPropertyTax={inputs.propertyTax}
+                        currentHeating={inputs.heatingCost}
+                        currentCondoFees={inputs.condoFees}
+                        currentDownPayment={inputs.downPayment}
+                      />
+                    </div>
+                  )}
 
                   {/* Explore more — very bottom */}
                   <FeatureDiscovery />

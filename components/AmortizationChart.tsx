@@ -10,35 +10,49 @@ import { PAYMENTS_PER_YEAR } from "@/lib/constants";
 import { formatCurrency } from "@/lib/formatters";
 
 interface Props {
-  schedule: AmortizationEntry[];
+  schedule:          AmortizationEntry[];
   amortizationYears: number;
-  frequency: PaymentFrequency;
-  homePrice: number;
+  frequency:         PaymentFrequency;
+  homePrice:         number;     // purchase: price paid. refinance: current home value.
+  initialEquity?:    number;     // refinance: equity already built (homeValue - balance)
+  showEquity?:       boolean;    // false hides the equity line (renewal mode)
+  title?:            string;
 }
 
-export default function AmortizationChart({ schedule, amortizationYears, frequency, homePrice }: Props) {
+export default function AmortizationChart({
+  schedule, amortizationYears, frequency,
+  homePrice, initialEquity = 0, showEquity = true, title,
+}: Props) {
   const ppy = PAYMENTS_PER_YEAR[frequency];
 
   const chartData = useMemo(() => {
-    const points: { year: number; balance: number; equity: number; cumulativeInterest: number }[] = [];
+    const points: { year: number; balance: number; equity?: number; cumulativeInterest: number }[] = [];
     const first = schedule[0];
     const initialBalance = first ? Math.round(first.balance + first.principal) : 0;
-    points.push({ year: 0, balance: initialBalance, equity: 0, cumulativeInterest: 0 });
+
+    // Year 0 — starting point
+    points.push({
+      year: 0,
+      balance: initialBalance,
+      ...(showEquity ? { equity: Math.round(initialEquity) } : {}),
+      cumulativeInterest: 0,
+    });
+
     const totalYears = Math.ceil(schedule.length / ppy);
     for (let y = 1; y <= totalYears; y++) {
-      const idx = Math.min(y * ppy - 1, schedule.length - 1);
+      const idx   = Math.min(y * ppy - 1, schedule.length - 1);
       const entry = schedule[idx];
       if (!entry) break;
-      const equity = Math.max(0, homePrice - entry.balance);
+      const equity = showEquity ? Math.max(0, homePrice - entry.balance + initialEquity) : undefined;
       points.push({
         year: y,
         balance: Math.round(entry.balance),
-        equity: Math.round(equity),
+        ...(showEquity ? { equity: Math.round(equity ?? 0) } : {}),
         cumulativeInterest: Math.round(entry.cumulativeInterest),
       });
     }
     return points;
-  }, [schedule, ppy, homePrice]);
+  }, [schedule, ppy, homePrice, initialEquity, showEquity]);
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (!active || !payload?.length) return null;
@@ -57,21 +71,23 @@ export default function AmortizationChart({ schedule, amortizationYears, frequen
 
   return (
     <div>
-      <h3 className="text-sm font-semibold text-neutral-700 mb-3">Your balance, equity & interest over time</h3>
+      <h3 className="text-sm font-semibold text-neutral-700 mb-3">
+        {title ?? (showEquity ? "Balance, equity & interest over time" : "Balance & interest over time")}
+      </h3>
       <div className="h-56">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={chartData} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id="balGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="var(--green)" stopOpacity={0.15} />
+                <stop offset="5%"  stopColor="var(--green)" stopOpacity={0.15} />
                 <stop offset="95%" stopColor="var(--green)" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="eqGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#0d5a96" stopOpacity={0.15} />
+                <stop offset="5%"  stopColor="#0d5a96" stopOpacity={0.15} />
                 <stop offset="95%" stopColor="#0d5a96" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="intGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#999999" stopOpacity={0.15} />
+                <stop offset="5%"  stopColor="#999999" stopOpacity={0.15} />
                 <stop offset="95%" stopColor="#999999" stopOpacity={0} />
               </linearGradient>
             </defs>
@@ -86,8 +102,10 @@ export default function AmortizationChart({ schedule, amortizationYears, frequen
               formatter={(v) => <span className="text-xs text-neutral-600">{v}</span>} />
             <Area type="monotone" dataKey="balance" name="Remaining Balance"
               stroke="var(--green)" strokeWidth={2} fill="url(#balGrad)" />
-            <Area type="monotone" dataKey="equity" name="Home Equity"
-              stroke="#0d5a96" strokeWidth={2} fill="url(#eqGrad)" />
+            {showEquity && (
+              <Area type="monotone" dataKey="equity" name="Home Equity"
+                stroke="#0d5a96" strokeWidth={2} fill="url(#eqGrad)" />
+            )}
             <Area type="monotone" dataKey="cumulativeInterest" name="Cumulative Interest"
               stroke="#999999" strokeWidth={2} fill="url(#intGrad)" />
           </AreaChart>
