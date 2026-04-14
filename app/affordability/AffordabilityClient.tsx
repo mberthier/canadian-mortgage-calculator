@@ -39,11 +39,11 @@ export default function AffordabilityClient() {
     return gdsMax <= tdsMax ? "GDS" : "TDS";
   })();
 
-  const inp = "w-full pl-7 pr-3 py-2.5 rounded-lg border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-700/20 focus:border-blue-600 transition-colors";
-  const inpR = "w-full px-3 pr-8 py-2.5 rounded-lg border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-700/20 focus:border-blue-600 transition-colors";
+  const inp = "w-full pl-7 pr-3 py-2.5 rounded-lg border border-neutral-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors";
+  const inpR = "w-full px-3 pr-8 py-2.5 rounded-lg border border-neutral-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors";
 
   return (
-    <div className="rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden">
+    <div className="rounded-2xl bg-white border border-neutral-100 shadow-sm overflow-hidden">
       <div className="p-6 space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[
@@ -55,30 +55,30 @@ export default function AffordabilityClient() {
             { label: "Monthly Heating", value: heat, set: setHeat },
           ].map(({ label, value, set }) => (
             <div key={label}>
-              <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">{label}</label>
+              <label className="block text-xs font-medium text-neutral-500 mb-1.5 uppercase tracking-wide">{label}</label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 text-sm">$</span>
                 <input type="number" min="0" step={value >= 10000 ? 1000 : 50} value={value}
                   onChange={(e) => set(Number(e.target.value))} className={inp} />
               </div>
             </div>
           ))}
           <div>
-            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
+            <label className="block text-xs font-medium text-neutral-500 mb-1.5 uppercase tracking-wide">
               Interest Rate (stress test: {stressRate.toFixed(2)}%)
             </label>
             <div className="relative">
               <input type="number" min="0.5" max="15" step="0.05" value={rate}
                 onChange={(e) => setRate(parseFloat(e.target.value))} className={`${inpR} pr-8`} />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">%</span>
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 text-sm">%</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="border-t border-slate-100 p-6" style={{ background: "var(--cream)" }}>
+      <div className="border-t border-neutral-100 p-6" style={{ background: "#f8f8f8" }}>
         <div className="text-center mb-5">
-          <p className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-1">
+          <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide mb-1">
             Estimated Max Purchase Price
           </p>
           <p className="font-display text-5xl leading-none" style={{ color: "var(--green)" }}>
@@ -94,8 +94,8 @@ export default function AffordabilityClient() {
             { label: "Max Monthly Payment", value: formatCurrency(maxMonthly, 2), color: "var(--green)" },
             { label: "Max Mortgage Amount", value: formatCurrency(maxLoan, 0, true), color: "var(--ink)" },
           ].map(({ label, value, color }) => (
-            <div key={label} className="rounded-xl bg-white border border-slate-100 p-3 text-center">
-              <p className="text-xs text-slate-500 mb-1">{label}</p>
+            <div key={label} className="rounded-xl bg-white border border-neutral-100 p-3 text-center">
+              <p className="text-xs text-neutral-500 mb-1">{label}</p>
               <p className="font-semibold text-base" style={{ color }}>{value}</p>
             </div>
           ))}

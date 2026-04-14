@@ -26,8 +26,8 @@ const ICONS: Record<string, React.ReactNode> = {
 
 export default function FeatureDiscovery() {
   return (
-    <div className="rounded-2xl border border-slate-100 bg-white overflow-hidden">
-      <div className="px-5 py-3.5 border-b border-slate-100 rounded-t-2xl" style={{ background: "var(--cream)" }}>
+    <div className="rounded-2xl border border-neutral-100 bg-white overflow-hidden">
+      <div className="px-5 py-3.5 border-b border-neutral-100 rounded-t-2xl" style={{ background: "#f8f8f8" }}>
         <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--ink-faint)" }}>
           Explore more
         </p>
@@ -40,7 +40,7 @@ export default function FeatureDiscovery() {
               className="flex items-start gap-2.5 px-3 py-2.5 rounded-lg text-left transition-all hover:opacity-90"
               style={isGreen
                 ? { background: "var(--green-light)", border: "1px solid var(--green-border)" }
-                : { background: "var(--cream)", border: "1px solid var(--cream-dark)" }}>
+                : { background: "#f8f8f8", border: "1px solid #e8e8e8" }}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                 className="mt-0.5 shrink-0"

@@ -63,14 +63,14 @@ export default function FirstTimeBuyerPage() {
             <h2 className="font-display text-2xl mb-5" style={{ color: "var(--ink)" }}>Federal and provincial programs</h2>
             <div className="space-y-3">
               {PROGRAMS.map((p) => (
-                <div key={p.name} className="rounded-xl bg-white border border-slate-100 p-5 flex gap-4">
+                <div key={p.name} className="rounded-xl bg-white border border-neutral-100 p-5 flex gap-4">
                   <div className="shrink-0 w-28 text-center">
                     <p className="text-base font-bold" style={{ color: "var(--green)" }}>{p.amount}</p>
                     <p className="text-xs mt-1 rounded-full px-2 py-0.5 inline-block"
                       style={{ background: "var(--green-light)", color: "var(--green)" }}>{p.type}</p>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-slate-800 mb-1">{p.name}</p>
+                    <p className="text-sm font-semibold text-neutral-800 mb-1">{p.name}</p>
                     <p className="text-sm" style={{ color: "var(--ink-mid)" }}>{p.detail}</p>
                   </div>
                 </div>

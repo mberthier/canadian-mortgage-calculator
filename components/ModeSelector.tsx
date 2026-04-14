@@ -16,7 +16,7 @@ const MODES: { value: MortgageMode; label: string; sub: string }[] = [
 
 export default function ModeSelector({ mode, onChange }: Props) {
   return (
-    <div className="grid grid-cols-3 gap-1.5 p-1 rounded-xl" style={{ background: "var(--cream-dark)" }}>
+    <div className="grid grid-cols-3 gap-1.5 p-1 rounded-xl" style={{ background: "#eeeeee" }}>
       {MODES.map((m) => {
         const active = mode === m.value;
         return (

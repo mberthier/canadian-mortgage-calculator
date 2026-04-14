@@ -41,16 +41,16 @@ export default function StressTest({ outputs, inputs }: Props) {
   const base = scenarios[0].payment;
 
   return (
-    <div ref={sectionRef} className="rounded-2xl bg-white border border-slate-100 overflow-hidden">
+    <div ref={sectionRef} className="rounded-2xl bg-white border border-neutral-100 overflow-hidden">
       <button onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between px-5 py-4 hover:bg-slate-50 transition-colors"
+        className="w-full flex items-center justify-between px-5 py-4 hover:bg-neutral-50 transition-colors"
         aria-expanded={open}>
-        <p className="text-sm font-semibold text-slate-800">What if rates go up at renewal?</p>
-        <span className="text-slate-400 text-lg">{open ? "−" : "+"}</span>
+        <p className="text-sm font-semibold text-neutral-800">What if rates go up at renewal?</p>
+        <span className="text-neutral-400 text-lg">{open ? "−" : "+"}</span>
       </button>
       {open && (
-      <div className="px-5 pb-5 border-t border-slate-100 pt-4">
-      <p className="text-sm text-slate-500 mb-4">
+      <div className="px-5 pb-5 border-t border-neutral-100 pt-4">
+      <p className="text-sm text-neutral-500 mb-4">
         If your rate changes when your {inputs.termYears}-year term ends, your {FREQUENCY_LABELS[inputs.paymentFrequency].toLowerCase()} payment on the {formatCurrency(outputs.termEndBalance, 0, true)} remaining balance would be:
       </p>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -60,7 +60,7 @@ export default function StressTest({ outputs, inputs }: Props) {
           return (
             <div key={s.label} className="rounded-xl p-3 text-center border"
               style={isBase
-                ? { background: "var(--cream)", borderColor: "#e7e5e4" }
+                ? { background: "#f8f8f8", borderColor: "#e7e5e4" }
                 : diff > 300 ? { background: "#fef2f2", borderColor: "#fecaca" }
                 : { background: "#fffbeb", borderColor: "#fde68a" }}>
               <p className="text-xs font-medium mb-1" style={{ color: isBase ? "var(--ink-mid)" : diff > 300 ? "var(--red)" : "var(--amber)" }}>
@@ -79,7 +79,7 @@ export default function StressTest({ outputs, inputs }: Props) {
           );
         })}
       </div>
-      <p className="text-xs text-slate-400 mt-3">
+      <p className="text-xs text-neutral-400 mt-3">
         Stress test qualifying rate: {outputs.stressTestRate.toFixed(2)}% (contract rate + 2%, minimum 5.25%)
       </p>
       </div>

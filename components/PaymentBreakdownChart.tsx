@@ -17,7 +17,7 @@ interface Props {
   inputs: MortgageInputs;
 }
 
-const COLORS = ["var(--green)", "#0d5a96", "#b5d4f4", "#7a9ab5", "#dce8f2"];
+const COLORS = ["var(--green)", "#0d5a96", "#dbeafe", "#999999", "#f0f0f0"];
 
 export default function PaymentBreakdownChart({ outputs, inputs }: Props) {
   const monthlyMortgage = outputs.monthlyPayment;
@@ -39,10 +39,10 @@ export default function PaymentBreakdownChart({ outputs, inputs }: Props) {
       const item = payload[0];
       const pct = total > 0 ? ((item.value / total) * 100).toFixed(1) : "0";
       return (
-        <div className="bg-white border border-slate-200 rounded-lg px-3 py-2 shadow-sm text-sm">
-          <p className="font-medium text-slate-900">{item.name}</p>
-          <p className="text-slate-600">
-            {formatCurrency(item.value)}/mo <span className="text-slate-400">({pct}%)</span>
+        <div className="bg-white border border-neutral-200 rounded-lg px-3 py-2 shadow-sm text-sm">
+          <p className="font-medium text-neutral-900">{item.name}</p>
+          <p className="text-neutral-600">
+            {formatCurrency(item.value)}/mo <span className="text-neutral-400">({pct}%)</span>
           </p>
         </div>
       );
@@ -52,7 +52,7 @@ export default function PaymentBreakdownChart({ outputs, inputs }: Props) {
 
   return (
     <div>
-      <h3 className="text-sm font-semibold text-slate-700 mb-3">Where your money goes each month</h3>
+      <h3 className="text-sm font-semibold text-neutral-700 mb-3">Where your money goes each month</h3>
       <div className="h-56">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
@@ -74,15 +74,15 @@ export default function PaymentBreakdownChart({ outputs, inputs }: Props) {
               iconType="circle"
               iconSize={8}
               formatter={(value) => (
-                <span className="text-xs text-slate-600">{value}</span>
+                <span className="text-xs text-neutral-600">{value}</span>
               )}
             />
           </PieChart>
         </ResponsiveContainer>
       </div>
       <div className="mt-3 text-center">
-        <p className="text-xs text-slate-500">Total monthly cost</p>
-        <p className="text-xl font-bold text-slate-900">{formatCurrency(total)}</p>
+        <p className="text-xs text-neutral-500">Total monthly cost</p>
+        <p className="text-xl font-bold text-neutral-900">{formatCurrency(total)}</p>
       </div>
     </div>
   );

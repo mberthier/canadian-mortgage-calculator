@@ -30,8 +30,8 @@ function Step({ number, title, children }: StepProps) {
         style={{ background: "var(--green)" }}>
         {number}
       </div>
-      <div className="flex-1 pb-5 border-b border-slate-100 last:border-0 last:pb-0">
-        <p className="text-sm font-semibold text-slate-800 mb-1.5">{title}</p>
+      <div className="flex-1 pb-5 border-b border-neutral-100 last:border-0 last:pb-0">
+        <p className="text-sm font-semibold text-neutral-800 mb-1.5">{title}</p>
         {children}
       </div>
     </div>
@@ -64,10 +64,10 @@ export default function FirstTimeBuyerGuide({
     : 500_000 * 0.05 + Math.min(homePrice - 500_000, 1_000_000) * 0.1;
 
   return (
-    <div className="border-t border-slate-100 pt-5">
+    <div className="border-t border-neutral-100 pt-5">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="w-full flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-colors"
+        className="w-full flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-neutral-400 hover:text-neutral-600 transition-colors"
         aria-expanded={open}
       >
         <div className="flex items-center gap-2">
@@ -90,7 +90,7 @@ export default function FirstTimeBuyerGuide({
 
           {/* First-time buyer toggle */}
           <label className="flex items-center gap-3 cursor-pointer p-3 rounded-xl border"
-            style={{ background: "var(--cream)", borderColor: isFirstTimeBuyer ? "var(--green-border)" : "#e7e5e4" }}>
+            style={{ background: "#f8f8f8", borderColor: isFirstTimeBuyer ? "var(--green-border)" : "#e7e5e4" }}>
             <div
               onClick={onToggle}
               role="switch"
@@ -103,7 +103,7 @@ export default function FirstTimeBuyerGuide({
               <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${isFirstTimeBuyer ? "translate-x-5" : ""}`} />
             </div>
             <div>
-              <p className="text-sm font-semibold text-slate-800">I'm a first-time home buyer</p>
+              <p className="text-sm font-semibold text-neutral-800">I'm a first-time home buyer</p>
               <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
                 Enables LTT rebates and relevant tips below
               </p>
@@ -116,26 +116,26 @@ export default function FirstTimeBuyerGuide({
             <Step number={1} title="How much do you need for a down payment?">
               <div className="space-y-2 text-xs" style={{ color: "var(--ink-mid)" }}>
                 <p>In Canada, the minimum down payment depends on the purchase price:</p>
-                <div className="rounded-lg overflow-hidden border border-slate-100">
+                <div className="rounded-lg overflow-hidden border border-neutral-100">
                   <table className="w-full text-xs">
                     <thead>
-                      <tr style={{ background: "var(--cream)" }}>
-                        <th className="px-3 py-2 text-left font-semibold text-slate-600">Purchase Price</th>
-                        <th className="px-3 py-2 text-right font-semibold text-slate-600">Min. Down</th>
+                      <tr style={{ background: "#f8f8f8" }}>
+                        <th className="px-3 py-2 text-left font-semibold text-neutral-600">Purchase Price</th>
+                        <th className="px-3 py-2 text-right font-semibold text-neutral-600">Min. Down</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr className={homePrice <= 500_000 ? "bg-blue-50" : ""}>
-                        <td className="px-3 py-2 text-slate-600">Under $500,000</td>
-                        <td className="px-3 py-2 text-right font-medium text-slate-800">5%</td>
+                        <td className="px-3 py-2 text-neutral-600">Under $500,000</td>
+                        <td className="px-3 py-2 text-right font-medium text-neutral-800">5%</td>
                       </tr>
                       <tr className={homePrice > 500_000 && homePrice <= 1_500_000 ? "bg-blue-50" : ""}>
-                        <td className="px-3 py-2 text-slate-600">$500K – $1.5M</td>
-                        <td className="px-3 py-2 text-right font-medium text-slate-800">5% + 10% over $500K</td>
+                        <td className="px-3 py-2 text-neutral-600">$500K – $1.5M</td>
+                        <td className="px-3 py-2 text-right font-medium text-neutral-800">5% + 10% over $500K</td>
                       </tr>
                       <tr className={homePrice > 1_500_000 ? "bg-blue-50" : ""}>
-                        <td className="px-3 py-2 text-slate-600">Over $1.5M</td>
-                        <td className="px-3 py-2 text-right font-medium text-slate-800">20%</td>
+                        <td className="px-3 py-2 text-neutral-600">Over $1.5M</td>
+                        <td className="px-3 py-2 text-right font-medium text-neutral-800">20%</td>
                       </tr>
                     </tbody>
                   </table>
@@ -152,14 +152,14 @@ export default function FirstTimeBuyerGuide({
             <Step number={2} title="What is CMHC insurance and do you need it?">
               <div className="space-y-2 text-xs" style={{ color: "var(--ink-mid)" }}>
                 <p>
-                  If your down payment is <strong className="text-slate-700">less than 20%</strong>, the federal government requires you to buy mortgage default insurance through CMHC. The premium is added to your mortgage — you don't pay it upfront.
+                  If your down payment is <strong className="text-neutral-700">less than 20%</strong>, the federal government requires you to buy mortgage default insurance through CMHC. The premium is added to your mortgage — you don't pay it upfront.
                 </p>
-                <div className="rounded-lg overflow-hidden border border-slate-100">
+                <div className="rounded-lg overflow-hidden border border-neutral-100">
                   <table className="w-full text-xs">
                     <thead>
-                      <tr style={{ background: "var(--cream)" }}>
-                        <th className="px-3 py-2 text-left font-semibold text-slate-600">Down Payment</th>
-                        <th className="px-3 py-2 text-right font-semibold text-slate-600">Premium</th>
+                      <tr style={{ background: "#f8f8f8" }}>
+                        <th className="px-3 py-2 text-left font-semibold text-neutral-600">Down Payment</th>
+                        <th className="px-3 py-2 text-right font-semibold text-neutral-600">Premium</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -170,8 +170,8 @@ export default function FirstTimeBuyerGuide({
                         { range: "20%+", rate: "No insurance", active: downPercent >= 20 },
                       ].map(({ range, rate, active }) => (
                         <tr key={range} style={active ? { background: "var(--green-light)" } : {}}>
-                          <td className="px-3 py-2 text-slate-600">{range}</td>
-                          <td className="px-3 py-2 text-right font-medium text-slate-800">{rate}</td>
+                          <td className="px-3 py-2 text-neutral-600">{range}</td>
+                          <td className="px-3 py-2 text-right font-medium text-neutral-800">{rate}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -196,13 +196,13 @@ export default function FirstTimeBuyerGuide({
             <Step number={3} title="What is the mortgage stress test?">
               <div className="space-y-2 text-xs" style={{ color: "var(--ink-mid)" }}>
                 <p>
-                  Before approving your mortgage, your lender must verify you can afford payments at a higher rate — either your contract rate <strong className="text-slate-700">+ 2%</strong> or <strong className="text-slate-700">5.25%</strong>, whichever is higher.
+                  Before approving your mortgage, your lender must verify you can afford payments at a higher rate — either your contract rate <strong className="text-neutral-700">+ 2%</strong> or <strong className="text-neutral-700">5.25%</strong>, whichever is higher.
                 </p>
                 <p>This protects you from defaulting if rates rise at renewal.</p>
                 {interestRate > 0 && (
-                  <div className="rounded-lg px-3 py-2 border border-slate-100"
-                    style={{ background: "var(--cream)" }}>
-                    At your rate of <strong className="text-slate-700">{interestRate}%</strong>, you'll be stress-tested at{" "}
+                  <div className="rounded-lg px-3 py-2 border border-neutral-100"
+                    style={{ background: "#f8f8f8" }}>
+                    At your rate of <strong className="text-neutral-700">{interestRate}%</strong>, you'll be stress-tested at{" "}
                     <strong style={{ color: "var(--green)" }}>{stressTestRate.toFixed(2)}%</strong>.
                     {" "}Your lender will calculate your GDS/TDS ratios using this higher rate.
                   </div>
@@ -214,15 +214,15 @@ export default function FirstTimeBuyerGuide({
             <Step number={4} title="Land transfer tax — and your rebate">
               <div className="space-y-2 text-xs" style={{ color: "var(--ink-mid)" }}>
                 <p>
-                  When you buy a home, you pay a <strong className="text-slate-700">land transfer tax</strong> to your province (and Toronto charges an additional municipal LTT).
+                  When you buy a home, you pay a <strong className="text-neutral-700">land transfer tax</strong> to your province (and Toronto charges an additional municipal LTT).
                 </p>
                 {homePrice > 0 && (
-                  <div className="rounded-lg overflow-hidden border border-slate-100">
+                  <div className="rounded-lg overflow-hidden border border-neutral-100">
                     <table className="w-full text-xs">
                       <tbody>
                         <tr>
-                          <td className="px-3 py-2 text-slate-600">LTT in {PROVINCE_NAMES[province] ?? province}</td>
-                          <td className="px-3 py-2 text-right font-medium text-slate-800">
+                          <td className="px-3 py-2 text-neutral-600">LTT in {PROVINCE_NAMES[province] ?? province}</td>
+                          <td className="px-3 py-2 text-right font-medium text-neutral-800">
                             {formatCurrency(lttNoRebate.total, 0)}
                           </td>
                         </tr>
@@ -235,7 +235,7 @@ export default function FirstTimeBuyerGuide({
                               </td>
                             </tr>
                             <tr style={{ background: "var(--green-light)" }}>
-                              <td className="px-3 py-2 font-semibold text-slate-700">Your net LTT</td>
+                              <td className="px-3 py-2 font-semibold text-neutral-700">Your net LTT</td>
                               <td className="px-3 py-2 text-right font-semibold" style={{ color: "var(--green)" }}>
                                 {formatCurrency(ltt.net, 0)}
                               </td>
@@ -244,7 +244,7 @@ export default function FirstTimeBuyerGuide({
                         )}
                         {!hasRebate && (
                           <tr>
-                            <td className="px-3 py-2 text-slate-400" colSpan={2}>
+                            <td className="px-3 py-2 text-neutral-400" colSpan={2}>
                               No first-time buyer LTT rebate in {PROVINCE_NAMES[province] ?? province}
                             </td>
                           </tr>
@@ -265,10 +265,10 @@ export default function FirstTimeBuyerGuide({
             <Step number={5} title="The Home Buyers' Plan — use your RRSP">
               <div className="text-xs space-y-2" style={{ color: "var(--ink-mid)" }}>
                 <p>
-                  First-time buyers can withdraw up to <strong className="text-slate-700">$60,000 per person</strong> from their RRSP tax-free to use toward a down payment (increased from $35K in 2024).
+                  First-time buyers can withdraw up to <strong className="text-neutral-700">$60,000 per person</strong> from their RRSP tax-free to use toward a down payment (increased from $35K in 2024).
                 </p>
                 <p>
-                  Couples can withdraw up to <strong className="text-slate-700">$120,000 combined</strong>. You have 15 years to repay the withdrawn amount back into your RRSP.
+                  Couples can withdraw up to <strong className="text-neutral-700">$120,000 combined</strong>. You have 15 years to repay the withdrawn amount back into your RRSP.
                 </p>
                 <div className="rounded-lg px-3 py-2 border"
                   style={{ background: "var(--green-light)", borderColor: "var(--green-border)", color: "var(--green)" }}>

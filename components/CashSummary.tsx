@@ -40,9 +40,9 @@ export default function CashSummary({ inputs, outputs }: Props) {
   }
 
   return (
-    <div className="rounded-2xl border border-slate-100 bg-white overflow-hidden">
-      <div className="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between"
-        style={{ background: "var(--cream)" }}>
+    <div className="rounded-2xl border border-neutral-100 bg-white overflow-hidden">
+      <div className="px-5 py-3.5 border-b border-neutral-100 flex items-center justify-between"
+        style={{ background: "#f8f8f8" }}>
         <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--ink-faint)" }}>
           Cash needed at closing
         </p>
@@ -61,8 +61,8 @@ export default function CashSummary({ inputs, outputs }: Props) {
           </div>
         ))}
 
-        <div className="flex justify-between text-sm font-semibold border-t border-slate-100 pt-2.5 mt-1">
-          <span className="text-slate-800">Total cash needed</span>
+        <div className="flex justify-between text-sm font-semibold border-t border-neutral-100 pt-2.5 mt-1">
+          <span className="text-neutral-800">Total cash needed</span>
           <span style={{ color: "var(--green)" }}>
             {formatCurrency(outputs.totalUpfrontCash, 0)}
           </span>

@@ -88,13 +88,13 @@ export default function AffordabilityCalculator({
   }
 
   return (
-    <div ref={sectionRef} className="rounded-2xl bg-white border border-slate-100 overflow-hidden">
+    <div ref={sectionRef} className="rounded-2xl bg-white border border-neutral-100 overflow-hidden">
       <button onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between px-5 py-4 hover:bg-slate-50 transition-colors"
+        className="w-full flex items-center justify-between px-5 py-4 hover:bg-neutral-50 transition-colors"
         aria-expanded={open}>
         <div className="flex items-start gap-3">
           <div>
-            <p className="text-sm font-semibold text-slate-800 text-left">Can you actually afford this?</p>
+            <p className="text-sm font-semibold text-neutral-800 text-left">Can you actually afford this?</p>
             {/* Show summary even when collapsed */}
             {!open && currentHomePrice > 0 && monthlyIncome > 0 && (
               <p className="text-xs mt-0.5 text-left"
@@ -106,25 +106,25 @@ export default function AffordabilityCalculator({
             )}
           </div>
         </div>
-        <span className="text-slate-400 text-lg shrink-0 ml-3">{open ? "−" : "+"}</span>
+        <span className="text-neutral-400 text-lg shrink-0 ml-3">{open ? "−" : "+"}</span>
       </button>
 
       {open && (
-        <div className="border-t border-slate-100">
+        <div className="border-t border-neutral-100">
           {/* Inline summary — always visible at top */}
-          <div className="px-5 py-4 grid grid-cols-2 gap-3" style={{ background: "var(--cream)" }}>
+          <div className="px-5 py-4 grid grid-cols-2 gap-3" style={{ background: "#f8f8f8" }}>
             {[
               { key: "GDS", pct: gds, limit: GDS_LIMIT, color: gdsColor,
                 tip: "GDS measures housing costs as % of income. Includes mortgage P&I, property tax, heating, 50% condo fees. Limit: 39%." },
               { key: "TDS", pct: tds, limit: TDS_LIMIT, color: tdsColor,
                 tip: "TDS adds all other debts to GDS — car loans, student loans, credit card minimums. Limit: 44%." },
             ].map(({ key, pct, limit, color, tip }) => (
-              <div key={key} className="rounded-xl bg-white border border-slate-100 p-3">
+              <div key={key} className="rounded-xl bg-white border border-neutral-100 p-3">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs font-semibold text-slate-600 flex items-center">
+                  <span className="text-xs font-semibold text-neutral-600 flex items-center">
                     {key}<Tooltip content={tip} />
                   </span>
-                  <span className="text-xs text-slate-400">limit {limit}%</span>
+                  <span className="text-xs text-neutral-400">limit {limit}%</span>
                 </div>
                 <p className="text-2xl font-semibold font-display leading-none mb-2" style={{ color }}>
                   {pct.toFixed(1)}%
@@ -135,7 +135,7 @@ export default function AffordabilityCalculator({
           </div>
 
           {/* Verdict */}
-          <div className="px-5 py-3 border-t border-slate-100"
+          <div className="px-5 py-3 border-t border-neutral-100"
             style={qualifies
               ? { background: "var(--green-light)" }
               : { background: "#fef2f2" }}>
@@ -150,7 +150,7 @@ export default function AffordabilityCalculator({
           </div>
 
           {/* Inputs */}
-          <div className="px-5 py-4 space-y-4 border-t border-slate-100">
+          <div className="px-5 py-4 space-y-4 border-t border-neutral-100">
             <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
               Pre-filled with Canadian median income ({formatCurrency(CANADIAN_MEDIAN_INCOME, 0)}). Adjust to your situation.
             </p>
@@ -161,38 +161,38 @@ export default function AffordabilityCalculator({
                 { label: "Monthly debts",         value: monthlyDebts, set: setDebts },
               ].map(({ label, value, set }) => (
                 <div key={label}>
-                  <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">{label}</label>
+                  <label className="block text-xs font-medium text-neutral-500 mb-1.5 uppercase tracking-wide">{label}</label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">$</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 text-sm">$</span>
                     <input type="text" inputMode="numeric"
                       value={value > 0 ? value.toLocaleString("en-CA") : ""}
                       onChange={(e) => set(parseInt(e.target.value.replace(/[^0-9]/g, "")) || 0)}
-                      className="w-full pl-7 pr-3 py-2 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-700/20 focus:border-blue-600 transition-colors" />
+                      className="w-full pl-7 pr-3 py-2 rounded-lg border border-neutral-200 bg-white text-sm text-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors" />
                   </div>
                 </div>
               ))}
               <div>
-                <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide flex items-center gap-1">
+                <label className="block text-xs font-medium text-neutral-500 mb-1.5 uppercase tracking-wide flex items-center gap-1">
                   Down payment
                   <Tooltip content="Pre-filled from your calculator inputs." />
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">$</span>
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 text-sm">$</span>
                   <input type="text" inputMode="numeric"
                     value={downPayment > 0 ? downPayment.toLocaleString("en-CA") : ""}
                     onChange={(e) => {
                       setDown(parseInt(e.target.value.replace(/[^0-9]/g, "")) || 0);
                       setDownSynced(false);
                     }}
-                    className="w-full pl-7 pr-3 py-2 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-700/20 focus:border-blue-600 transition-colors" />
+                    className="w-full pl-7 pr-3 py-2 rounded-lg border border-neutral-200 bg-white text-sm text-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors" />
                 </div>
               </div>
             </div>
 
             {/* Max purchase price */}
             {maxPrice > 0 && (
-              <div className="rounded-xl p-4 border border-slate-100 bg-white">
-                <p className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-1">
+              <div className="rounded-xl p-4 border border-neutral-100 bg-white">
+                <p className="text-xs font-medium text-neutral-400 uppercase tracking-wide mb-1">
                   Estimated max purchase price
                 </p>
                 <p className="font-display text-3xl leading-none mb-1" style={{ color: "var(--green)" }}>

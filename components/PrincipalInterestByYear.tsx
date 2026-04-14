@@ -46,8 +46,8 @@ export default function PrincipalInterestByYear({ schedule, amortizationYears, f
       const interest = payload.find((p: any) => p.dataKey === "interest")?.value ?? 0;
       const total = principal + interest;
       return (
-        <div className="bg-white border border-slate-200 rounded-lg px-3 py-2 shadow-sm text-sm">
-          <p className="font-semibold text-slate-900 mb-1.5">Year {label}</p>
+        <div className="bg-white border border-neutral-200 rounded-lg px-3 py-2 shadow-sm text-sm">
+          <p className="font-semibold text-neutral-900 mb-1.5">Year {label}</p>
           <div className="space-y-0.5">
             <p className="text-xs flex justify-between gap-4">
               <span className="text-blue-600">Principal</span>
@@ -57,8 +57,8 @@ export default function PrincipalInterestByYear({ schedule, amortizationYears, f
               <span className="text-red-500">Interest</span>
               <span className="font-medium">{formatCurrency(interest)}</span>
             </p>
-            <p className="text-xs flex justify-between gap-4 border-t border-slate-100 pt-1 mt-1">
-              <span className="text-slate-500">Total</span>
+            <p className="text-xs flex justify-between gap-4 border-t border-neutral-100 pt-1 mt-1">
+              <span className="text-neutral-500">Total</span>
               <span className="font-medium">{formatCurrency(total)}</span>
             </p>
           </div>
@@ -70,23 +70,23 @@ export default function PrincipalInterestByYear({ schedule, amortizationYears, f
 
   return (
     <div>
-      <h3 className="text-sm font-semibold text-slate-700 mb-3">How each payment splits over time</h3>
+      <h3 className="text-sm font-semibold text-neutral-700 mb-3">How each payment splits over time</h3>
       <div className="h-56">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData} margin={{ top: 4, right: 8, left: 0, bottom: 0 }} barCategoryGap="20%">
-            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#eeeeee" vertical={false} />
             <XAxis
               dataKey="year"
               tickLine={false}
               axisLine={false}
-              tick={{ fontSize: 10, fill: "#94a3b8" }}
+              tick={{ fontSize: 10, fill: "#999999" }}
               interval={Math.floor(chartData.length / 6)}
               tickFormatter={(v) => `${v}`}
             />
             <YAxis
               tickLine={false}
               axisLine={false}
-              tick={{ fontSize: 10, fill: "#94a3b8" }}
+              tick={{ fontSize: 10, fill: "#999999" }}
               tickFormatter={(v) => `$${Math.round(v / 1000)}K`}
               width={48}
             />
@@ -94,10 +94,10 @@ export default function PrincipalInterestByYear({ schedule, amortizationYears, f
             <Legend
               iconType="circle"
               iconSize={8}
-              formatter={(v) => <span className="text-xs text-slate-600">{v}</span>}
+              formatter={(v) => <span className="text-xs text-neutral-600">{v}</span>}
             />
             <Bar dataKey="principal" name="Principal" fill="var(--green)" stackId="a" radius={[0, 0, 0, 0]} />
-            <Bar dataKey="interest" name="Interest" fill="#b5d4f4" stackId="a" radius={[3, 3, 0, 0]} />
+            <Bar dataKey="interest" name="Interest" fill="#dbeafe" stackId="a" radius={[3, 3, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>

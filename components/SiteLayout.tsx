@@ -27,9 +27,9 @@ export default function SiteLayout({ children }: Props) {
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <div className="min-h-screen" style={{ background: "var(--cream)" }}>
+    <div className="min-h-screen" style={{ background: "#f8f8f8" }}>
       {/* Header */}
-      <header className="border-b bg-white sticky top-0 z-20" style={{ borderColor: "var(--cream-dark)" }}>
+      <header className="border-b bg-white sticky top-0 z-20" style={{ borderColor: "#e8e8e8" }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="h-14 flex items-center justify-between gap-4">
             <Link href="/" className="flex items-center shrink-0">
@@ -42,7 +42,7 @@ export default function SiteLayout({ children }: Props) {
                 <Link key={href} href={href}
                   className="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors whitespace-nowrap"
                   style={isActive(href)
-                    ? { background: "var(--green-light)", color: "var(--green)" }
+                    ? { background: "#eff6ff", color: "#1068A8", fontWeight: 600 }
                     : { color: "var(--ink-muted)" }}>
                   {label}
                 </Link>
@@ -55,7 +55,7 @@ export default function SiteLayout({ children }: Props) {
                 <Link key={href} href={href}
                   className="px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition-colors shrink-0"
                   style={isActive(href)
-                    ? { background: "var(--green-light)", color: "var(--green)" }
+                    ? { background: "#eff6ff", color: "#1068A8", fontWeight: 600 }
                     : { color: "var(--ink-muted)" }}>
                   {label}
                 </Link>
@@ -68,7 +68,7 @@ export default function SiteLayout({ children }: Props) {
       <main>{children}</main>
 
       {/* Footer */}
-      <footer className="border-t mt-16" style={{ borderColor: "var(--cream-dark)", background: "#fff" }}>
+      <footer className="border-t mt-16" style={{ borderColor: "#e8e8e8", background: "#fff" }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 mb-8">
             <div>

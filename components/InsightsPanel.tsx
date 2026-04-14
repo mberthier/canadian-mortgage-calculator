@@ -214,7 +214,7 @@ const ICONS = {
   ),
   info: (
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-      <circle cx="7" cy="7" r="6" fill="#e6f1fb" stroke="var(--green)" strokeWidth="1.2"/>
+      <circle cx="7" cy="7" r="6" fill="#eff6ff" stroke="var(--green)" strokeWidth="1.2"/>
       <path d="M7 6v4M7 4.5v.5" stroke="var(--green)" strokeWidth="1.2" strokeLinecap="round"/>
     </svg>
   ),
@@ -225,9 +225,9 @@ export default function InsightsPanel({ inputs, outputs }: Props) {
   if (insights.length === 0) return null;
 
   return (
-    <div className="rounded-2xl border border-slate-100 bg-white overflow-hidden">
-      <div className="px-5 py-3.5 border-b border-slate-100 flex items-center gap-2 rounded-t-2xl"
-        style={{ background: "var(--cream)" }}>
+    <div className="rounded-2xl border border-neutral-100 bg-white overflow-hidden">
+      <div className="px-5 py-3.5 border-b border-neutral-100 flex items-center gap-2 rounded-t-2xl"
+        style={{ background: "#f8f8f8" }}>
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
           <path d="M7 1l1.5 3h3l-2.5 2 1 3L7 7.5 4 9l1-3L2.5 4h3L7 1z"
             fill="var(--green)" stroke="var(--green)" strokeWidth="0.5" strokeLinejoin="round"/>
@@ -236,7 +236,7 @@ export default function InsightsPanel({ inputs, outputs }: Props) {
           Insights
         </p>
       </div>
-      <div className="divide-y divide-slate-50">
+      <div className="divide-y divide-neutral-50">
         {insights.map((insight, i) => (
           <div key={i} className="flex items-start gap-3 px-5 py-3.5">
             <span className="shrink-0 mt-0.5">{ICONS[insight.type]}</span>

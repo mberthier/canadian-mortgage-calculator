@@ -23,12 +23,12 @@ interface MetricProps {
 
 function Metric({ label, value, sub, tip, highlight }: MetricProps) {
   return (
-    <div className={`rounded-xl p-4 ${highlight ? "bg-white border border-slate-100" : ""}`}>
+    <div className={`rounded-xl p-4 ${highlight ? "bg-white border border-neutral-100" : ""}`}>
       <p className="text-xs font-medium uppercase tracking-wide flex items-center gap-0.5 mb-1"
         style={{ color: "var(--ink-faint)" }}>
         {label}{tip && <Tooltip content={tip} />}
       </p>
-      <p className="text-xl font-semibold text-slate-800">{value}</p>
+      <p className="text-xl font-semibold text-neutral-800">{value}</p>
       {sub && <p className="text-xs mt-0.5" style={{ color: "var(--ink-faint)" }}>{sub}</p>}
     </div>
   );
@@ -42,7 +42,7 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
   const isPurchase = inputs.mortgageMode === "purchase";
 
   return (
-    <div className="rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+    <div className="rounded-2xl border border-neutral-100 shadow-sm overflow-hidden">
 
       {/* Hero payment */}
       <div className="px-6 pt-6 pb-5" style={{ background: "var(--green)" }}>
@@ -77,8 +77,8 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
       </div>
 
       {/* Key metrics grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-y divide-slate-100"
-        style={{ background: "var(--cream)" }}>
+      <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-y divide-neutral-100"
+        style={{ background: "#f8f8f8" }}>
         <Metric label="Monthly ownership"
           value={formatCurrency(outputs.totalMonthlyOwnership, 0)}
           sub="Mortgage + tax + heat"
@@ -101,7 +101,7 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
 
       {/* CMHC notice */}
       {hasCMHC && (
-        <div className="px-5 py-3 border-t border-slate-100 flex items-start gap-2"
+        <div className="px-5 py-3 border-t border-neutral-100 flex items-start gap-2"
           style={{ background: "#fffbeb" }}>
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0 mt-0.5" aria-hidden="true">
             <circle cx="7" cy="7" r="6" stroke="#d97706" strokeWidth="1.5"/>

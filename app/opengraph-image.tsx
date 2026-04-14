@@ -10,7 +10,7 @@ export default async function Image() {
     (
       <div
         style={{
-          background: "#f0f5fa",
+          background: "#fafafa",
           width: "100%",
           height: "100%",
           display: "flex",
@@ -41,7 +41,7 @@ export default async function Image() {
               <path d="M2 11L5 4.5l2.5 3.5L9.5 5l2.5 6H2z" fill="white"/>
             </svg>
           </div>
-          <span style={{ fontSize: "28px", fontWeight: 600, color: "#0B1927", letterSpacing: "-0.5px" }}>
+          <span style={{ fontSize: "28px", fontWeight: 600, color: "#111111", letterSpacing: "-0.5px" }}>
             CrystalKey
           </span>
         </div>
@@ -61,7 +61,7 @@ export default async function Image() {
         {/* Subtitle */}
         <div style={{
           fontSize: "28px",
-          color: "#4a6b85",
+          color: "#555555",
           fontFamily: "system-ui, sans-serif",
           fontWeight: 400,
           marginBottom: "52px",
@@ -73,7 +73,7 @@ export default async function Image() {
         <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
           {["Free", "Accurate", "Built for Canadians", "All provinces"].map((tag) => (
             <div key={tag} style={{
-              background: "#e6f1fb",
+              background: "#eff6ff",
               color: "#1068A8",
               borderRadius: "999px",
               padding: "10px 24px",
@@ -92,7 +92,7 @@ export default async function Image() {
           bottom: "56px",
           right: "80px",
           fontSize: "22px",
-          color: "#7a9ab5",
+          color: "#999999",
           fontFamily: "system-ui, sans-serif",
         }}>
           crystalkey.ca

@@ -85,23 +85,23 @@ export default function AmortizationTable({ schedule, frequency, termYears }: Pr
     return (
       <div ref={sectionRef}>
       <button onClick={() => setExpanded(true)}
-        className="w-full flex items-center justify-between px-4 py-3.5 rounded-xl border border-slate-200 bg-white text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm"
+        className="w-full flex items-center justify-between px-4 py-3.5 rounded-xl border border-neutral-200 bg-white text-sm font-semibold text-neutral-700 hover:bg-neutral-50 transition-colors shadow-sm"
         aria-expanded={false}>
         <span>View Full Amortization Schedule</span>
-        <span className="text-xs text-slate-400">{schedule.length.toLocaleString()} payments · ↓ expand</span>
+        <span className="text-xs text-neutral-400">{schedule.length.toLocaleString()} payments · ↓ expand</span>
         </button>
       </div>
     );
   }
 
-  const thCls = "px-4 py-2.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide";
+  const thCls = "px-4 py-2.5 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wide";
   const thR   = thCls + " text-right";
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm">
+    <div className="rounded-xl border border-neutral-200 bg-white overflow-hidden shadow-sm">
       {/* toolbar */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 gap-3 flex-wrap">
-        <div className="flex gap-1 bg-slate-100 rounded-lg p-0.5">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-neutral-100 gap-3 flex-wrap">
+        <div className="flex gap-1 bg-neutral-100 rounded-lg p-0.5">
           {(["yearly", "payments"] as const).map((m) => (
             <button key={m} onClick={() => setViewMode(m)}
               className="px-3 py-1 rounded-md text-xs font-medium transition-colors capitalize"
@@ -114,22 +114,22 @@ export default function AmortizationTable({ schedule, frequency, termYears }: Pr
         </div>
         <div className="flex items-center gap-2 ml-auto">
           <button onClick={() => downloadCSV(schedule, frequency)}
-            className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors font-medium">
+            className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-neutral-200 text-neutral-600 hover:bg-neutral-50 transition-colors font-medium">
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
               <path d="M6 1v7M3.5 5.5L6 8l2.5-2.5M2 10h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
             Export CSV
           </button>
           <button onClick={() => setExpanded(false)}
-            className="text-xs text-slate-400 hover:text-slate-600 px-2 py-1.5">
+            className="text-xs text-neutral-400 hover:text-neutral-600 px-2 py-1.5">
             ↑ Collapse
           </button>
         </div>
       </div>
 
       {/* term legend */}
-      <div className="px-4 py-2 text-xs flex items-center gap-2 border-b border-slate-50"
-        style={{ background: "var(--cream)" }}>
+      <div className="px-4 py-2 text-xs flex items-center gap-2 border-b border-neutral-50"
+        style={{ background: "#f8f8f8" }}>
         <span className="inline-block w-2.5 h-2.5 rounded-sm" style={{ background: "var(--green-light)", border: "1px solid var(--green-border)" }}></span>
         <span style={{ color: "var(--ink-faint)" }}>Highlighted = current {termYears}-year term</span>
         {hasAnyLumpSums && (
@@ -144,7 +144,7 @@ export default function AmortizationTable({ schedule, frequency, termYears }: Pr
       <div className="overflow-x-auto">
         <table className="w-full text-sm" role="table">
           <thead>
-            <tr style={{ background: "var(--cream)" }}>
+            <tr style={{ background: "#f8f8f8" }}>
               {viewMode === "yearly" ? (
                 <>
                   <th className={thCls}>Year</th>
@@ -166,7 +166,7 @@ export default function AmortizationTable({ schedule, frequency, termYears }: Pr
               )}
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-50">
+          <tbody className="divide-y divide-neutral-50">
             {viewMode === "yearly"
               ? yearlyData.map((row) => {
                   const hasLump = row.totalLumpSum > 0;
@@ -174,23 +174,23 @@ export default function AmortizationTable({ schedule, frequency, termYears }: Pr
                     <tr key={row.year}
                       className="transition-colors"
                       style={row.isInTerm ? { background: "var(--green-light)" } : undefined}
-                      onMouseEnter={(e) => { if (!row.isInTerm) (e.currentTarget as HTMLElement).style.background = "var(--cream)"; }}
+                      onMouseEnter={(e) => { if (!row.isInTerm) (e.currentTarget as HTMLElement).style.background = "#f9f9f9"; }}
                       onMouseLeave={(e) => { if (!row.isInTerm) (e.currentTarget as HTMLElement).style.background = ""; }}>
                       <td className="px-4 py-2.5">
-                        <span className="font-medium text-slate-700">Year {row.year}</span>
+                        <span className="font-medium text-neutral-700">Year {row.year}</span>
                         {row.isInTerm && <span className="ml-2 text-xs font-medium" style={{ color: "var(--green)" }}>Term</span>}
                       </td>
-                      <td className="px-4 py-2.5 text-right text-slate-600 tabular-nums">{formatCurrency(row.totalPayment)}</td>
+                      <td className="px-4 py-2.5 text-right text-neutral-600 tabular-nums">{formatCurrency(row.totalPayment)}</td>
                       <td className="px-4 py-2.5 text-right tabular-nums" style={{ color: "var(--green-mid)" }}>{formatCurrency(row.totalPrincipal)}</td>
                       <td className="px-4 py-2.5 text-right tabular-nums" style={{ color: "var(--red)" }}>{formatCurrency(row.totalInterest)}</td>
                       {hasAnyLumpSums && (
                         <td className="px-4 py-2.5 text-right tabular-nums">
                           {hasLump
                             ? <span className="font-semibold text-blue-700">{formatCurrency(row.totalLumpSum)}</span>
-                            : <span className="text-slate-300">—</span>}
+                            : <span className="text-neutral-300">—</span>}
                         </td>
                       )}
-                      <td className="px-4 py-2.5 text-right font-semibold text-slate-900 tabular-nums">{formatCurrency(row.endBalance)}</td>
+                      <td className="px-4 py-2.5 text-right font-semibold text-neutral-900 tabular-nums">{formatCurrency(row.endBalance)}</td>
                     </tr>
                   );
                 })
@@ -203,18 +203,18 @@ export default function AmortizationTable({ schedule, frequency, termYears }: Pr
                       style={isInTerm ? { background: "var(--green-light)" } : undefined}
                       onMouseEnter={(e) => { if (!isInTerm) (e.currentTarget as HTMLElement).style.background = "var(--cream)"; }}
                       onMouseLeave={(e) => { if (!isInTerm) (e.currentTarget as HTMLElement).style.background = ""; }}>
-                      <td className="px-4 py-2 text-slate-400 tabular-nums text-xs">{row.paymentNumber}</td>
-                      <td className="px-4 py-2 text-right text-slate-700 tabular-nums text-xs">{formatCurrency(row.payment)}</td>
+                      <td className="px-4 py-2 text-neutral-400 tabular-nums text-xs">{row.paymentNumber}</td>
+                      <td className="px-4 py-2 text-right text-neutral-700 tabular-nums text-xs">{formatCurrency(row.payment)}</td>
                       <td className="px-4 py-2 text-right tabular-nums text-xs" style={{ color: "var(--green-mid)" }}>{formatCurrency(row.principal)}</td>
                       <td className="px-4 py-2 text-right tabular-nums text-xs" style={{ color: "var(--red)" }}>{formatCurrency(row.interest)}</td>
                       {hasAnyLumpSums && (
                         <td className="px-4 py-2 text-right tabular-nums text-xs">
                           {hasLump
                             ? <span className="font-semibold text-blue-700">{formatCurrency(row.lumpSum!)}</span>
-                            : <span className="text-slate-300">—</span>}
+                            : <span className="text-neutral-300">—</span>}
                         </td>
                       )}
-                      <td className="px-4 py-2 text-right font-medium text-slate-900 tabular-nums text-xs">{formatCurrency(row.balance)}</td>
+                      <td className="px-4 py-2 text-right font-medium text-neutral-900 tabular-nums text-xs">{formatCurrency(row.balance)}</td>
                     </tr>
                   );
                 })}
@@ -223,14 +223,14 @@ export default function AmortizationTable({ schedule, frequency, termYears }: Pr
       </div>
 
       {viewMode === "payments" && totalPages > 1 && (
-        <div className="flex items-center justify-between px-4 py-3 border-t border-slate-100">
+        <div className="flex items-center justify-between px-4 py-3 border-t border-neutral-100">
           <button disabled={page === 0} onClick={() => setPage((p) => p - 1)}
-            className="text-xs px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 disabled:opacity-40 hover:bg-slate-50">
+            className="text-xs px-3 py-1.5 rounded-lg border border-neutral-200 text-neutral-600 disabled:opacity-40 hover:bg-neutral-50">
             ← Prev
           </button>
-          <span className="text-xs text-slate-500">Page {page + 1} of {totalPages} · {schedule.length} payments</span>
+          <span className="text-xs text-neutral-500">Page {page + 1} of {totalPages} · {schedule.length} payments</span>
           <button disabled={page >= totalPages - 1} onClick={() => setPage((p) => p + 1)}
-            className="text-xs px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 disabled:opacity-40 hover:bg-slate-50">
+            className="text-xs px-3 py-1.5 rounded-lg border border-neutral-200 text-neutral-600 disabled:opacity-40 hover:bg-neutral-50">
             Next →
           </button>
         </div>

@@ -3,7 +3,7 @@ import { IllustrationFormula, IllustrationReceipt, IllustrationCalendar } from "
 
 export default function AboutSection() {
   return (
-    <section className="rounded-2xl bg-white border border-slate-100 p-8 mt-6">
+    <section className="rounded-2xl bg-white border border-neutral-100 p-8 mt-6">
       <h2 className="font-display text-2xl mb-2" style={{ color: "var(--ink)" }}>
         Why CrystalKey is different
       </h2>
@@ -33,13 +33,13 @@ export default function AboutSection() {
             <div className="mb-4">
               <Illustration />
             </div>
-            <h3 className="text-sm font-semibold text-slate-800 mb-2">{title}</h3>
+            <h3 className="text-sm font-semibold text-neutral-800 mb-2">{title}</h3>
             <p className="text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>{body}</p>
           </div>
         ))}
       </div>
 
-      <div className="pt-6 border-t border-slate-100 flex flex-wrap gap-4 items-center justify-between">
+      <div className="pt-6 border-t border-neutral-100 flex flex-wrap gap-4 items-center justify-between">
         <p className="text-sm" style={{ color: "var(--ink-faint)" }}>
           Not sure where to start?
         </p>

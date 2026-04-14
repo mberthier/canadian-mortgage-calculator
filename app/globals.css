@@ -5,27 +5,27 @@
 @tailwind utilities;
 
 :root {
-  /* Page surfaces */
-  --cream:        #f0f5fa;
-  --cream-dark:   #dce8f2;
+  /* Page surfaces — pure neutral, no blue tint */
+  --cream:        #ffffff;
+  --cream-dark:   #f0f0f0;
 
-  /* Primary brand — Crystal Blue */
+  /* Primary brand — Crystal Blue, used sparingly */
   --green:        #1068A8;
   --green-mid:    #0d5a96;
-  --green-light:  #e6f1fb;
-  --green-border: #b5d4f4;
+  --green-light:  #eff6ff;
+  --green-border: #dbeafe;
 
-  /* Text — Midnight tones */
-  --ink:          #0B1927;
-  --ink-mid:      #1e3a52;
-  --ink-muted:    #4a6b85;
-  --ink-faint:    #7a9ab5;
+  /* Text — near-black neutral, not navy */
+  --ink:          #111111;
+  --ink-mid:      #444444;
+  --ink-muted:    #666666;
+  --ink-faint:    #999999;
 
   --white:        #ffffff;
-  --red:          #b91c1c;
-  --amber:        #92400e;
+  --red:          #dc2626;
+  --amber:        #b45309;
 
-  /* Brand identity colors — used for wordmark specifically */
+  /* Brand identity — wordmark only */
   --brand-midnight:     #0B1927;
   --brand-crystal-blue: #1068A8;
   --brand-teal:         #00B4A0;
@@ -36,12 +36,11 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: 'Outfit', system-ui, sans-serif;
-  background: var(--cream);
+  background: #fafafa;
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
 }
 
-/* DM Serif Display for payment numbers and H1s */
 .font-display { font-family: 'DM Serif Display', Georgia, serif; }
 
 input, select, textarea, button {
@@ -50,12 +49,11 @@ input, select, textarea, button {
 input::placeholder { color: var(--ink-faint); }
 select option { background: #fff; color: var(--ink); }
 
-/* Range slider */
 input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
   height: 3px;
-  background: var(--cream-dark);
+  background: #e5e5e5;
   border-radius: 999px;
   outline: none;
   cursor: pointer;
@@ -66,7 +64,7 @@ input[type="range"]::-webkit-slider-thumb {
   background: var(--green);
   border-radius: 50%;
   border: 2px solid #fff;
-  box-shadow: 0 1px 4px rgba(16,104,168,0.3);
+  box-shadow: 0 1px 4px rgba(16,104,168,0.25);
   cursor: pointer;
   transition: transform 0.1s;
 }
@@ -74,10 +72,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--cream-dark); border-radius: 999px; }
+::-webkit-scrollbar-thumb { background: #e0e0e0; border-radius: 999px; }
 
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button { opacity: 0.4; }
-
-/* Tailwind stone overrides → blue-grey for brand consistency */
-.bg-white { background-color: #ffffff !important; }

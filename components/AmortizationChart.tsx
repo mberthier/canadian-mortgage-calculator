@@ -43,12 +43,12 @@ export default function AmortizationChart({ schedule, amortizationYears, frequen
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (!active || !payload?.length) return null;
     return (
-      <div className="bg-white border border-slate-200 rounded-lg px-3 py-2.5 shadow-sm text-sm">
-        <p className="font-semibold text-slate-900 mb-1.5">Year {label}</p>
+      <div className="bg-white border border-neutral-200 rounded-lg px-3 py-2.5 shadow-sm text-sm">
+        <p className="font-semibold text-neutral-900 mb-1.5">Year {label}</p>
         {payload.map((p: any) => (
           <p key={p.name} className="text-xs flex justify-between gap-4">
             <span style={{ color: p.stroke }}>{p.name}</span>
-            <span className="font-medium text-slate-800">{formatCurrency(p.value)}</span>
+            <span className="font-medium text-neutral-800">{formatCurrency(p.value)}</span>
           </p>
         ))}
       </div>
@@ -57,7 +57,7 @@ export default function AmortizationChart({ schedule, amortizationYears, frequen
 
   return (
     <div>
-      <h3 className="text-sm font-semibold text-slate-700 mb-3">Your balance, equity & interest over time</h3>
+      <h3 className="text-sm font-semibold text-neutral-700 mb-3">Your balance, equity & interest over time</h3>
       <div className="h-56">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={chartData} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
@@ -71,25 +71,25 @@ export default function AmortizationChart({ schedule, amortizationYears, frequen
                 <stop offset="95%" stopColor="#0d5a96" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="intGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#7a9ab5" stopOpacity={0.15} />
-                <stop offset="95%" stopColor="#7a9ab5" stopOpacity={0} />
+                <stop offset="5%" stopColor="#999999" stopOpacity={0.15} />
+                <stop offset="95%" stopColor="#999999" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#eeeeee" />
             <XAxis dataKey="year" tickLine={false} axisLine={false}
-              tick={{ fontSize: 10, fill: "#94a3b8" }} tickFormatter={(v) => `Yr ${v}`} />
+              tick={{ fontSize: 10, fill: "#999999" }} tickFormatter={(v) => `Yr ${v}`} />
             <YAxis tickLine={false} axisLine={false}
-              tick={{ fontSize: 10, fill: "#94a3b8" }}
+              tick={{ fontSize: 10, fill: "#999999" }}
               tickFormatter={(v) => `$${Math.round(v / 1000)}K`} width={50} />
             <Tooltip content={<CustomTooltip />} />
             <Legend iconType="circle" iconSize={8}
-              formatter={(v) => <span className="text-xs text-slate-600">{v}</span>} />
+              formatter={(v) => <span className="text-xs text-neutral-600">{v}</span>} />
             <Area type="monotone" dataKey="balance" name="Remaining Balance"
               stroke="var(--green)" strokeWidth={2} fill="url(#balGrad)" />
             <Area type="monotone" dataKey="equity" name="Home Equity"
               stroke="#0d5a96" strokeWidth={2} fill="url(#eqGrad)" />
             <Area type="monotone" dataKey="cumulativeInterest" name="Cumulative Interest"
-              stroke="#7a9ab5" strokeWidth={2} fill="url(#intGrad)" />
+              stroke="#999999" strokeWidth={2} fill="url(#intGrad)" />
           </AreaChart>
         </ResponsiveContainer>
       </div>
