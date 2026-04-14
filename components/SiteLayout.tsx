@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Wordmark from "./Wordmark";
 import { usePathname } from "next/navigation";
 
 const NAV_LINKS = [
@@ -31,15 +32,8 @@ export default function SiteLayout({ children }: Props) {
       <header className="border-b bg-white sticky top-0 z-20" style={{ borderColor: "var(--cream-dark)" }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="h-14 flex items-center justify-between gap-4">
-            <Link href="/" className="flex items-center gap-2.5 shrink-0">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "var(--green)" }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                  stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <circle cx="8" cy="11" r="4"/>
-                  <path d="M12 11h8M18 11v3M15 11v2"/>
-                </svg>
-              </div>
-              <span className="font-semibold text-stone-900 tracking-tight" style={{ fontSize: "15px" }}>CrystalKey</span>
+            <Link href="/" className="flex items-center shrink-0">
+              <Wordmark size="nav" />
             </Link>
 
             {/* Desktop nav */}
@@ -78,15 +72,8 @@ export default function SiteLayout({ children }: Props) {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 mb-8">
             <div>
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ background: "var(--green)" }}>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                    stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <circle cx="8" cy="11" r="4"/>
-                    <path d="M12 11h8M18 11v3M15 11v2"/>
-                  </svg>
-                </div>
-                <span className="text-sm font-semibold text-stone-800">CrystalKey</span>
+              <div className="mb-3">
+                <Wordmark size="footer" />
               </div>
               <p className="text-xs leading-relaxed" style={{ color: "var(--ink-faint)" }}>
                 Crystal clear mortgage calculations for Canadians.
@@ -130,7 +117,7 @@ export default function SiteLayout({ children }: Props) {
                 Estimates only. Not financial advice. Always consult a licensed mortgage broker before making real estate decisions.
               </p>
               <p className="text-xs mt-3" style={{ color: "var(--ink-faint)" }}>
-                © {new Date().getFullYear()} CrystalKey
+                © {new Date().getFullYear()} CrystalKey.ca
               </p>
             </div>
           </div>

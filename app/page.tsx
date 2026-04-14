@@ -18,6 +18,7 @@ import AffordabilityCalculator from "@/components/AffordabilityCalculator";
 import MortgageComparison from "@/components/MortgageComparison";
 import ShareButton from "@/components/ShareButton";
 import FeatureDiscovery from "@/components/FeatureDiscovery";
+import Wordmark from "@/components/Wordmark";
 import { useMortgageCalculator } from "@/hooks/useMortgageCalculator";
 import { FREQUENCY_LABELS } from "@/lib/constants";
 import { formatCurrency } from "@/lib/formatters";
