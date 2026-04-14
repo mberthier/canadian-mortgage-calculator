@@ -62,7 +62,7 @@ function ResultsNarrative({
 
   return (
     <div className="pl-4 py-1 text-sm leading-relaxed"
-      style={{ borderLeft: "3px solid var(--green)", color: "var(--ink-mid)" }}>
+      style={{ borderLeft: "3px solid var(--brand-teal)", color: "var(--ink-mid)" }}>
       At this rate, you'd pay{" "}
       <span className="font-semibold text-neutral-900">{payment} {freq}</span>{" "}
       for the first {inputs.termYears} years, leaving{" "}
@@ -223,9 +223,6 @@ export default function Home() {
                     />
                   </div>
 
-                  {/* Explore more */}
-                  <FeatureDiscovery />
-
                   <div data-section="stress-test">
                     <StressTest outputs={outputs} inputs={inputs} />
                   </div>
@@ -244,6 +241,8 @@ export default function Home() {
                     />
                   </div>
 
+                  {/* Explore more — very bottom */}
+                  <FeatureDiscovery />
                 </>
               )}
             </main>
@@ -252,8 +251,8 @@ export default function Home() {
         </div>
 
         {/* Mobile sticky footer */}
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 border-t bg-white"
-          style={{ borderColor: "#e8e8e8" }}>
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 border-t"
+          style={{ borderColor: "#ebebea", background: "#ffffff" }}>
           <div className="flex items-center justify-between px-5 py-3">
             <div>
               <p className="text-xs" style={{ color: "var(--ink-faint)" }}>

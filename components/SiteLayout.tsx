@@ -6,12 +6,12 @@ import Wordmark from "./Wordmark";
 import { usePathname } from "next/navigation";
 
 const NAV_LINKS = [
-  { href: "/",                        label: "Calculator"          },
+  { href: "/",                        label: "Mortgage Calculator" },
   { href: "/affordability",           label: "Affordability"       },
-  { href: "/cmhc-calculator",         label: "CMHC"                },
-  { href: "/land-transfer-tax",       label: "Land Transfer"       },
+  { href: "/cmhc-calculator",         label: "CMHC Insurance"      },
+  { href: "/land-transfer-tax",       label: "Land Transfer Tax"   },
   { href: "/mortgage-break-penalty",  label: "Break Penalty"       },
-  { href: "/first-time-buyer",        label: "First-Time"          },
+  { href: "/first-time-buyer",        label: "First-Time Buyers"   },
   { href: "/mortgage-rates",          label: "Rates"               },
   { href: "/glossary",                label: "Glossary"            },
 ];
@@ -27,7 +27,7 @@ export default function SiteLayout({ children }: Props) {
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <div className="min-h-screen" style={{ background: "#fafafa" }}>
+    <div className="min-h-screen" style={{ background: "#f9f8f7" }}>
       {/* Header */}
       <header className="border-b bg-white sticky top-0 z-20" style={{ borderColor: "#e8e8e8" }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
@@ -68,7 +68,7 @@ export default function SiteLayout({ children }: Props) {
       <main>{children}</main>
 
       {/* Footer */}
-      <footer className="border-t mt-16" style={{ borderColor: "#e8e8e8", background: "#fff" }}>
+      <footer className="border-t mt-16" style={{ borderColor: "#ebebea", background: "#ffffff" }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 mb-8">
             <div>
@@ -89,6 +89,7 @@ export default function SiteLayout({ children }: Props) {
                   { href: "/affordability", label: "Affordability" },
                   { href: "/cmhc-calculator", label: "CMHC Insurance" },
                   { href: "/land-transfer-tax", label: "Land Transfer Tax" },
+                  { href: "/mortgage-break-penalty", label: "Break Penalty" },
                 ].map(({ href, label }) => (
                   <li key={href}>
                     <Link href={href} className="text-xs hover:underline transition-colors"
@@ -102,7 +103,6 @@ export default function SiteLayout({ children }: Props) {
               <ul className="space-y-2">
                 {[
                   { href: "/first-time-buyer", label: "First-Time Buyers" },
-                  { href: "/mortgage-break-penalty", label: "Break Penalty" },
                   { href: "/mortgage-rates", label: "Rate History" },
                   { href: "/glossary", label: "Glossary" },
                 ].map(({ href, label }) => (

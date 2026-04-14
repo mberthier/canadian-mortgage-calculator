@@ -65,7 +65,7 @@ export default function MortgageComparison({ inputs, loanAmount }: Props) {
         className="w-full flex items-center justify-between px-5 py-4 hover:bg-neutral-50 transition-colors"
         aria-expanded={open}>
         <div className="flex items-center gap-2">
-          <p className="text-sm font-semibold text-neutral-800">What if you got a better rate?</p>
+          <p className="text-sm font-semibold text-neutral-800">Compare mortgage scenarios</p>
           <span className="text-xs rounded-full px-2 py-0.5 font-medium"
             style={{ background: "var(--green-light)", color: "var(--green)" }}>A vs B</span>
         </div>
@@ -146,7 +146,7 @@ export default function MortgageComparison({ inputs, loanAmount }: Props) {
                   <td className="px-4 py-2.5 text-right font-semibold tabular-nums" style={{ color: "var(--green)" }}>{formatCurrency(scenarioA.payment, 2)}</td>
                   <td className="px-4 py-2.5 text-right text-neutral-700 tabular-nums">{formatCurrency(scenarioB.payment, 2)}</td>
                   <td className="px-4 py-2.5 text-right tabular-nums font-medium"
-                    style={{ color: paymentDiff > 0 ? "#ef4444" : "var(--green-mid)" }}>
+                    style={{ color: paymentDiff > 0 ? "#888888" : "var(--green-mid)" }}>
                     {paymentDiff >= 0 ? "+" : ""}{formatCurrency(paymentDiff, 2)}
                   </td>
                 </tr>
@@ -158,7 +158,7 @@ export default function MortgageComparison({ inputs, loanAmount }: Props) {
                   <td className="px-4 py-2.5 text-right font-semibold tabular-nums" style={{ color: "var(--green)" }}>{formatCurrency(scenarioA.termInterest, 0)}</td>
                   <td className="px-4 py-2.5 text-right text-neutral-700 tabular-nums">{formatCurrency(scenarioB.termInterest, 0)}</td>
                   <td className="px-4 py-2.5 text-right tabular-nums font-medium"
-                    style={{ color: termIntDiff > 0 ? "#ef4444" : "var(--green-mid)" }}>
+                    style={{ color: termIntDiff > 0 ? "#888888" : "var(--green-mid)" }}>
                     {termIntDiff >= 0 ? "+" : ""}{formatCurrency(termIntDiff, 0)}
                   </td>
                 </tr>
@@ -167,7 +167,7 @@ export default function MortgageComparison({ inputs, loanAmount }: Props) {
                   <td className="px-4 py-2.5 text-right font-semibold tabular-nums" style={{ color: "var(--green)" }}>{formatCurrency(scenarioA.termEndBalance, 0, true)}</td>
                   <td className="px-4 py-2.5 text-right text-neutral-700 tabular-nums">{formatCurrency(scenarioB.termEndBalance, 0, true)}</td>
                   <td className="px-4 py-2.5 text-right tabular-nums font-medium"
-                    style={{ color: termBalDiff > 0 ? "#ef4444" : "var(--green-mid)" }}>
+                    style={{ color: termBalDiff > 0 ? "#888888" : "var(--green-mid)" }}>
                     {termBalDiff >= 0 ? "+" : ""}{formatCurrency(termBalDiff, 0, true)}
                   </td>
                 </tr>
@@ -179,7 +179,7 @@ export default function MortgageComparison({ inputs, loanAmount }: Props) {
                   <td className="px-4 py-2.5 text-right font-semibold tabular-nums" style={{ color: "var(--green)" }}>{formatCurrency(scenarioA.totalInterest, 0, true)}</td>
                   <td className="px-4 py-2.5 text-right text-neutral-700 tabular-nums">{formatCurrency(scenarioB.totalInterest, 0, true)}</td>
                   <td className="px-4 py-2.5 text-right tabular-nums font-medium"
-                    style={{ color: totalIntDiff > 0 ? "#ef4444" : "var(--green-mid)" }}>
+                    style={{ color: totalIntDiff > 0 ? "#888888" : "var(--green-mid)" }}>
                     {totalIntDiff >= 0 ? "+" : ""}{formatCurrency(totalIntDiff, 0, true)}
                   </td>
                 </tr>
@@ -201,8 +201,8 @@ export default function MortgageComparison({ inputs, loanAmount }: Props) {
             <div className="rounded-xl p-3 border"
               style={betterB
                 ? { background: "var(--green-light)", borderColor: "var(--green-border)" }
-                : { background: "#fef2f2", borderColor: "#fecaca" }}>
-              <p className="text-sm font-semibold" style={{ color: betterB ? "var(--green)" : "#ef4444" }}>
+                : { background: "#fafafa", borderColor: "#e0e0e0" }}>
+              <p className="text-sm font-semibold" style={{ color: betterB ? "var(--green)" : "var(--ink-mid)" }}>
                 {betterB
                   ? `Scenario B saves ${formatCurrency(Math.abs(totalIntDiff), 0)} in total interest`
                   : `Scenario A saves ${formatCurrency(Math.abs(totalIntDiff), 0)} in total interest`}

@@ -17,7 +17,7 @@ interface Props {
 }
 
 // Statistics Canada 2024 median after-tax family income
-const CANADIAN_MEDIAN_INCOME = 92_000;
+const CANADIAN_MEDIAN_INCOME = 100_000; // Round number near Statistics Canada 2024 median
 
 export default function AffordabilityCalculator({
   currentHomePrice, currentRate, currentAmortization,
@@ -78,7 +78,7 @@ export default function AffordabilityCalculator({
   const tdsColor = tds > TDS_LIMIT ? "#ef4444" : tds > TDS_LIMIT * 0.9 ? "var(--amber)" : "var(--green)";
 
   function GaugeBar({ pct, limit }: { pct: number; limit: number }) {
-    const color = pct > limit ? "#ef4444" : pct > limit * 0.9 ? "var(--amber)" : "var(--green-mid)";
+    const color = pct > limit ? "#ef4444" : pct > limit * 0.9 ? "var(--amber)" : "var(--green)";
     return (
       <div className="w-full rounded-full h-1.5 overflow-hidden" style={{ background: "#e8e8e8" }}>
         <div className="h-full rounded-full transition-all duration-300"
@@ -152,11 +152,11 @@ export default function AffordabilityCalculator({
           {/* Inputs */}
           <div className="px-5 py-4 space-y-4 border-t border-neutral-100">
             <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
-              Pre-filled with Canadian median income ({formatCurrency(CANADIAN_MEDIAN_INCOME, 0)}). Adjust to your situation.
+              Enter your gross (pre-tax) income — this is what lenders use. Pre-filled with $100K as a round starting point.
             </p>
             <div className="grid grid-cols-2 gap-3">
               {[
-                { label: "Your annual income",   value: annualIncome, set: setIncome },
+                { label: "Gross annual income",  value: annualIncome, set: setIncome },
                 { label: "Co-applicant income",  value: coIncome,     set: setCoIncome },
                 { label: "Monthly debts",         value: monthlyDebts, set: setDebts },
               ].map(({ label, value, set }) => (
@@ -195,7 +195,7 @@ export default function AffordabilityCalculator({
                 <p className="text-xs font-medium text-neutral-400 uppercase tracking-wide mb-1">
                   Estimated max purchase price
                 </p>
-                <p className="font-display text-3xl leading-none mb-1" style={{ color: "var(--green)" }}>
+                <p className="font-display text-3xl leading-none mb-1" style={{ color: "var(--brand-teal)" }}>
                   {formatCurrency(maxPrice, 0)}
                 </p>
                 <p className="text-xs" style={{ color: "var(--ink-faint)" }}>

@@ -62,7 +62,7 @@ export default function CashSummary({ inputs, outputs }: Props) {
 
         <div className="flex justify-between text-sm font-semibold border-t border-neutral-100 pt-2.5 mt-1">
           <span className="text-neutral-800">Total cash needed</span>
-          <span style={{ color: "var(--green)" }}>
+          <span style={{ color: "var(--brand-teal)" }}>
             {formatCurrency(outputs.totalUpfrontCash, 0)}
           </span>
         </div>

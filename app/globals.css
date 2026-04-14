@@ -5,17 +5,22 @@
 @tailwind utilities;
 
 :root {
-  /* Page surfaces — pure neutral, no blue tint */
+  /* Page surfaces — very slightly warm white, like Wealthsimple */
   --cream:        #ffffff;
   --cream-dark:   #f0f0f0;
 
-  /* Primary brand — Crystal Blue, used sparingly */
+  /* Primary brand — Crystal Blue */
   --green:        #1068A8;
   --green-mid:    #0d5a96;
   --green-light:  #eff6ff;
   --green-border: #dbeafe;
 
-  /* Text — near-black neutral, not navy */
+  /* Teal — second accent for positive states, used sparingly */
+  --teal:         #0891b2;
+  --teal-light:   #ecfeff;
+  --teal-border:  #a5f3fc;
+
+  /* Text — neutral */
   --ink:          #111111;
   --ink-mid:      #444444;
   --ink-muted:    #666666;
@@ -25,7 +30,7 @@
   --red:          #dc2626;
   --amber:        #b45309;
 
-  /* Brand identity — wordmark only */
+  /* Brand identity */
   --brand-midnight:     #0B1927;
   --brand-crystal-blue: #1068A8;
   --brand-teal:         #00B4A0;
@@ -36,7 +41,8 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: 'Outfit', system-ui, sans-serif;
-  background: #fafafa;
+  /* Very subtle warm tint — not blue, not grey, just alive */
+  background: #f9f8f7;
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
 }
