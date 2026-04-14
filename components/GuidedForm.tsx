@@ -32,9 +32,9 @@ const lbl = "block text-xs font-medium text-neutral-500 uppercase tracking-wide 
 
 function Divider({ label }: { label: string }) {
   return (
-    <div className="flex items-center gap-2 pt-1 pb-0.5">
-      <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--ink-faint)" }}>{label}</span>
-      <div className="flex-1 h-px" style={{ background: "var(--cream-dark)" }} />
+    <div className="flex items-center gap-2 pt-3 pb-0.5">
+      <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--ink-muted)" }}>{label}</span>
+      <div className="flex-1 h-px bg-neutral-200" />
     </div>
   );
 }

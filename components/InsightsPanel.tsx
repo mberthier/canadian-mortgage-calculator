@@ -226,8 +226,7 @@ export default function InsightsPanel({ inputs, outputs }: Props) {
 
   return (
     <div className="rounded-2xl border border-neutral-100 bg-white overflow-hidden">
-      <div className="px-5 py-3.5 border-b border-neutral-100 flex items-center gap-2 rounded-t-2xl"
-        style={{ background: "#f8f8f8" }}>
+      <div className="px-5 py-3.5 border-b border-neutral-100 flex items-center gap-2">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
           <path d="M7 1l1.5 3h3l-2.5 2 1 3L7 7.5 4 9l1-3L2.5 4h3L7 1z"
             fill="var(--green)" stroke="var(--green)" strokeWidth="0.5" strokeLinejoin="round"/>

@@ -55,7 +55,7 @@ export default function BreakPenaltyPage() {
         <div className="mt-8 mb-10">
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
             <div>
-              <h1 className="font-display text-4xl leading-tight mb-3" style={{ color: "var(--ink)" }}>
+              <h1 className="text-4xl font-bold leading-tight mb-3 tracking-tight" style={{ color: "var(--ink)" }}>
                 Mortgage Break Penalty Calculator
               </h1>
               <p className="text-lg" style={{ color: "var(--ink-muted)" }}>

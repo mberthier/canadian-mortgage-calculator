@@ -2,7 +2,6 @@
 
 import React from "react";
 import Script from "next/script";
-import Breadcrumb from "@/components/Breadcrumb";
 import SiteLayout from "@/components/SiteLayout";
 import ModeSelector from "@/components/ModeSelector";
 import GuidedForm from "@/components/GuidedForm";
@@ -62,8 +61,8 @@ function ResultsNarrative({
   if (inputs.mortgageMode !== "purchase") return null;
 
   return (
-    <div className="rounded-xl px-4 py-3.5 text-sm leading-relaxed border border-neutral-100"
-      style={{ background: "#f8f8f8", color: "var(--ink-mid)" }}>
+    <div className="pl-4 py-1 text-sm leading-relaxed"
+      style={{ borderLeft: "3px solid var(--green)", color: "var(--ink-mid)" }}>
       At this rate, you'd pay{" "}
       <span className="font-semibold text-neutral-900">{payment} {freq}</span>{" "}
       for the first {inputs.termYears} years, leaving{" "}
@@ -94,16 +93,11 @@ export default function Home() {
 
       <SiteLayout>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10">
-          <Breadcrumb crumbs={[
-            { label: "CrystalKey", href: "/" },
-            { label: "Mortgage Calculator" },
-          ]} />
-
           {/* ── Hero header — your design, preserved exactly ── */}
           <div className="mt-8 mb-10">
             <div className="flex flex-col items-center text-center">
               <div className="max-w-3xl">
-                <h1 className="font-display text-4xl leading-tight mb-3" style={{ color: "var(--ink)" }}>
+                <h1 className="text-4xl font-bold leading-tight mb-3 tracking-tight" style={{ color: "var(--ink)" }}>
                   Canadian Mortgage Calculator
                 </h1>
                 <p className="text-lg mb-5" style={{ color: "var(--ink-muted)" }}>
@@ -111,14 +105,18 @@ export default function Home() {
                 </p>
                 <div className="flex flex-wrap justify-center gap-3">
                   {[
-                    "🔓 No email or account",
-                    "🇨🇦 Canadian rules built in",
-                    "📊 Complete and accurate",
-                  ].map((item) => (
-                    <span key={item}
-                      className="inline-flex items-center justify-center rounded-full px-4 py-2 text-sm bg-white border"
+                    { icon: "M9 12l2 2 4-4", label: "No account needed" },
+                    { icon: "M3 12h18M12 3l7 9-7 9-7-9 7-9z", label: "Canadian rules built in" },
+                    { icon: "M3 3v18h18M7 16l4-4 4 4 4-8", label: "Complete & accurate" },
+                  ].map(({ icon, label }) => (
+                    <span key={label}
+                      className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm bg-white border"
                       style={{ color: "var(--ink-mid)", borderColor: "#e8e8e8" }}>
-                      {item}
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                        stroke="var(--green)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d={icon}/>
+                      </svg>
+                      {label}
                     </span>
                   ))}
                 </div>
@@ -131,7 +129,7 @@ export default function Home() {
 
             {/* Left — guided inputs only */}
             <aside>
-              <div className="rounded-2xl bg-white p-5 shadow-sm"
+              <div className="rounded-2xl bg-white p-5"
                 style={{ border: "1px solid #e8e8e8" }}>
                 <div className="mb-5">
                   <ModeSelector mode={inputs.mortgageMode} onChange={setMode} />
@@ -153,8 +151,8 @@ export default function Home() {
                   setField={setField}
                 />
               </div>
-              <p className="text-xs text-neutral-400 mt-4 leading-relaxed">
-                These numbers are a starting point, not a contract. A good broker will get you closer.
+              <p className="text-xs mt-4 px-1 leading-relaxed" style={{ color: "var(--ink-faint)" }}>
+                Estimates only — not financial advice. Consult a licensed broker before decisions.
               </p>
             </aside>
 

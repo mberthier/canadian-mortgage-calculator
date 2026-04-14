@@ -6,7 +6,7 @@ import Wordmark from "./Wordmark";
 import { usePathname } from "next/navigation";
 
 const NAV_LINKS = [
-  { href: "/",                        label: "Mortgage Calculator" },
+  { href: "/",                        label: "Calculator"          },
   { href: "/affordability",           label: "Affordability"       },
   { href: "/cmhc-calculator",         label: "CMHC"                },
   { href: "/land-transfer-tax",       label: "Land Transfer"       },
@@ -37,7 +37,7 @@ export default function SiteLayout({ children }: Props) {
             </Link>
 
             {/* Desktop nav */}
-            <nav className="hidden lg:flex items-center gap-0.5 overflow-x-auto" aria-label="Main navigation">
+            <nav className="hidden lg:flex items-center gap-0.5 overflow-x-auto ml-6 pl-6 border-l border-neutral-200" aria-label="Main navigation">
               {NAV_LINKS.map(({ href, label }) => (
                 <Link key={href} href={href}
                   className="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors whitespace-nowrap"
@@ -76,7 +76,9 @@ export default function SiteLayout({ children }: Props) {
                 <Wordmark size="footer" />
               </div>
               <p className="text-xs leading-relaxed" style={{ color: "var(--ink-faint)" }}>
-                Crystal clear mortgage calculations for Canadians.
+                <em style={{ fontFamily: "'DM Serif Display', Georgia, serif", fontStyle: "italic", fontSize: "13px" }}>
+                  Crystal clear mortgage calculations for Canadians.
+                </em>
               </p>
             </div>
             <div>

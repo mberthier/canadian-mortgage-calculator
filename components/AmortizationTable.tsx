@@ -129,7 +129,7 @@ export default function AmortizationTable({ schedule, frequency, termYears }: Pr
 
       {/* term legend */}
       <div className="px-4 py-2 text-xs flex items-center gap-2 border-b border-neutral-50"
-        style={{ background: "#f8f8f8" }}>
+       >
         <span className="inline-block w-2.5 h-2.5 rounded-sm" style={{ background: "var(--green-light)", border: "1px solid var(--green-border)" }}></span>
         <span style={{ color: "var(--ink-faint)" }}>Highlighted = current {termYears}-year term</span>
         {hasAnyLumpSums && (
@@ -144,7 +144,7 @@ export default function AmortizationTable({ schedule, frequency, termYears }: Pr
       <div className="overflow-x-auto">
         <table className="w-full text-sm" role="table">
           <thead>
-            <tr style={{ background: "#f8f8f8" }}>
+            <tr>
               {viewMode === "yearly" ? (
                 <>
                   <th className={thCls}>Year</th>

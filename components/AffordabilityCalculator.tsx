@@ -112,7 +112,7 @@ export default function AffordabilityCalculator({
       {open && (
         <div className="border-t border-neutral-100">
           {/* Inline summary — always visible at top */}
-          <div className="px-5 py-4 grid grid-cols-2 gap-3" style={{ background: "#f8f8f8" }}>
+          <div className="px-5 py-4 grid grid-cols-2 gap-3">
             {[
               { key: "GDS", pct: gds, limit: GDS_LIMIT, color: gdsColor,
                 tip: "GDS measures housing costs as % of income. Includes mortgage P&I, property tax, heating, 50% condo fees. Limit: 39%." },

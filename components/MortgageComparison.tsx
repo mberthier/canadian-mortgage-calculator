@@ -133,7 +133,7 @@ export default function MortgageComparison({ inputs, loanAmount }: Props) {
           <div className="rounded-xl border border-neutral-100 overflow-hidden">
             <table className="w-full text-sm">
               <thead>
-                <tr style={{ background: "#f8f8f8" }}>
+                <tr>
                   <th className="px-4 py-2.5 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wide"></th>
                   <th className="px-4 py-2.5 text-right text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--green)" }}>A</th>
                   <th className="px-4 py-2.5 text-right text-xs font-semibold text-neutral-500 uppercase tracking-wide">B</th>
@@ -150,7 +150,7 @@ export default function MortgageComparison({ inputs, loanAmount }: Props) {
                     {paymentDiff >= 0 ? "+" : ""}{formatCurrency(paymentDiff, 2)}
                   </td>
                 </tr>
-                <tr style={{ background: "#f8f8f8" }}>
+                <tr>
                   <td className="px-4 py-2.5 font-semibold text-neutral-700" colSpan={4}>After {inputs.termYears}-year term</td>
                 </tr>
                 <tr>
@@ -171,7 +171,7 @@ export default function MortgageComparison({ inputs, loanAmount }: Props) {
                     {termBalDiff >= 0 ? "+" : ""}{formatCurrency(termBalDiff, 0, true)}
                   </td>
                 </tr>
-                <tr style={{ background: "#f8f8f8" }}>
+                <tr>
                   <td className="px-4 py-2.5 font-semibold text-neutral-700" colSpan={4}>Full amortization</td>
                 </tr>
                 <tr>

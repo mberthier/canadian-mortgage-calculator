@@ -77,8 +77,7 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
       </div>
 
       {/* Key metrics grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-y divide-neutral-100"
-        style={{ background: "#f8f8f8" }}>
+      <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-y divide-neutral-100" style={{ background: "#fff" }}>
         <Metric label="Monthly ownership"
           value={formatCurrency(outputs.totalMonthlyOwnership, 0)}
           sub="Mortgage + tax + heat"
