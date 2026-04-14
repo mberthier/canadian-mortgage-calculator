@@ -29,7 +29,7 @@ export default function ModeSelector({ mode, onChange }: Props) {
             <p className="text-xs font-semibold" style={{ color: active ? "var(--green)" : "var(--ink-muted)" }}>
               {m.label}
             </p>
-            <p className="text-xs mt-0.5 hidden sm:block" style={{ color: active ? "var(--ink-faint)" : "var(--ink-faint)", opacity: active ? 1 : 0.7 }}>
+            <p className="text-xs mt-0.5 hidden sm:block" style={{ color: "var(--ink-faint)", opacity: active ? 1 : 0.6 }}>
               {m.sub}
             </p>
           </button>

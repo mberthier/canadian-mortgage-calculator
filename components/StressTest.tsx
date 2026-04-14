@@ -60,7 +60,7 @@ export default function StressTest({ outputs, inputs }: Props) {
           return (
             <div key={s.label} className="rounded-xl p-3 text-center border"
               style={isBase
-                ? { background: "#f8f8f8", borderColor: "#e7e5e4" }
+                ? { background: "#fafafa", borderColor: "#e7e5e4" }
                 : diff > 300 ? { background: "#fef2f2", borderColor: "#fecaca" }
                 : { background: "#fffbeb", borderColor: "#fde68a" }}>
               <p className="text-xs font-medium mb-1" style={{ color: isBase ? "var(--ink-mid)" : diff > 300 ? "var(--red)" : "var(--amber)" }}>

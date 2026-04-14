@@ -58,7 +58,7 @@ export default function StressTestClient() {
         </div>
       </div>
 
-      <div className="border-t border-neutral-100 p-6 space-y-4" style={{ background: "#f8f8f8" }}>
+      <div className="border-t border-neutral-100 p-6 space-y-4" style={{ background: "#fafafa" }}>
         <div className="grid grid-cols-3 gap-3">
           {[
             { label: "Your Contract Rate", value: `${rate.toFixed(2)}%`, color: "var(--green)" },

@@ -75,7 +75,7 @@ export default function RateHistoryChart({ currentRate, onSelectRate }: Props) {
               { label: "Best 5yr Fixed", value: "3.89%", sub: "As of Apr 9, 2026", color: "var(--ink)" },
             ].map(({ label, value, sub, color }) => (
               <div key={label} className="rounded-xl p-3 text-center border border-neutral-100"
-                style={{ background: "#f8f8f8" }}>
+                style={{ background: "#fafafa" }}>
                 <p className="text-lg font-semibold" style={{ color }}>{value}</p>
                 <p className="text-xs font-medium text-neutral-600 mt-0.5">{label}</p>
                 <p className="text-xs mt-0.5" style={{ color: "var(--ink-faint)" }}>{sub}</p>

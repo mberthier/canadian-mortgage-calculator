@@ -106,7 +106,7 @@ export default function BreakPenaltyCalculatorClient() {
 
       {/* Results */}
       {result && (
-        <div className="border-t border-neutral-100 p-6 space-y-4" style={{ background: "#f8f8f8" }}>
+        <div className="border-t border-neutral-100 p-6 space-y-4" style={{ background: "#fafafa" }}>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="rounded-xl bg-white border border-neutral-100 p-4 text-center">
               <p className="text-xs text-neutral-500 mb-1 uppercase tracking-wide">3-Month Interest</p>

@@ -40,7 +40,7 @@ export default function FeatureDiscovery() {
               className="flex items-start gap-2.5 px-3 py-2.5 rounded-lg text-left transition-all hover:opacity-90"
               style={isGreen
                 ? { background: "var(--green-light)", border: "1px solid var(--green-border)" }
-                : { background: "#f8f8f8", border: "1px solid #e8e8e8" }}>
+                : { background: "#fafafa", border: "1px solid #e8e8e8" }}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                 className="mt-0.5 shrink-0"

@@ -60,7 +60,7 @@ export default function FirstTimeBuyerPage() {
 
         <div className="space-y-10">
           <section>
-            <h2 className="font-display text-2xl mb-5" style={{ color: "var(--ink)" }}>Federal and provincial programs</h2>
+            <h2 className="text-2xl font-semibold tracking-tight mb-5" style={{ color: "var(--ink)" }}>Federal and provincial programs</h2>
             <div className="space-y-3">
               {PROGRAMS.map((p) => (
                 <div key={p.name} className="rounded-xl bg-white border border-neutral-100 p-5 flex gap-4">
@@ -79,13 +79,13 @@ export default function FirstTimeBuyerPage() {
           </section>
 
           <section>
-            <h2 className="font-display text-2xl mb-4" style={{ color: "var(--ink)" }}>Frequently asked questions</h2>
+            <h2 className="text-2xl font-semibold mb-4 tracking-tight" style={{ color: "var(--ink)" }}>Frequently asked questions</h2>
             <FAQAccordion items={FAQ} pageUrl="https://crystalkey.ca/first-time-buyer" />
           </section>
         </div>
 
         <div className="mt-12 rounded-2xl p-8 text-center" style={{ background: "var(--green)" }}>
-          <h2 className="font-display text-2xl text-white mb-2">Calculate your first home purchase</h2>
+          <h2 className="text-2xl font-semibold tracking-tight text-white mb-2">Calculate your first home purchase</h2>
           <p className="text-sm mb-5" style={{ color: "rgba(255,255,255,0.7)" }}>
             See your CMHC cost, LTT rebate, total upfront cash, and full payment breakdown.
           </p>

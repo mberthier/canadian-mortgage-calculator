@@ -80,7 +80,7 @@ export default function AffordabilityCalculator({
   function GaugeBar({ pct, limit }: { pct: number; limit: number }) {
     const color = pct > limit ? "#ef4444" : pct > limit * 0.9 ? "var(--amber)" : "var(--green-mid)";
     return (
-      <div className="w-full rounded-full h-1.5 overflow-hidden" style={{ background: "var(--cream-dark)" }}>
+      <div className="w-full rounded-full h-1.5 overflow-hidden" style={{ background: "#e8e8e8" }}>
         <div className="h-full rounded-full transition-all duration-300"
           style={{ width: `${Math.min((pct / limit) * 100, 100)}%`, background: color }} />
       </div>

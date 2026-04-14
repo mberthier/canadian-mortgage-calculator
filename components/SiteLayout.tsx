@@ -27,7 +27,7 @@ export default function SiteLayout({ children }: Props) {
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <div className="min-h-screen" style={{ background: "#f8f8f8" }}>
+    <div className="min-h-screen" style={{ background: "#fafafa" }}>
       {/* Header */}
       <header className="border-b bg-white sticky top-0 z-20" style={{ borderColor: "#e8e8e8" }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6">

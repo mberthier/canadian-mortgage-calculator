@@ -50,7 +50,7 @@ export default function AffordabilityPage() {
 
         <div className="mt-12 space-y-10">
           <section>
-            <h2 className="font-display text-2xl mb-4" style={{ color: "var(--ink)" }}>How affordability works in Canada</h2>
+            <h2 className="text-2xl font-semibold mb-4 tracking-tight" style={{ color: "var(--ink)" }}>How affordability works in Canada</h2>
             <div className="space-y-4 text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>
               <p>Canadian lenders apply two standardized tests — GDS and TDS — both calculated at the <strong className="text-neutral-700">stress test rate</strong> (the higher of your contract rate + 2% or 5.25%), not your actual rate. CMHC raised the GDS limit from 32% to 39% in December 2024, meaningfully increasing qualifying power.</p>
               <p>Your maximum purchase price is determined by whichever constraint binds first. Adding a co-applicant, reducing debts, or increasing your down payment all improve your position.</p>
@@ -58,7 +58,7 @@ export default function AffordabilityPage() {
           </section>
 
           <section>
-            <h2 className="font-display text-2xl mb-4" style={{ color: "var(--ink)" }}>Stress test rates by contract rate</h2>
+            <h2 className="text-2xl font-semibold mb-4 tracking-tight" style={{ color: "var(--ink)" }}>Stress test rates by contract rate</h2>
             <div className="rounded-2xl overflow-hidden border border-neutral-100">
               <table className="w-full text-sm">
                 <thead>
@@ -87,13 +87,13 @@ export default function AffordabilityPage() {
           </section>
 
           <section>
-            <h2 className="font-display text-2xl mb-4" style={{ color: "var(--ink)" }}>Frequently asked questions</h2>
+            <h2 className="text-2xl font-semibold mb-4 tracking-tight" style={{ color: "var(--ink)" }}>Frequently asked questions</h2>
             <FAQAccordion items={FAQ} pageUrl="https://crystalkey.ca/affordability" />
           </section>
         </div>
 
         <div className="mt-12 rounded-2xl p-8 text-center" style={{ background: "var(--green)" }}>
-          <h2 className="font-display text-2xl text-white mb-2">Calculate your full mortgage</h2>
+          <h2 className="text-2xl font-semibold tracking-tight text-white mb-2">Calculate your full mortgage</h2>
           <p className="text-sm mb-5" style={{ color: "rgba(255,255,255,0.7)" }}>
             See your payment, CMHC, land transfer tax, and full amortization schedule.
           </p>

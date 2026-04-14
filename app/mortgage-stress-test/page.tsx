@@ -44,7 +44,7 @@ export default function StressTestPage() {
 
         <div className="mt-12 space-y-8">
           <section>
-            <h2 className="font-display text-2xl mb-3" style={{ color: "var(--ink)" }}>How the Canadian mortgage stress test works</h2>
+            <h2 className="text-2xl font-semibold mb-3 tracking-tight" style={{ color: "var(--ink)" }}>How the Canadian mortgage stress test works</h2>
             <div className="space-y-3 text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>
               <p>Introduced in 2016 and expanded in 2018, the stress test ensures Canadians can handle higher rates at renewal. Lenders calculate your GDS and TDS ratios at the stress test rate — not your actual rate — before approving your mortgage.</p>
               <p>The stress test rate is the greater of your contract rate + 2% or 5.25%. With today's rates around 3.89% fixed, most borrowers face a stress test rate of 5.89%.</p>
@@ -52,13 +52,13 @@ export default function StressTestPage() {
             </div>
           </section>
           <section>
-            <h2 className="font-display text-2xl mb-4" style={{ color: "var(--ink)" }}>Frequently asked questions</h2>
+            <h2 className="text-2xl font-semibold mb-4 tracking-tight" style={{ color: "var(--ink)" }}>Frequently asked questions</h2>
             <FAQAccordion items={FAQ} pageUrl="https://crystalkey.ca/mortgage-stress-test" />
           </section>
         </div>
 
         <div className="mt-12 rounded-2xl p-8 text-center" style={{ background: "var(--green)" }}>
-          <h2 className="font-display text-2xl text-white mb-2">Run your complete mortgage calculation</h2>
+          <h2 className="text-2xl font-semibold tracking-tight text-white mb-2">Run your complete mortgage calculation</h2>
           <p className="text-sm mb-5" style={{ color: "rgba(255,255,255,0.7)" }}>Full amortization, CMHC, LTT, and renewal stress test scenarios in one place.</p>
           <Link href="/" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm"
             style={{ background: "#fff", color: "var(--green)" }}>

@@ -69,7 +69,7 @@ export default function BreakPenaltyPage() {
 
         <div className="mt-12 space-y-10">
           <section>
-            <h2 className="font-display text-2xl mb-4" style={{ color: "var(--ink)" }}>
+            <h2 className="text-2xl font-semibold mb-4 tracking-tight" style={{ color: "var(--ink)" }}>
               How mortgage break penalties work in Canada
             </h2>
             <div className="space-y-4 text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>
@@ -86,7 +86,7 @@ export default function BreakPenaltyPage() {
           </section>
 
           <section>
-            <h2 className="font-display text-2xl mb-4" style={{ color: "var(--ink)" }}>
+            <h2 className="text-2xl font-semibold mb-4 tracking-tight" style={{ color: "var(--ink)" }}>
               Why big bank IRD penalties are so much larger
             </h2>
             <div className="space-y-4 text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>
@@ -106,7 +106,7 @@ export default function BreakPenaltyPage() {
           </section>
 
           <section>
-            <h2 className="font-display text-2xl mb-4" style={{ color: "var(--ink)" }}>
+            <h2 className="text-2xl font-semibold mb-4 tracking-tight" style={{ color: "var(--ink)" }}>
               The break penalty table
             </h2>
             <div className="rounded-2xl bg-white border border-neutral-100 overflow-hidden">
@@ -140,7 +140,7 @@ export default function BreakPenaltyPage() {
           </section>
 
           <section>
-            <h2 className="font-display text-2xl mb-4" style={{ color: "var(--ink)" }}>
+            <h2 className="text-2xl font-semibold mb-4 tracking-tight" style={{ color: "var(--ink)" }}>
               Frequently asked questions
             </h2>
             <FAQAccordion items={FAQ} pageUrl="https://crystalkey.ca/mortgage-break-penalty" />
@@ -148,7 +148,7 @@ export default function BreakPenaltyPage() {
         </div>
 
         <div className="mt-12 rounded-2xl p-8 text-center" style={{ background: "var(--green)" }}>
-          <h2 className="font-display text-2xl text-white mb-2">
+          <h2 className="text-2xl font-semibold tracking-tight text-white mb-2">
             Thinking about refinancing?
           </h2>
           <p className="text-sm mb-5" style={{ color: "rgba(255,255,255,0.7)" }}>

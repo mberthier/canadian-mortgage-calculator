@@ -299,8 +299,8 @@ export default function GlossaryPage() {
           {letters.map((letter) => (
             <section key={letter} id={letter}>
               <div className="flex items-center gap-3 mb-6">
-                <h2 className="font-display text-3xl" style={{ color: "var(--green)" }}>{letter}</h2>
-                <div className="flex-1 h-px" style={{ background: "var(--cream-dark)" }} />
+                <h2 className="text-2xl font-bold tracking-tight" style={{ color: "var(--green)" }}>{letter}</h2>
+                <div className="flex-1 h-px" style={{ background: "#e8e8e8" }} />
               </div>
               <div className="space-y-6">
                 {grouped[letter].map((term) => (
@@ -335,7 +335,7 @@ export default function GlossaryPage() {
 
         {/* CTA */}
         <div className="mt-16 rounded-2xl p-8 text-center" style={{ background: "var(--green)" }}>
-          <h2 className="font-display text-2xl text-white mb-2">Ready to run the numbers?</h2>
+          <h2 className="text-2xl font-semibold tracking-tight text-white mb-2">Ready to run the numbers?</h2>
           <p className="text-sm mb-5" style={{ color: "rgba(255,255,255,0.7)" }}>
             Now that you know the terms, put them to work.
           </p>

@@ -65,7 +65,7 @@ export default function LTTCalculatorClient() {
       </div>
 
       {/* Results */}
-      <div className="border-t border-neutral-100 p-6" style={{ background: "#f8f8f8" }}>
+      <div className="border-t border-neutral-100 p-6" style={{ background: "#fafafa" }}>
         <div className="space-y-2.5 text-sm">
           {ltt.provincial > 0 && (
             <div className="flex justify-between">

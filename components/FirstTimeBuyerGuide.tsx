@@ -90,7 +90,7 @@ export default function FirstTimeBuyerGuide({
 
           {/* First-time buyer toggle */}
           <label className="flex items-center gap-3 cursor-pointer p-3 rounded-xl border"
-            style={{ background: "#f8f8f8", borderColor: isFirstTimeBuyer ? "var(--green-border)" : "#e7e5e4" }}>
+            style={{ background: "#fafafa", borderColor: isFirstTimeBuyer ? "var(--green-border)" : "#e7e5e4" }}>
             <div
               onClick={onToggle}
               role="switch"
@@ -119,7 +119,7 @@ export default function FirstTimeBuyerGuide({
                 <div className="rounded-lg overflow-hidden border border-neutral-100">
                   <table className="w-full text-xs">
                     <thead>
-                      <tr style={{ background: "#f8f8f8" }}>
+                      <tr style={{ background: "#fafafa" }}>
                         <th className="px-3 py-2 text-left font-semibold text-neutral-600">Purchase Price</th>
                         <th className="px-3 py-2 text-right font-semibold text-neutral-600">Min. Down</th>
                       </tr>
@@ -157,7 +157,7 @@ export default function FirstTimeBuyerGuide({
                 <div className="rounded-lg overflow-hidden border border-neutral-100">
                   <table className="w-full text-xs">
                     <thead>
-                      <tr style={{ background: "#f8f8f8" }}>
+                      <tr style={{ background: "#fafafa" }}>
                         <th className="px-3 py-2 text-left font-semibold text-neutral-600">Down Payment</th>
                         <th className="px-3 py-2 text-right font-semibold text-neutral-600">Premium</th>
                       </tr>
@@ -201,7 +201,7 @@ export default function FirstTimeBuyerGuide({
                 <p>This protects you from defaulting if rates rise at renewal.</p>
                 {interestRate > 0 && (
                   <div className="rounded-lg px-3 py-2 border border-neutral-100"
-                    style={{ background: "#f8f8f8" }}>
+                    style={{ background: "#fafafa" }}>
                     At your rate of <strong className="text-neutral-700">{interestRate}%</strong>, you'll be stress-tested at{" "}
                     <strong style={{ color: "var(--green)" }}>{stressTestRate.toFixed(2)}%</strong>.
                     {" "}Your lender will calculate your GDS/TDS ratios using this higher rate.

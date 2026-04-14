@@ -44,7 +44,7 @@ export default function MortgageRatesPage() {
 
         <div className="mt-12 space-y-8">
           <section>
-            <h2 className="font-display text-2xl mb-3" style={{ color: "var(--ink)" }}>The rate cycle in context</h2>
+            <h2 className="text-2xl font-semibold mb-3 tracking-tight" style={{ color: "var(--ink)" }}>The rate cycle in context</h2>
             <div className="space-y-3 text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>
               <p>Canadian mortgage rates went on an unprecedented journey between 2022 and 2026. The Bank of Canada raised its overnight rate from 0.25% to 5.0% in 18 months — the fastest tightening cycle in Canadian history — to combat inflation that peaked above 8%.</p>
               <p>Starting in June 2024, the BoC cut rates nine consecutive times, bringing the overnight rate from 5.0% to 2.25% by October 2025. Fixed mortgage rates followed bond yields lower, dropping from nearly 6% to around 3.89% today.</p>
@@ -53,13 +53,13 @@ export default function MortgageRatesPage() {
           </section>
 
           <section>
-            <h2 className="font-display text-2xl mb-4" style={{ color: "var(--ink)" }}>Frequently asked questions</h2>
+            <h2 className="text-2xl font-semibold mb-4 tracking-tight" style={{ color: "var(--ink)" }}>Frequently asked questions</h2>
             <FAQAccordion items={FAQ} pageUrl="https://crystalkey.ca/mortgage-rates" />
           </section>
         </div>
 
         <div className="mt-12 rounded-2xl p-8 text-center" style={{ background: "var(--green)" }}>
-          <h2 className="font-display text-2xl text-white mb-2">Calculate your mortgage at today's rates</h2>
+          <h2 className="text-2xl font-semibold tracking-tight text-white mb-2">Calculate your mortgage at today's rates</h2>
           <p className="text-sm mb-5" style={{ color: "rgba(255,255,255,0.7)" }}>
             Best available rates pre-loaded in the calculator.
           </p>

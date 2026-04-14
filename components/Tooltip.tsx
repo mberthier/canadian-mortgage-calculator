@@ -68,7 +68,7 @@ export default function Tooltip({ content, children }: Props) {
         style={{
           width:      15,
           height:     15,
-          background: open ? "var(--green)" : "var(--cream-dark)",
+          background: open ? "var(--green)" : "#e8e8e8",
           color:      open ? "#fff" : "var(--ink-muted)",
           fontSize:   9,
           fontWeight: 700,

@@ -42,7 +42,7 @@ export default function CMHCPage() {
         <CMHCCalculatorClient />
         <div className="mt-12 space-y-8">
           <section>
-            <h2 className="font-display text-2xl mb-4" style={{ color: "var(--ink)" }}>CMHC premium rates for 2026</h2>
+            <h2 className="text-2xl font-semibold mb-4 tracking-tight" style={{ color: "var(--ink)" }}>CMHC premium rates for 2026</h2>
             <div className="rounded-2xl bg-white border border-neutral-100 overflow-hidden">
               <table className="w-full text-sm">
                 <thead><tr style={{ background: "var(--green)", color: "#fff" }}>
@@ -63,12 +63,12 @@ export default function CMHCPage() {
             </div>
           </section>
           <section>
-            <h2 className="font-display text-2xl mb-4" style={{ color: "var(--ink)" }}>Frequently asked questions</h2>
+            <h2 className="text-2xl font-semibold mb-4 tracking-tight" style={{ color: "var(--ink)" }}>Frequently asked questions</h2>
             <FAQAccordion items={FAQ} pageUrl="https://crystalkey.ca/cmhc-calculator" />
           </section>
         </div>
         <div className="mt-12 rounded-2xl p-8 text-center" style={{ background: "var(--green)" }}>
-          <h2 className="font-display text-2xl text-white mb-2">Calculate your full mortgage payment</h2>
+          <h2 className="text-2xl font-semibold tracking-tight text-white mb-2">Calculate your full mortgage payment</h2>
           <p className="text-sm mb-5" style={{ color: "rgba(255,255,255,0.7)" }}>Including CMHC, amortization schedule, land transfer tax, and total upfront costs.</p>
           <Link href="/" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm" style={{ background: "#fff", color: "var(--green)" }}>Open Full Mortgage Calculator →</Link>
         </div>

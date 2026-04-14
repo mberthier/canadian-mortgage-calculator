@@ -4,7 +4,7 @@ import { IllustrationFormula, IllustrationReceipt, IllustrationCalendar } from "
 export default function AboutSection() {
   return (
     <section className="rounded-2xl bg-white border border-neutral-100 p-8 mt-6">
-      <h2 className="font-display text-2xl mb-2" style={{ color: "var(--ink)" }}>
+      <h2 className="text-2xl font-semibold tracking-tight mb-2" style={{ color: "var(--ink)" }}>
         Why CrystalKey is different
       </h2>
       <p className="text-sm mb-8" style={{ color: "var(--ink-muted)" }}>

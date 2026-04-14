@@ -75,7 +75,7 @@ export default function LandTransferTax({ inputs, setField }: Props) {
             <span className="text-sm text-neutral-700">First-time home buyer</span>
           </label>
 
-          <div className="rounded-lg border border-neutral-100 p-3 space-y-2 text-sm" style={{ background: "#f8f8f8" }}>
+          <div className="rounded-lg border border-neutral-100 p-3 space-y-2 text-sm" style={{ background: "#fafafa" }}>
             {ltt.provincial > 0 && (
               <div className="flex justify-between text-neutral-600">
                 <span>Provincial LTT</span><span>{formatCurrency(ltt.provincial)}</span>

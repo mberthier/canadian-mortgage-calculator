@@ -145,12 +145,15 @@ function RateInput({ id, label, tip, value, onChange, showSlider, sliderNote }: 
 function MoreToggle({ open, onToggle, label = "More options" }: { open: boolean; onToggle: () => void; label?: string }) {
   return (
     <button type="button" onClick={onToggle}
-      className="w-full flex items-center justify-between rounded-lg px-3 py-2.5 text-xs font-medium border transition-colors"
+      className="w-full flex items-center justify-between rounded-lg px-3 py-2.5 text-xs font-medium transition-colors"
       style={open
-        ? { background: "var(--cream-dark)", color: "var(--ink-mid)", borderColor: "#e8e8e8" }
-        : { background: "var(--green-light)", color: "var(--green)", borderColor: "var(--green-border)" }}>
+        ? { background: "#fafafa", color: "var(--ink-mid)", border: "1px solid #e0e0e0" }
+        : { background: "#eff6ff", color: "var(--green)", border: "1px solid #dbeafe" }}>
       <span>{open ? `Hide ${label.toLowerCase()}` : label}</span>
-      <span>{open ? "−" : "+"}</span>
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"
+        style={{ transform: open ? "rotate(180deg)" : "none", transition: "transform 0.15s" }}>
+        <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
     </button>
   );
 }
@@ -309,7 +312,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
           {/* LTT — read-only calculated */}
           {inputs.homePrice > 0 && (
             <div className="rounded-lg px-3 py-2.5 text-xs space-y-1.5 border"
-              style={{ background: "#f8f8f8", borderColor: "#e8e8e8" }}>
+              style={{ background: "#fafafa", borderColor: "#e8e8e8" }}>
               {(outputs.ltt.provincial > 0 || outputs.ltt.municipal > 0) && (
                 <div className="flex justify-between">
                   <span className="flex items-center gap-1" style={{ color: "var(--ink-mid)" }}>
@@ -456,7 +459,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
 
           {currentPayment > 0 && (
             <div className="rounded-lg px-3 py-2.5 text-sm flex justify-between border"
-              style={{ background: "#f8f8f8", borderColor: "#e8e8e8" }}>
+              style={{ background: "#fafafa", borderColor: "#e8e8e8" }}>
               <span style={{ color: "var(--ink-mid)" }}>Current payment at {currentRate.toFixed(2)}%</span>
               <span className="font-semibold text-neutral-800">{formatCurrency(currentPayment, 2)}</span>
             </div>
@@ -536,7 +539,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
 
           {inputs.homeValue > 0 && inputs.currentBalance > 0 && (
             <div className="rounded-lg px-3 py-2.5 text-xs flex justify-between border"
-              style={{ background: "#f8f8f8", borderColor: outputs.ltv > 0.8 ? "#fecaca" : "var(--cream-dark)" }}>
+              style={{ background: "#fafafa", borderColor: outputs.ltv > 0.8 ? "#fecaca" : "#e8e8e8" }}>
               <span style={{ color: "var(--ink-mid)" }}>Estimated equity</span>
               <span className="font-semibold" style={{ color: outputs.ltv > 0.8 ? "#ef4444" : "var(--green)" }}>
                 {formatCurrency(Math.max(0, inputs.homeValue - inputs.currentBalance), 0)}
@@ -553,7 +556,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
 
           {currentPayment > 0 && (
             <div className="rounded-lg px-3 py-2.5 text-sm flex justify-between border"
-              style={{ background: "#f8f8f8", borderColor: "#e8e8e8" }}>
+              style={{ background: "#fafafa", borderColor: "#e8e8e8" }}>
               <span style={{ color: "var(--ink-mid)" }}>Current payment at {currentRate.toFixed(2)}%</span>
               <span className="font-semibold text-neutral-800">{formatCurrency(currentPayment, 2)}</span>
             </div>

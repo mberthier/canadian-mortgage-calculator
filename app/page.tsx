@@ -259,7 +259,7 @@ export default function Home() {
               <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
                 {FREQUENCY_LABELS[inputs.paymentFrequency]}
               </p>
-              <p className="font-display text-2xl" style={{ color: "var(--green)" }}>
+              <p className="text-2xl font-semibold tracking-tight" style={{ color: "var(--green)" }}>
                 {formatCurrency(outputs.periodicPayment, 2)}
               </p>
             </div>

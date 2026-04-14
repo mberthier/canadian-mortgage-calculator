@@ -201,7 +201,7 @@ export default function AmortizationTable({ schedule, frequency, termYears }: Pr
                     <tr key={row.paymentNumber}
                       className="transition-colors"
                       style={isInTerm ? { background: "var(--green-light)" } : undefined}
-                      onMouseEnter={(e) => { if (!isInTerm) (e.currentTarget as HTMLElement).style.background = "var(--cream)"; }}
+                      onMouseEnter={(e) => { if (!isInTerm) (e.currentTarget as HTMLElement).style.background = "#f9f9f9"; }}
                       onMouseLeave={(e) => { if (!isInTerm) (e.currentTarget as HTMLElement).style.background = ""; }}>
                       <td className="px-4 py-2 text-neutral-400 tabular-nums text-xs">{row.paymentNumber}</td>
                       <td className="px-4 py-2 text-right text-neutral-700 tabular-nums text-xs">{formatCurrency(row.payment)}</td>

@@ -76,7 +76,7 @@ export default function AffordabilityClient() {
         </div>
       </div>
 
-      <div className="border-t border-neutral-100 p-6" style={{ background: "#f8f8f8" }}>
+      <div className="border-t border-neutral-100 p-6" style={{ background: "#fafafa" }}>
         <div className="text-center mb-5">
           <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide mb-1">
             Estimated Max Purchase Price

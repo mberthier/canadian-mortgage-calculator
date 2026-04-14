@@ -215,7 +215,7 @@ export default function CalculatorForm({
                   {(ltv * 100).toFixed(1)}%
                 </span>
               </div>
-              <div className="w-full rounded-full h-1.5 overflow-hidden" style={{ background: "var(--cream-dark)" }}>
+              <div className="w-full rounded-full h-1.5 overflow-hidden" style={{ background: "#e8e8e8" }}>
                 <div className="h-full rounded-full transition-all"
                   style={{ width: `${Math.min(ltv * 100, 100)}%`,
                     background: ltv > 0.8 ? "var(--red)" : ltv > 0.7 ? "var(--amber)" : "var(--green-mid)" }} />
@@ -248,7 +248,7 @@ export default function CalculatorForm({
         onClick={() => setShowMore((o) => !o)}
         className="w-full flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-all"
         style={showMore
-          ? { background: "var(--cream-dark)", color: "var(--ink-mid)" }
+          ? { background: "#e8e8e8", color: "var(--ink-mid)" }
           : { background: "var(--green-light)", color: "var(--green)", border: "1px solid var(--green-border)" }}
         aria-expanded={showMore}
       >

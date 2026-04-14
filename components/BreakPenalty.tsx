@@ -117,7 +117,7 @@ export default function BreakPenalty() {
                 { label: "Your Penalty",      value: result.penalty,           highlight: true,                       isTotal: true },
               ].map(({ label, value, highlight, disabled, isTotal }) => (
                 <div key={label} className="p-3 text-center"
-                  style={isTotal ? { background: "#f8f8f8" } : {}}>
+                  style={isTotal ? { background: "#fafafa" } : {}}>
                   <p className="text-xs font-medium mb-1" style={{ color: "var(--ink-faint)" }}>{label}</p>
                   <p className="font-semibold"
                     style={{
@@ -135,7 +135,7 @@ export default function BreakPenalty() {
           </div>
 
           <div className="rounded-lg px-3 py-2.5 text-xs leading-relaxed border border-neutral-100"
-            style={{ background: "#f8f8f8", color: "var(--ink-muted)" }}>
+            style={{ background: "#fafafa", color: "var(--ink-muted)" }}>
             <strong className="text-neutral-700">Estimate only.</strong> Actual penalties vary significantly by lender. Some use posted rates vs discounted rates for IRD; some apply different comparison periods. Big bank penalties are typically higher than monoline lenders. Always confirm with your lender before breaking your mortgage.
           </div>
         </div>

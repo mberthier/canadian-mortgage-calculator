@@ -78,7 +78,7 @@ export default function CMHCCalculatorClient() {
       </div>
 
       {/* Results */}
-      <div className="border-t border-neutral-100 p-6" style={{ background: hasCMHC ? "var(--cream)" : "var(--green-light)" }}>
+      <div className="border-t border-neutral-100 p-6" style={{ background: hasCMHC ? "#f9f9f9" : "var(--green-light)" }}>
         {hasCMHC ? (
           <div className="space-y-4">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
