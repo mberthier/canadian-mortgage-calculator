@@ -48,7 +48,7 @@ export default function LTTPage() {
             <h2 className="font-display text-2xl mb-4" style={{ color: "var(--ink)" }}>
               Land transfer tax by province
             </h2>
-            <div className="rounded-2xl bg-white border border-stone-100 overflow-hidden">
+            <div className="rounded-2xl bg-white border border-slate-100 overflow-hidden">
               <table className="w-full text-sm">
                 <thead>
                   <tr style={{ background: "var(--green)", color: "#fff" }}>
@@ -57,7 +57,7 @@ export default function LTTPage() {
                     <th className="px-5 py-3.5 text-right font-semibold">First-Time Rebate</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-stone-50 text-sm">
+                <tbody className="divide-y divide-slate-50 text-sm">
                   {[
                     ["Ontario", "0.5% – 2.5%", "Up to $4,000"],
                     ["Toronto (municipal)", "0.5% – 2.5%", "Up to $4,475"],
@@ -70,9 +70,9 @@ export default function LTTPage() {
                     ["Alberta", "~$600 flat fee", "N/A"],
                     ["Saskatchewan / Others", "None", "N/A"],
                   ].map(([prov, tax, rebate]) => (
-                    <tr key={prov} className="hover:bg-stone-50">
-                      <td className="px-5 py-3 font-medium text-stone-800">{prov}</td>
-                      <td className="px-5 py-3 text-right text-stone-600">{tax}</td>
+                    <tr key={prov} className="hover:bg-slate-50">
+                      <td className="px-5 py-3 font-medium text-slate-800">{prov}</td>
+                      <td className="px-5 py-3 text-right text-slate-600">{tax}</td>
                       <td className="px-5 py-3 text-right" style={{ color: rebate === "None" || rebate === "N/A" ? "var(--ink-faint)" : "var(--green-mid)" }}>{rebate}</td>
                     </tr>
                   ))}

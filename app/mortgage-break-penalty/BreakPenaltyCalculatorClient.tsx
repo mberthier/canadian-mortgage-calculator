@@ -16,17 +16,17 @@ export default function BreakPenaltyCalculatorClient() {
     [balance, originalRate, currentRate, remainingMonths, isVariable],
   );
 
-  const inp = "w-full px-3 py-2.5 rounded-lg border border-stone-200 bg-white text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-green-700/20 focus:border-green-700 transition-colors";
+  const inp = "w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-700/20 focus:border-blue-600 transition-colors";
 
   return (
-    <div className="rounded-2xl bg-white border border-stone-100 shadow-sm overflow-hidden">
+    <div className="rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden">
       <div className="p-6 space-y-5">
         {/* Mortgage type */}
         <div>
-          <label className="block text-xs font-medium text-stone-500 mb-2 uppercase tracking-wide">
+          <label className="block text-xs font-medium text-slate-500 mb-2 uppercase tracking-wide">
             Mortgage type
           </label>
-          <div className="flex rounded-lg overflow-hidden border border-stone-200 w-fit">
+          <div className="flex rounded-lg overflow-hidden border border-slate-200 w-fit">
             {[false, true].map((v) => (
               <button key={String(v)} type="button" onClick={() => setVariable(v)}
                 className="px-4 py-2 text-sm font-medium transition-colors"
@@ -41,11 +41,11 @@ export default function BreakPenaltyCalculatorClient() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-medium text-stone-500 mb-1.5 uppercase tracking-wide">
+            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
               Remaining balance
             </label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm">$</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">$</span>
               <input type="text" inputMode="numeric"
                 value={balance > 0 ? balance.toLocaleString("en-CA") : ""}
                 onChange={(e) => {
@@ -57,7 +57,7 @@ export default function BreakPenaltyCalculatorClient() {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-stone-500 mb-1.5 uppercase tracking-wide">
+            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
               Months remaining in term
             </label>
             <input type="number" min="1" max="120" step="1" value={remainingMonths}
@@ -66,7 +66,7 @@ export default function BreakPenaltyCalculatorClient() {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-stone-500 mb-1.5 uppercase tracking-wide">
+            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
               Your contracted rate
             </label>
             <div className="relative">
@@ -77,13 +77,13 @@ export default function BreakPenaltyCalculatorClient() {
                   if (!isNaN(v)) setOrig(v);
                 }}
                 className={`${inp} pr-8`} />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm">%</span>
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">%</span>
             </div>
           </div>
 
           {!isVariable && (
             <div>
-              <label className="block text-xs font-medium text-stone-500 mb-1.5 uppercase tracking-wide">
+              <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
                 Lender's current rate
               </label>
               <div className="relative">
@@ -94,7 +94,7 @@ export default function BreakPenaltyCalculatorClient() {
                     if (!isNaN(v)) setCurrent(v);
                   }}
                   className={`${inp} pr-8`} />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm">%</span>
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">%</span>
               </div>
               <p className="text-xs mt-1" style={{ color: "var(--ink-faint)" }}>
                 The rate your lender currently offers for the same remaining term
@@ -106,18 +106,18 @@ export default function BreakPenaltyCalculatorClient() {
 
       {/* Results */}
       {result && (
-        <div className="border-t border-stone-100 p-6 space-y-4" style={{ background: "var(--cream)" }}>
+        <div className="border-t border-slate-100 p-6 space-y-4" style={{ background: "var(--cream)" }}>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="rounded-xl bg-white border border-stone-100 p-4 text-center">
-              <p className="text-xs text-stone-500 mb-1 uppercase tracking-wide">3-Month Interest</p>
+            <div className="rounded-xl bg-white border border-slate-100 p-4 text-center">
+              <p className="text-xs text-slate-500 mb-1 uppercase tracking-wide">3-Month Interest</p>
               <p className="text-2xl font-semibold" style={{ color: "var(--amber)" }}>
                 {formatCurrency(result.threeMonthInterest, 0)}
               </p>
             </div>
 
             {!isVariable && (
-              <div className="rounded-xl bg-white border border-stone-100 p-4 text-center">
-                <p className="text-xs text-stone-500 mb-1 uppercase tracking-wide">IRD Penalty</p>
+              <div className="rounded-xl bg-white border border-slate-100 p-4 text-center">
+                <p className="text-xs text-slate-500 mb-1 uppercase tracking-wide">IRD Penalty</p>
                 <p className="text-2xl font-semibold" style={{ color: result.ird > result.threeMonthInterest ? "#ef4444" : "var(--ink-mid)" }}>
                   {formatCurrency(result.ird, 0)}
                 </p>
@@ -138,9 +138,9 @@ export default function BreakPenaltyCalculatorClient() {
             </div>
           </div>
 
-          <div className="rounded-xl bg-white border border-stone-100 p-4 text-sm"
+          <div className="rounded-xl bg-white border border-slate-100 p-4 text-sm"
             style={{ color: "var(--ink-mid)" }}>
-            <p className="font-semibold text-stone-800 mb-1">How this is calculated</p>
+            <p className="font-semibold text-slate-800 mb-1">How this is calculated</p>
             {isVariable ? (
               <p>Variable rate mortgages always use 3-month interest: {formatCurrency(balance)} × {originalRate.toFixed(2)}% ÷ 12 × 3 = {formatCurrency(result.threeMonthInterest, 0)}</p>
             ) : (

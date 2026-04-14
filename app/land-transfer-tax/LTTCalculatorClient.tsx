@@ -14,40 +14,40 @@ export default function LTTCalculatorClient() {
   const ltt    = useMemo(() => calculateLandTransferTax(price, province, city, ftb), [price, province, city, ftb]);
   const noRebate = useMemo(() => calculateLandTransferTax(price, province, city, false), [price, province, city]);
 
-  const inp = "w-full px-3 py-2.5 rounded-lg border border-stone-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-green-700/20 focus:border-green-700 transition-colors";
-  const sel = "w-full px-3 py-2.5 rounded-lg border border-stone-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-green-700/20 focus:border-green-700 transition-colors appearance-none";
+  const inp = "w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-700/20 focus:border-blue-600 transition-colors";
+  const sel = "w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-700/20 focus:border-blue-600 transition-colors appearance-none";
 
   return (
-    <div className="rounded-2xl bg-white border border-stone-100 shadow-sm overflow-hidden">
+    <div className="rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden">
       <div className="p-6 space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
-            <label className="block text-xs font-medium text-stone-500 mb-1.5 uppercase tracking-wide">Purchase Price</label>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">Purchase Price</label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm">$</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">$</span>
               <input type="number" min="50000" max="10000000" step="10000" value={price}
                 onChange={(e) => setPrice(Number(e.target.value))}
                 className={`${inp} pl-7`} />
             </div>
           </div>
           <div>
-            <label className="block text-xs font-medium text-stone-500 mb-1.5 uppercase tracking-wide">Province</label>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">Province</label>
             <div className="relative">
               <select value={province} onChange={(e) => { setProvince(e.target.value); setCity(""); }} className={sel}>
                 {PROVINCES.map((p) => <option key={p.code} value={p.code}>{p.name}</option>)}
               </select>
-              <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 text-xs">▾</span>
+              <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs">▾</span>
             </div>
           </div>
           {province === "ON" && (
             <div>
-              <label className="block text-xs font-medium text-stone-500 mb-1.5 uppercase tracking-wide">City</label>
+              <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">City</label>
               <div className="relative">
                 <select value={city} onChange={(e) => setCity(e.target.value)} className={sel}>
                   <option value="">Other Ontario</option>
                   <option value="Toronto">Toronto</option>
                 </select>
-                <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 text-xs">▾</span>
+                <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs">▾</span>
               </div>
             </div>
           )}
@@ -60,27 +60,27 @@ export default function LTTCalculatorClient() {
             style={{ background: ftb ? "var(--green)" : "#d6d3d1" }}>
             <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${ftb ? "translate-x-5" : ""}`} />
           </div>
-          <span className="text-sm text-stone-700 font-medium">First-time home buyer (applies rebate)</span>
+          <span className="text-sm text-slate-700 font-medium">First-time home buyer (applies rebate)</span>
         </label>
       </div>
 
       {/* Results */}
-      <div className="border-t border-stone-100 p-6" style={{ background: "var(--cream)" }}>
+      <div className="border-t border-slate-100 p-6" style={{ background: "var(--cream)" }}>
         <div className="space-y-2.5 text-sm">
           {ltt.provincial > 0 && (
             <div className="flex justify-between">
-              <span className="text-stone-600">Provincial LTT</span>
-              <span className="font-medium text-stone-800">{formatCurrency(ltt.provincial)}</span>
+              <span className="text-slate-600">Provincial LTT</span>
+              <span className="font-medium text-slate-800">{formatCurrency(ltt.provincial)}</span>
             </div>
           )}
           {ltt.municipal > 0 && (
             <div className="flex justify-between">
-              <span className="text-stone-600">Toronto Municipal LTT</span>
-              <span className="font-medium text-stone-800">{formatCurrency(ltt.municipal)}</span>
+              <span className="text-slate-600">Toronto Municipal LTT</span>
+              <span className="font-medium text-slate-800">{formatCurrency(ltt.municipal)}</span>
             </div>
           )}
           {ltt.provincial === 0 && ltt.municipal === 0 && (
-            <p className="text-stone-500">No land transfer tax in this province.</p>
+            <p className="text-slate-500">No land transfer tax in this province.</p>
           )}
           {ltt.firstTimeBuyerRebate > 0 && (
             <div className="flex justify-between" style={{ color: "var(--green-mid)" }}>
@@ -89,8 +89,8 @@ export default function LTTCalculatorClient() {
             </div>
           )}
           {ltt.total > 0 && (
-            <div className="flex justify-between text-base font-bold border-t border-stone-200 pt-2.5 mt-1">
-              <span className="text-stone-800">Net Land Transfer Tax</span>
+            <div className="flex justify-between text-base font-bold border-t border-slate-200 pt-2.5 mt-1">
+              <span className="text-slate-800">Net Land Transfer Tax</span>
               <span style={{ color: "var(--green)" }}>{formatCurrency(ltt.net)}</span>
             </div>
           )}

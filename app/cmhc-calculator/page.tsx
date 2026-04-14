@@ -43,18 +43,18 @@ export default function CMHCPage() {
         <div className="mt-12 space-y-8">
           <section>
             <h2 className="font-display text-2xl mb-4" style={{ color: "var(--ink)" }}>CMHC premium rates for 2026</h2>
-            <div className="rounded-2xl bg-white border border-stone-100 overflow-hidden">
+            <div className="rounded-2xl bg-white border border-slate-100 overflow-hidden">
               <table className="w-full text-sm">
                 <thead><tr style={{ background: "var(--green)", color: "#fff" }}>
                   <th className="px-5 py-3.5 text-left font-semibold">Down Payment</th>
                   <th className="px-5 py-3.5 text-right font-semibold">LTV Ratio</th>
                   <th className="px-5 py-3.5 text-right font-semibold">Premium Rate</th>
                 </tr></thead>
-                <tbody className="divide-y divide-stone-50">
+                <tbody className="divide-y divide-slate-50">
                   {[["5% – 9.99%","90.01% – 95%","4.00%"],["10% – 14.99%","85.01% – 90%","3.10%"],["15% – 19.99%","80.01% – 85%","2.80%"],["20%+","80% or less","No insurance required"]].map(([down,ltv,rate]) => (
-                    <tr key={down} className="hover:bg-stone-50">
-                      <td className="px-5 py-3.5 font-medium text-stone-800">{down}</td>
-                      <td className="px-5 py-3.5 text-right text-stone-600">{ltv}</td>
+                    <tr key={down} className="hover:bg-slate-50">
+                      <td className="px-5 py-3.5 font-medium text-slate-800">{down}</td>
+                      <td className="px-5 py-3.5 text-right text-slate-600">{ltv}</td>
                       <td className="px-5 py-3.5 text-right font-semibold" style={{ color: rate.includes("No") ? "var(--green-mid)" : "var(--ink)" }}>{rate}</td>
                     </tr>
                   ))}

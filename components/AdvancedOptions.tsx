@@ -9,8 +9,8 @@ interface Props {
   setField: <K extends keyof MortgageInputs>(key: K, value: MortgageInputs[K]) => void;
 }
 
-const inp = "w-full px-3 py-2.5 rounded-lg border border-stone-200 bg-white text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-green-700/20 focus:border-green-700 transition-colors";
-const lbl = "block text-xs font-medium text-stone-500 mb-1.5 uppercase tracking-wide";
+const inp = "w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-700/20 focus:border-blue-600 transition-colors";
+const lbl = "block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide";
 
 function CurrencyField({ id, label, hint, value, onChange }: {
   id: string; label: string; hint?: string; value: number; onChange: (v: number) => void;
@@ -21,7 +21,7 @@ function CurrencyField({ id, label, hint, value, onChange }: {
     <div>
       <label htmlFor={id} className={lbl}>{label}</label>
       <div className="relative">
-        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm">$</span>
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">$</span>
         <input id={id} type="text" inputMode="numeric"
           value={focused ? raw : value > 0 ? value.toLocaleString("en-CA") : ""}
           onChange={(e) => setRaw(e.target.value.replace(/[^0-9.]/g, ""))}
@@ -29,7 +29,7 @@ function CurrencyField({ id, label, hint, value, onChange }: {
           onBlur={() => { setFocused(false); onChange(Math.max(0, parseCurrency(raw))); }}
           placeholder="0" className={`${inp} pl-7`} />
       </div>
-      {hint && <p className="mt-1 text-xs text-stone-400">{hint}</p>}
+      {hint && <p className="mt-1 text-xs text-slate-400">{hint}</p>}
     </div>
   );
 }
@@ -46,8 +46,8 @@ function Toggle({ checked, onChange, label, sub }: {
         <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${checked ? "translate-x-5" : ""}`} />
       </div>
       <div>
-        <p className="text-sm text-stone-700 font-medium">{label}</p>
-        {sub && <p className="text-xs text-stone-400">{sub}</p>}
+        <p className="text-sm text-slate-700 font-medium">{label}</p>
+        {sub && <p className="text-xs text-slate-400">{sub}</p>}
       </div>
     </label>
   );
@@ -58,9 +58,9 @@ export default function AdvancedOptions({ inputs, setField }: Props) {
   const isPurchase        = inputs.mortgageMode === "purchase";
 
   return (
-    <div className="border-t border-stone-100 pt-5">
+    <div className="border-t border-slate-100 pt-5">
       <button onClick={() => setOpen((o) => !o)}
-        className="w-full flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-stone-400 hover:text-stone-600 transition-colors"
+        className="w-full flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-colors"
         aria-expanded={open}>
         <span>Advanced Options</span>
         <span className="text-base">{open ? "−" : "+"}</span>

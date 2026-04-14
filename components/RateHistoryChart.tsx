@@ -16,8 +16,8 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload?.length) return null;
   const point = RATE_HISTORY.find((p) => p.label === label);
   return (
-    <div className="bg-white border border-stone-200 rounded-xl px-3 py-2.5 shadow-sm text-xs">
-      <p className="font-semibold text-stone-700 mb-1.5">{label}</p>
+    <div className="bg-white border border-slate-200 rounded-xl px-3 py-2.5 shadow-sm text-xs">
+      <p className="font-semibold text-slate-700 mb-1.5">{label}</p>
       {payload.map((p: any) => (
         <p key={p.name} className="flex justify-between gap-4" style={{ color: p.color }}>
           <span>{p.name}</span>
@@ -25,7 +25,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
         </p>
       ))}
       {point?.event && (
-        <p className="mt-1.5 pt-1.5 border-t border-stone-100 text-stone-500">{point.event}</p>
+        <p className="mt-1.5 pt-1.5 border-t border-slate-100 text-slate-500">{point.event}</p>
       )}
     </div>
   );
@@ -45,10 +45,10 @@ export default function RateHistoryChart({ currentRate, onSelectRate }: Props) {
   const tickInterval = range === "1y" ? 1 : range === "2y" ? 2 : 4;
 
   return (
-    <div className="border-t border-stone-100 pt-5">
+    <div className="border-t border-slate-100 pt-5">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="w-full flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-stone-400 hover:text-stone-600 transition-colors"
+        className="w-full flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-colors"
         aria-expanded={open}
       >
         <span>Rate History</span>
@@ -74,10 +74,10 @@ export default function RateHistoryChart({ currentRate, onSelectRate }: Props) {
               { label: "Prime Rate", value: `${CURRENT_PRIME}%`, sub: "All major banks", color: "var(--ink)" },
               { label: "Best 5yr Fixed", value: "3.89%", sub: "As of Apr 9, 2026", color: "var(--ink)" },
             ].map(({ label, value, sub, color }) => (
-              <div key={label} className="rounded-xl p-3 text-center border border-stone-100"
+              <div key={label} className="rounded-xl p-3 text-center border border-slate-100"
                 style={{ background: "var(--cream)" }}>
                 <p className="text-lg font-semibold" style={{ color }}>{value}</p>
-                <p className="text-xs font-medium text-stone-600 mt-0.5">{label}</p>
+                <p className="text-xs font-medium text-slate-600 mt-0.5">{label}</p>
                 <p className="text-xs mt-0.5" style={{ color: "var(--ink-faint)" }}>{sub}</p>
               </div>
             ))}
@@ -88,7 +88,7 @@ export default function RateHistoryChart({ currentRate, onSelectRate }: Props) {
             <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
               Updated {RATE_DATA_AS_OF}
             </p>
-            <div className="flex bg-stone-100 rounded-lg p-0.5 text-xs">
+            <div className="flex bg-slate-100 rounded-lg p-0.5 text-xs">
               {(["1y", "2y", "3y"] as const).map((r) => (
                 <button key={r} onClick={() => setRange(r)}
                   className="px-3 py-1 rounded-md font-medium transition-colors"
@@ -111,16 +111,16 @@ export default function RateHistoryChart({ currentRate, onSelectRate }: Props) {
                     <stop offset="95%" stopColor="var(--green)" stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="fixedGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#a8a29e" stopOpacity={0.15} />
-                    <stop offset="95%" stopColor="#a8a29e" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#7a9ab5" stopOpacity={0.15} />
+                    <stop offset="95%" stopColor="#7a9ab5" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
                 <XAxis dataKey="label" tickLine={false} axisLine={false}
-                  tick={{ fontSize: 10, fill: "#a8a29e" }}
+                  tick={{ fontSize: 10, fill: "#7a9ab5" }}
                   interval={tickInterval} />
                 <YAxis tickLine={false} axisLine={false}
-                  tick={{ fontSize: 10, fill: "#a8a29e" }}
+                  tick={{ fontSize: 10, fill: "#7a9ab5" }}
                   tickFormatter={(v) => `${v}%`}
                   domain={[Math.max(0, minRate), maxRate]}
                   width={36} />
@@ -136,7 +136,7 @@ export default function RateHistoryChart({ currentRate, onSelectRate }: Props) {
                   stroke="var(--green)" strokeWidth={2}
                   fill="url(#overnightGrad)" dot={false} activeDot={{ r: 4 }} />
                 <Area type="monotone" dataKey="fiveYearFixed" name="5yr Fixed"
-                  stroke="#a8a29e" strokeWidth={2}
+                  stroke="#7a9ab5" strokeWidth={2}
                   fill="url(#fixedGrad)" dot={false} activeDot={{ r: 4 }} />
               </AreaChart>
             </ResponsiveContainer>

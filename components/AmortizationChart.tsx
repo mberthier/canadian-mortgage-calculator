@@ -67,8 +67,8 @@ export default function AmortizationChart({ schedule, amortizationYears, frequen
                 <stop offset="95%" stopColor="var(--green)" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="eqGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#2d6a4f" stopOpacity={0.15} />
-                <stop offset="95%" stopColor="#2d6a4f" stopOpacity={0} />
+                <stop offset="5%" stopColor="#0d5a96" stopOpacity={0.15} />
+                <stop offset="95%" stopColor="#0d5a96" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="intGrad" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.15} />
@@ -87,7 +87,7 @@ export default function AmortizationChart({ schedule, amortizationYears, frequen
             <Area type="monotone" dataKey="balance" name="Remaining Balance"
               stroke="var(--green)" strokeWidth={2} fill="url(#balGrad)" />
             <Area type="monotone" dataKey="equity" name="Home Equity"
-              stroke="#2d6a4f" strokeWidth={2} fill="url(#eqGrad)" />
+              stroke="#0d5a96" strokeWidth={2} fill="url(#eqGrad)" />
             <Area type="monotone" dataKey="cumulativeInterest" name="Cumulative Interest"
               stroke="#f43f5e" strokeWidth={2} fill="url(#intGrad)" />
           </AreaChart>

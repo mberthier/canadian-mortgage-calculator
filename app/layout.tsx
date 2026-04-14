@@ -73,7 +73,7 @@ export const metadata: Metadata = {
     shortcut: "/favicon.ico",
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
     other: [
-      { rel: "mask-icon", url: "/favicon.svg", color: "#1a4731" },
+      { rel: "mask-icon", url: "/favicon.svg", color: "#1068A8" },
     ],
   },
   manifest: "/site.webmanifest",

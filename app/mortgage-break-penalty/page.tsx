@@ -77,10 +77,10 @@ export default function BreakPenaltyPage() {
                 When you sign a closed mortgage, you're committing to the full term. Breaking that contract — whether to refinance, sell, or pay off early — triggers a prepayment penalty. Canadian law requires lenders to disclose how they calculate this penalty, but the methods vary significantly.
               </p>
               <p>
-                For <strong className="text-stone-800">variable-rate mortgages</strong>, the penalty is always three months' interest on your outstanding balance. Straightforward, predictable, and usually not that large.
+                For <strong className="text-slate-800">variable-rate mortgages</strong>, the penalty is always three months' interest on your outstanding balance. Straightforward, predictable, and usually not that large.
               </p>
               <p>
-                For <strong className="text-stone-800">fixed-rate mortgages</strong>, you pay the greater of three months' interest or the Interest Rate Differential (IRD). The IRD is where things get complicated — and expensive.
+                For <strong className="text-slate-800">fixed-rate mortgages</strong>, you pay the greater of three months' interest or the Interest Rate Differential (IRD). The IRD is where things get complicated — and expensive.
               </p>
             </div>
           </section>
@@ -91,7 +91,7 @@ export default function BreakPenaltyPage() {
             </h2>
             <div className="space-y-4 text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>
               <p>
-                Major Canadian banks calculate IRD using their <strong className="text-stone-800">posted rates</strong> — the advertised rates nobody actually pays — rather than the discounted rate you actually received. This artificially deflates the "current rate" used in the IRD calculation, making the rate differential (and therefore the penalty) much larger than it should be.
+                Major Canadian banks calculate IRD using their <strong className="text-slate-800">posted rates</strong> — the advertised rates nobody actually pays — rather than the discounted rate you actually received. This artificially deflates the "current rate" used in the IRD calculation, making the rate differential (and therefore the penalty) much larger than it should be.
               </p>
               <p>
                 Monoline lenders (non-bank lenders like First National, MCAP, and others) typically calculate IRD using your actual contracted rate, resulting in penalties that are far more reasonable. This difference can mean paying $2,000 vs $20,000 for the same remaining term and balance.
@@ -109,7 +109,7 @@ export default function BreakPenaltyPage() {
             <h2 className="font-display text-2xl mb-4" style={{ color: "var(--ink)" }}>
               The break penalty table
             </h2>
-            <div className="rounded-2xl bg-white border border-stone-100 overflow-hidden">
+            <div className="rounded-2xl bg-white border border-slate-100 overflow-hidden">
               <table className="w-full text-sm">
                 <thead>
                   <tr style={{ background: "var(--green)", color: "#fff" }}>
@@ -118,16 +118,16 @@ export default function BreakPenaltyPage() {
                     <th className="px-5 py-3.5 text-right font-semibold">Typical amount</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-stone-50">
+                <tbody className="divide-y divide-slate-50">
                   {[
                     ["Variable rate", "3 months' interest", "Moderate"],
                     ["Fixed (monoline)", "Greater of 3mo interest or IRD (contract rate)", "Low–moderate"],
                     ["Fixed (big bank)", "Greater of 3mo interest or IRD (posted rate)", "Can be very large"],
                     ["Open mortgage", "No penalty", "None"],
                   ].map(([type, method, amount]) => (
-                    <tr key={type} className="hover:bg-stone-50">
-                      <td className="px-5 py-3 font-medium text-stone-800">{type}</td>
-                      <td className="px-5 py-3 text-right text-stone-600">{method}</td>
+                    <tr key={type} className="hover:bg-slate-50">
+                      <td className="px-5 py-3 font-medium text-slate-800">{type}</td>
+                      <td className="px-5 py-3 text-right text-slate-600">{method}</td>
                       <td className="px-5 py-3 text-right font-medium"
                         style={{ color: amount === "None" ? "var(--green-mid)" : amount.includes("very") ? "#ef4444" : "var(--ink)" }}>
                         {amount}

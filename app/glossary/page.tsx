@@ -280,7 +280,7 @@ export default function GlossaryPage() {
         </div>
 
         {/* Letter jump nav */}
-        <div className="flex flex-wrap gap-1.5 mb-10 p-4 rounded-2xl border border-stone-100 bg-white">
+        <div className="flex flex-wrap gap-1.5 mb-10 p-4 rounded-2xl border border-slate-100 bg-white">
           {letters.map((letter) => (
             <a key={letter} href={`#${letter}`}
               className="w-8 h-8 flex items-center justify-center rounded-lg text-xs font-semibold transition-colors"
@@ -306,13 +306,13 @@ export default function GlossaryPage() {
                 {grouped[letter].map((term) => (
                   <article key={term.term}
                     id={term.term.toLowerCase().replace(/[^a-z0-9]+/g, "-")}
-                    className="rounded-2xl bg-white border border-stone-100 p-6">
-                    <h3 className="text-base font-semibold text-stone-900 mb-2">{term.term}</h3>
+                    className="rounded-2xl bg-white border border-slate-100 p-6">
+                    <h3 className="text-base font-semibold text-slate-900 mb-2">{term.term}</h3>
                     <p className="text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>
                       {term.definition}
                     </p>
                     {term.related && term.related.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-stone-50">
+                      <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-slate-50">
                         <span className="text-xs" style={{ color: "var(--ink-faint)" }}>Related:</span>
                         {term.related.map((r) => {
                           const slug = r.toLowerCase().replace(/[^a-z0-9]+/g, "-");

@@ -80,7 +80,7 @@ export default function SiteLayout({ children }: Props) {
               </p>
             </div>
             <div>
-              <p className="text-xs font-semibold text-stone-600 uppercase tracking-wide mb-3">Calculators</p>
+              <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide mb-3">Calculators</p>
               <ul className="space-y-2">
                 {[
                   { href: "/", label: "Mortgage Calculator" },
@@ -96,7 +96,7 @@ export default function SiteLayout({ children }: Props) {
               </ul>
             </div>
             <div>
-              <p className="text-xs font-semibold text-stone-600 uppercase tracking-wide mb-3">Guides</p>
+              <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide mb-3">Guides</p>
               <ul className="space-y-2">
                 {[
                   { href: "/first-time-buyer", label: "First-Time Buyers" },
@@ -112,7 +112,7 @@ export default function SiteLayout({ children }: Props) {
               </ul>
             </div>
             <div>
-              <p className="text-xs font-semibold text-stone-600 uppercase tracking-wide mb-3">Legal</p>
+              <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide mb-3">Legal</p>
               <p className="text-xs leading-relaxed" style={{ color: "var(--ink-faint)" }}>
                 Estimates only. Not financial advice. Always consult a licensed mortgage broker before making real estate decisions.
               </p>

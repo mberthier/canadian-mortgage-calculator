@@ -26,9 +26,9 @@ interface Props {
   setField: <K extends keyof MortgageInputs>(key: K, value: MortgageInputs[K]) => void;
 }
 
-const inp = "w-full px-3 py-2.5 rounded-lg border border-stone-200 bg-white text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-green-700/20 focus:border-green-700 transition-colors";
-const sel = "w-full px-3 py-2.5 rounded-lg border border-stone-200 bg-white text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-green-700/20 focus:border-green-700 transition-colors appearance-none cursor-pointer";
-const lbl = "block text-xs font-medium text-stone-500 uppercase tracking-wide mb-1.5";
+const inp = "w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-700/20 focus:border-blue-600 transition-colors";
+const sel = "w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-700/20 focus:border-blue-600 transition-colors appearance-none cursor-pointer";
+const lbl = "block text-xs font-medium text-slate-500 uppercase tracking-wide mb-1.5";
 
 function Divider({ label }: { label: string }) {
   return (
@@ -45,7 +45,7 @@ function TogglePair({ label, value, onChange, tip }: {
   return (
     <div>
       <label className={`${lbl} flex items-center`}>{label}{tip && <Tooltip content={tip} />}</label>
-      <div className="flex rounded-lg overflow-hidden border border-stone-200 w-fit">
+      <div className="flex rounded-lg overflow-hidden border border-slate-200 w-fit">
         {([true, false] as const).map((opt) => (
           <button key={String(opt)} type="button" onClick={() => onChange(opt)}
             className="px-4 py-2 text-sm font-medium transition-colors"
@@ -69,7 +69,7 @@ function SelectField({ id, label, tip, value, onChange, children }: {
         <select id={id} value={value} onChange={(e) => onChange(e.target.value)} className={sel}>
           {children}
         </select>
-        <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 text-xs">▾</span>
+        <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs">▾</span>
       </div>
     </div>
   );
@@ -86,8 +86,8 @@ function CurrencyInput({ id, label, tip, value, onChange, placeholder, suffix, r
       <div>
         <label className={`${lbl} flex items-center`}>{label}{tip && <Tooltip content={tip} />}</label>
         <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm">$</span>
-          <div className={`${inp} pl-7 bg-stone-50 text-stone-500`}>{value > 0 ? value.toLocaleString("en-CA") : "—"}</div>
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">$</span>
+          <div className={`${inp} pl-7 bg-slate-50 text-slate-500`}>{value > 0 ? value.toLocaleString("en-CA") : "—"}</div>
         </div>
       </div>
     );
@@ -96,7 +96,7 @@ function CurrencyInput({ id, label, tip, value, onChange, placeholder, suffix, r
     <div>
       <label htmlFor={id} className={`${lbl} flex items-center`}>{label}{tip && <Tooltip content={tip} />}</label>
       <div className="relative">
-        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm select-none">$</span>
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm select-none">$</span>
         <input id={id} type="text" inputMode="numeric"
           value={focused ? raw : value > 0 ? value.toLocaleString("en-CA") : ""}
           onChange={(e) => setRaw(e.target.value.replace(/[^0-9.]/g, ""))}
@@ -129,7 +129,7 @@ function RateInput({ id, label, tip, value, onChange, showSlider, sliderNote }: 
           onFocus={() => { setFoc(true); setRaw(value > 0 ? String(value) : ""); }}
           onBlur={() => { setFoc(false); const v = parseFloat(raw); if (!isNaN(v) && v > 0) onChange(v); }}
           placeholder="0.00" className={`${inp} pr-8`} />
-        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm">%</span>
+        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">%</span>
       </div>
       {showSlider && (
         <>
@@ -196,7 +196,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
               <label className={lbl + " mb-0 flex items-center"}>Down payment
                 <Tooltip content="Min. 5% under $500K; 5%+10% on $500K–$1.5M; 20% over $1.5M. Under 20% triggers CMHC insurance." />
               </label>
-              <div className="flex rounded-lg overflow-hidden border border-stone-200 text-xs">
+              <div className="flex rounded-lg overflow-hidden border border-slate-200 text-xs">
                 {(["%", "$"] as const).map((m) => (
                   <button key={m} type="button" onClick={() => setDpMode(m)}
                     className="px-2.5 py-1 font-medium transition-colors"
@@ -212,11 +212,11 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
                   value={inputs.downPaymentPercent > 0 ? inputs.downPaymentPercent : ""}
                   onChange={(e) => { const v = parseFloat(e.target.value.replace(/[^0-9.]/g, "")); if (!isNaN(v)) setDownPaymentPercent(v); else if (!e.target.value) setDownPaymentPercent(0); }}
                   placeholder="20" className={`${errors.downPayment ? inp + " border-red-300" : inp} pr-8`} />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm">%</span>
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">%</span>
               </div>
             ) : (
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm">$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">$</span>
                 <input type="text" inputMode="numeric"
                   value={inputs.downPayment > 0 ? inputs.downPayment.toLocaleString("en-CA") : ""}
                   onChange={(e) => setDownPayment(parseCurrency(e.target.value))}
@@ -317,7 +317,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
                     <Tooltip content="A provincial tax paid on closing day when purchasing real estate. Most provinces charge 0.5%–2.5% of the purchase price. Toronto adds a municipal LTT on top. First-time buyers may be eligible for a rebate." />
                     <Link href="/land-transfer-tax" className="underline text-xs" style={{ color: "var(--green)" }}>details →</Link>
                   </span>
-                  <span className="font-medium text-stone-700">
+                  <span className="font-medium text-slate-700">
                     {formatCurrency(outputs.ltt.provincial + outputs.ltt.municipal, 0)}
                   </span>
                 </div>
@@ -331,7 +331,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
               {outputs.gstHst.net > 0 && (
                 <div className="flex justify-between">
                   <span style={{ color: "var(--ink-mid)" }}>GST/HST (new build, net)</span>
-                  <span className="font-medium text-stone-700">{formatCurrency(outputs.gstHst.net, 0)}</span>
+                  <span className="font-medium text-slate-700">{formatCurrency(outputs.gstHst.net, 0)}</span>
                 </div>
               )}
               {outputs.ltt.provincial === 0 && outputs.ltt.municipal === 0 && outputs.gstHst.net === 0 && (
@@ -406,14 +406,14 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
                       const val = inputs.lumpSumsByYear[year] ?? 0;
                       return (
                         <div key={year} className="flex items-center gap-2">
-                          <span className="text-xs text-stone-500 w-12 shrink-0">Year {year}</span>
+                          <span className="text-xs text-slate-500 w-12 shrink-0">Year {year}</span>
                           <div className="relative flex-1">
-                            <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-stone-400 text-xs">$</span>
+                            <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs">$</span>
                             <input type="text" inputMode="numeric"
                               value={val > 0 ? val.toLocaleString("en-CA") : ""}
                               onChange={(e) => setLumpSumForYear(year, parseCurrency(e.target.value))}
                               placeholder="0"
-                              className="w-full pl-6 pr-2 py-1.5 rounded-lg border border-stone-200 bg-white text-xs text-stone-900 focus:outline-none focus:ring-1 focus:ring-green-700/20 focus:border-green-700" />
+                              className="w-full pl-6 pr-2 py-1.5 rounded-lg border border-slate-200 bg-white text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-blue-700/20 focus:border-blue-600" />
                           </div>
                         </div>
                       );
@@ -458,7 +458,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
             <div className="rounded-lg px-3 py-2.5 text-sm flex justify-between border"
               style={{ background: "var(--cream)", borderColor: "var(--cream-dark)" }}>
               <span style={{ color: "var(--ink-mid)" }}>Current payment at {currentRate.toFixed(2)}%</span>
-              <span className="font-semibold text-stone-800">{formatCurrency(currentPayment, 2)}</span>
+              <span className="font-semibold text-slate-800">{formatCurrency(currentPayment, 2)}</span>
             </div>
           )}
 
@@ -493,14 +493,14 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
                       const val = inputs.lumpSumsByYear[year] ?? 0;
                       return (
                         <div key={year} className="flex items-center gap-2">
-                          <span className="text-xs text-stone-500 w-12 shrink-0">Year {year}</span>
+                          <span className="text-xs text-slate-500 w-12 shrink-0">Year {year}</span>
                           <div className="relative flex-1">
-                            <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-stone-400 text-xs">$</span>
+                            <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs">$</span>
                             <input type="text" inputMode="numeric"
                               value={val > 0 ? val.toLocaleString("en-CA") : ""}
                               onChange={(e) => setLumpSumForYear(year, parseCurrency(e.target.value))}
                               placeholder="0"
-                              className="w-full pl-6 pr-2 py-1.5 rounded-lg border border-stone-200 bg-white text-xs text-stone-900 focus:outline-none focus:ring-1 focus:ring-green-700/20" />
+                              className="w-full pl-6 pr-2 py-1.5 rounded-lg border border-slate-200 bg-white text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-blue-700/20" />
                           </div>
                         </div>
                       );
@@ -555,7 +555,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
             <div className="rounded-lg px-3 py-2.5 text-sm flex justify-between border"
               style={{ background: "var(--cream)", borderColor: "var(--cream-dark)" }}>
               <span style={{ color: "var(--ink-mid)" }}>Current payment at {currentRate.toFixed(2)}%</span>
-              <span className="font-semibold text-stone-800">{formatCurrency(currentPayment, 2)}</span>
+              <span className="font-semibold text-slate-800">{formatCurrency(currentPayment, 2)}</span>
             </div>
           )}
 

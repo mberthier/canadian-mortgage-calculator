@@ -19,10 +19,10 @@ interface Props {
   ltv: number;
 }
 
-const inp    = "w-full px-3 py-2.5 rounded-lg border border-stone-200 bg-white text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-green-700/20 focus:border-green-700 transition-colors placeholder-stone-300";
-const inpErr = "w-full px-3 py-2.5 rounded-lg border border-red-300 bg-red-50 text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-red-300 transition-colors";
-const lbl    = "text-xs font-medium text-stone-500 uppercase tracking-wide";
-const sel    = "w-full px-3 py-2.5 rounded-lg border border-stone-200 bg-white text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-green-700/20 focus:border-green-700 transition-colors appearance-none cursor-pointer";
+const inp    = "w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-700/20 focus:border-blue-600 transition-colors placeholder-stone-300";
+const inpErr = "w-full px-3 py-2.5 rounded-lg border border-red-300 bg-red-50 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-red-300 transition-colors";
+const lbl    = "text-xs font-medium text-slate-500 uppercase tracking-wide";
+const sel    = "w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-700/20 focus:border-blue-600 transition-colors appearance-none cursor-pointer";
 
 const TIPS = {
   homePrice:    "The purchase price of the property you're buying.",
@@ -69,7 +69,7 @@ function CurrencyInput({ id, label, tip, value, onChange, error, hint }: {
     <div>
       <Label text={label} tip={tip} htmlFor={id} />
       <div className="relative">
-        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm select-none">$</span>
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm select-none">$</span>
         <input id={id} type="text" inputMode="numeric"
           value={focused ? raw : value > 0 ? value.toLocaleString("en-CA") : ""}
           onChange={(e) => setRaw(e.target.value.replace(/[^0-9.]/g, ""))}
@@ -94,7 +94,7 @@ function SelectField({ id, label, tip, value, onChange, children }: {
         <select id={id} value={value} onChange={(e) => onChange(e.target.value)} className={sel}>
           {children}
         </select>
-        <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 text-xs">▾</span>
+        <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs">▾</span>
       </div>
     </div>
   );
@@ -130,7 +130,7 @@ export default function CalculatorForm({
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <Label text="Down Payment" tip={TIPS.downPayment} />
-              <div className="flex rounded-lg overflow-hidden border border-stone-200 text-xs">
+              <div className="flex rounded-lg overflow-hidden border border-slate-200 text-xs">
                 {(["percent", "value"] as const).map((m) => (
                   <button key={m} onClick={() => setDpMode(m)}
                     className="px-3 py-1 font-medium transition-colors"
@@ -148,11 +148,11 @@ export default function CalculatorForm({
                 <input type="number" min="0" max="99" step="0.5" value={inputs.downPaymentPercent}
                   onChange={(e) => setDownPaymentPercent(parseFloat(e.target.value) || 0)}
                   className={`${errors.downPayment ? inpErr : inp} pr-8`} />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm">%</span>
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">%</span>
               </div>
             ) : (
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm">$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">$</span>
                 <input type="text" inputMode="numeric"
                   value={inputs.downPayment > 0 ? inputs.downPayment.toLocaleString("en-CA") : ""}
                   onChange={(e) => setDownPayment(parseCurrency(e.target.value))}
@@ -232,7 +232,7 @@ export default function CalculatorForm({
           <input id="rate" type="number" min="0.1" max="30" step="0.01" value={inputs.interestRate}
             onChange={(e) => setField("interestRate", parseFloat(e.target.value) || 0)}
             className={`${errors.interestRate ? inpErr : inp} pr-8`} />
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm">%</span>
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">%</span>
         </div>
         <input type="range" min="0.5" max="12" step="0.05" value={inputs.interestRate}
           onChange={(e) => setField("interestRate", parseFloat(e.target.value))}
@@ -286,9 +286,9 @@ export default function CalculatorForm({
           </SelectField>
 
           {/* Monthly Costs */}
-          <div className="border-t border-stone-100 pt-4">
+          <div className="border-t border-slate-100 pt-4">
             <button onClick={() => setShowCosts((o) => !o)}
-              className="w-full flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-stone-400 hover:text-stone-600 transition-colors mb-0"
+              className="w-full flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-colors mb-0"
               aria-expanded={showCosts}>
               <span>Monthly Costs</span>
               <span className="text-base">{showCosts ? "−" : "+"}</span>

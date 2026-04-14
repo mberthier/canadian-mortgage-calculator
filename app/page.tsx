@@ -62,12 +62,12 @@ function ResultsNarrative({
   if (inputs.mortgageMode !== "purchase") return null;
 
   return (
-    <div className="rounded-xl px-4 py-3.5 text-sm leading-relaxed border border-stone-100"
+    <div className="rounded-xl px-4 py-3.5 text-sm leading-relaxed border border-slate-100"
       style={{ background: "var(--cream)", color: "var(--ink-mid)" }}>
       At this rate, you'd pay{" "}
-      <span className="font-semibold text-stone-900">{payment} {freq}</span>{" "}
+      <span className="font-semibold text-slate-900">{payment} {freq}</span>{" "}
       for the first {inputs.termYears} years, leaving{" "}
-      <span className="font-semibold text-stone-900">{balance} owing</span> at renewal.
+      <span className="font-semibold text-slate-900">{balance} owing</span> at renewal.
       {" "}Your equity at that point would be{" "}
       <span className="font-semibold" style={{ color: "var(--green-mid)" }}>{equity}%</span>
       {parseInt(equity) >= 20
@@ -153,7 +153,7 @@ export default function Home() {
                   setField={setField}
                 />
               </div>
-              <p className="text-xs text-stone-400 mt-4 leading-relaxed">
+              <p className="text-xs text-slate-400 mt-4 leading-relaxed">
                 These numbers are a starting point, not a contract. A good broker will get you closer.
               </p>
             </aside>
@@ -195,10 +195,10 @@ export default function Home() {
               {outputs.amortizationSchedule.length > 0 && (
                 <>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div className="bg-white rounded-2xl p-5 border border-stone-100">
+                    <div className="bg-white rounded-2xl p-5 border border-slate-100">
                       <PaymentBreakdownChart outputs={outputs} inputs={inputs} />
                     </div>
-                    <div className="bg-white rounded-2xl p-5 border border-stone-100">
+                    <div className="bg-white rounded-2xl p-5 border border-slate-100">
                       <AmortizationChart
                         schedule={outputs.amortizationSchedule}
                         amortizationYears={inputs.amortizationYears}
@@ -208,7 +208,7 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="bg-white rounded-2xl p-5 border border-stone-100">
+                  <div className="bg-white rounded-2xl p-5 border border-slate-100">
                     <PrincipalInterestByYear
                       schedule={outputs.amortizationSchedule}
                       amortizationYears={inputs.amortizationYears}
@@ -268,7 +268,7 @@ export default function Home() {
             <div className="flex items-center gap-3">
               <div className="text-right">
                 <p className="text-xs" style={{ color: "var(--ink-faint)" }}>Monthly ownership</p>
-                <p className="text-sm font-medium text-stone-700">
+                <p className="text-sm font-medium text-slate-700">
                   {formatCurrency(outputs.totalMonthlyOwnership, 0)}
                 </p>
               </div>

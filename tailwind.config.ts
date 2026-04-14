@@ -9,7 +9,13 @@ const config: Config = {
     "./lib/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        midnight:      "#0B1927",
+        "crystal-blue":"#1068A8",
+        "brand-teal":  "#00B4A0",
+      },
+    },
   },
   plugins: [],
 };

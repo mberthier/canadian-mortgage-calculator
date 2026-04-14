@@ -26,8 +26,8 @@ const ICONS: Record<string, React.ReactNode> = {
 
 export default function FeatureDiscovery() {
   return (
-    <div className="rounded-2xl border border-stone-100 bg-white overflow-hidden">
-      <div className="px-5 py-3.5 border-b border-stone-100 rounded-t-2xl" style={{ background: "var(--cream)" }}>
+    <div className="rounded-2xl border border-slate-100 bg-white overflow-hidden">
+      <div className="px-5 py-3.5 border-b border-slate-100 rounded-t-2xl" style={{ background: "var(--cream)" }}>
         <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--ink-faint)" }}>
           Explore more
         </p>

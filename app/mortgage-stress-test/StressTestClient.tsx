@@ -25,10 +25,10 @@ export default function StressTestClient() {
   const tds = gds; // simplified (no other debts in this calculator)
   const passes = gds <= 39 && tds <= 44;
 
-  const inp = "w-full pl-7 pr-3 py-2.5 rounded-lg border border-stone-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-green-700/20 focus:border-green-700 transition-colors";
+  const inp = "w-full pl-7 pr-3 py-2.5 rounded-lg border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-700/20 focus:border-blue-600 transition-colors";
 
   return (
-    <div className="rounded-2xl bg-white border border-stone-100 shadow-sm overflow-hidden">
+    <div className="rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden">
       <div className="p-6 space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[
@@ -38,35 +38,35 @@ export default function StressTestClient() {
             { label: "Annual Property Tax", value: tax, set: setTax },
           ].map(({ label, value, set }) => (
             <div key={label}>
-              <label className="block text-xs font-medium text-stone-500 mb-1.5 uppercase tracking-wide">{label}</label>
+              <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">{label}</label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm">$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">$</span>
                 <input type="number" min="0" step={value >= 10000 ? 10000 : 100} value={value}
                   onChange={(e) => set(Number(e.target.value))} className={inp} />
               </div>
             </div>
           ))}
           <div>
-            <label className="block text-xs font-medium text-stone-500 mb-1.5 uppercase tracking-wide">Contract Rate</label>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">Contract Rate</label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm font-medium">%</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-medium">%</span>
               <input type="number" min="0.5" max="15" step="0.05" value={rate}
                 onChange={(e) => setRate(parseFloat(e.target.value))}
-                className="w-full pl-7 pr-3 py-2.5 rounded-lg border border-stone-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-green-700/20 focus:border-green-700 transition-colors" />
+                className="w-full pl-7 pr-3 py-2.5 rounded-lg border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-700/20 focus:border-blue-600 transition-colors" />
             </div>
           </div>
         </div>
       </div>
 
-      <div className="border-t border-stone-100 p-6 space-y-4" style={{ background: "var(--cream)" }}>
+      <div className="border-t border-slate-100 p-6 space-y-4" style={{ background: "var(--cream)" }}>
         <div className="grid grid-cols-3 gap-3">
           {[
             { label: "Your Contract Rate", value: `${rate.toFixed(2)}%`, color: "var(--green)" },
             { label: "Stress Test Rate", value: `${stressRate.toFixed(2)}%`, color: "var(--amber)" },
             { label: "Qualifying Payment", value: formatCurrency(monthlyStress, 0) + "/mo", color: "var(--ink)" },
           ].map(({ label, value, color }) => (
-            <div key={label} className="rounded-xl bg-white border border-stone-100 p-3 text-center">
-              <p className="text-xs text-stone-500 mb-1">{label}</p>
+            <div key={label} className="rounded-xl bg-white border border-slate-100 p-3 text-center">
+              <p className="text-xs text-slate-500 mb-1">{label}</p>
               <p className="font-semibold text-base" style={{ color }}>{value}</p>
             </div>
           ))}

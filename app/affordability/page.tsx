@@ -52,14 +52,14 @@ export default function AffordabilityPage() {
           <section>
             <h2 className="font-display text-2xl mb-4" style={{ color: "var(--ink)" }}>How affordability works in Canada</h2>
             <div className="space-y-4 text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>
-              <p>Canadian lenders apply two standardized tests — GDS and TDS — both calculated at the <strong className="text-stone-700">stress test rate</strong> (the higher of your contract rate + 2% or 5.25%), not your actual rate. CMHC raised the GDS limit from 32% to 39% in December 2024, meaningfully increasing qualifying power.</p>
+              <p>Canadian lenders apply two standardized tests — GDS and TDS — both calculated at the <strong className="text-slate-700">stress test rate</strong> (the higher of your contract rate + 2% or 5.25%), not your actual rate. CMHC raised the GDS limit from 32% to 39% in December 2024, meaningfully increasing qualifying power.</p>
               <p>Your maximum purchase price is determined by whichever constraint binds first. Adding a co-applicant, reducing debts, or increasing your down payment all improve your position.</p>
             </div>
           </section>
 
           <section>
             <h2 className="font-display text-2xl mb-4" style={{ color: "var(--ink)" }}>Stress test rates by contract rate</h2>
-            <div className="rounded-2xl overflow-hidden border border-stone-100">
+            <div className="rounded-2xl overflow-hidden border border-slate-100">
               <table className="w-full text-sm">
                 <thead>
                   <tr style={{ background: "var(--green)", color: "#fff" }}>
@@ -68,17 +68,17 @@ export default function AffordabilityPage() {
                     <th className="px-5 py-3.5 text-right font-semibold">Rule applied</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-stone-50">
+                <tbody className="divide-y divide-slate-50">
                   {[
                     ["3.89%", "5.89%", "Contract + 2%"],
                     ["3.50%", "5.50%", "Contract + 2%"],
                     ["3.00%", "5.25%", "5.25% floor"],
                     ["2.50%", "5.25%", "5.25% floor"],
                   ].map(([rate, stress, why]) => (
-                    <tr key={rate} className="hover:bg-stone-50">
-                      <td className="px-5 py-3 font-medium text-stone-800">{rate}</td>
+                    <tr key={rate} className="hover:bg-slate-50">
+                      <td className="px-5 py-3 font-medium text-slate-800">{rate}</td>
                       <td className="px-5 py-3 text-right font-semibold" style={{ color: "var(--green)" }}>{stress}</td>
-                      <td className="px-5 py-3 text-right text-stone-500 text-xs">{why}</td>
+                      <td className="px-5 py-3 text-right text-slate-500 text-xs">{why}</td>
                     </tr>
                   ))}
                 </tbody>

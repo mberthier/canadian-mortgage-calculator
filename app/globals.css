@@ -5,20 +5,27 @@
 @tailwind utilities;
 
 :root {
-  --cream:        #f7f5f0;
-  --cream-dark:   #ede9e1;
-  --green:        #1a4731;
-  --green-mid:    #2d6a4f;
-  --green-light:  #e8f2ec;
-  --green-border: #c3dece;
-  --ink:          #1c1917;
-  --ink-mid:      #44403c;
-  --ink-muted:    #78716c;
-  --ink-faint:    #a8a29e;
+  /* Page surfaces */
+  --cream:        #f0f5fa;
+  --cream-dark:   #dce8f2;
+
+  /* Primary brand — Crystal Blue */
+  --green:        #1068A8;
+  --green-mid:    #0d5a96;
+  --green-light:  #e6f1fb;
+  --green-border: #b5d4f4;
+
+  /* Text — Midnight tones */
+  --ink:          #0B1927;
+  --ink-mid:      #1e3a52;
+  --ink-muted:    #4a6b85;
+  --ink-faint:    #7a9ab5;
+
   --white:        #ffffff;
   --red:          #b91c1c;
   --amber:        #92400e;
-  /* Brand identity colors */
+
+  /* Brand identity colors — used for wordmark specifically */
   --brand-midnight:     #0B1927;
   --brand-crystal-blue: #1068A8;
   --brand-teal:         #00B4A0;
@@ -34,7 +41,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* DM Serif Display only for the hero payment number */
+/* DM Serif Display for payment numbers and H1s */
 .font-display { font-family: 'DM Serif Display', Georgia, serif; }
 
 input, select, textarea, button {
@@ -59,7 +66,7 @@ input[type="range"]::-webkit-slider-thumb {
   background: var(--green);
   border-radius: 50%;
   border: 2px solid #fff;
-  box-shadow: 0 1px 4px rgba(26,71,49,0.3);
+  box-shadow: 0 1px 4px rgba(16,104,168,0.3);
   cursor: pointer;
   transition: transform 0.1s;
 }
@@ -71,3 +78,6 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button { opacity: 0.4; }
+
+/* Tailwind stone overrides → blue-grey for brand consistency */
+.bg-white { background-color: #ffffff !important; }

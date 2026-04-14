@@ -97,7 +97,7 @@ export default function PrincipalInterestByYear({ schedule, amortizationYears, f
               formatter={(v) => <span className="text-xs text-slate-600">{v}</span>}
             />
             <Bar dataKey="principal" name="Principal" fill="var(--green)" stackId="a" radius={[0, 0, 0, 0]} />
-            <Bar dataKey="interest" name="Interest" fill="#c3dece" stackId="a" radius={[3, 3, 0, 0]} />
+            <Bar dataKey="interest" name="Interest" fill="#b5d4f4" stackId="a" radius={[3, 3, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>

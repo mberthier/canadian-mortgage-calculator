@@ -25,9 +25,9 @@ export default function LumpSumByYear({
   const monthsSaved = paymentsSaved % 12;
 
   return (
-    <div className="border-t border-stone-100 pt-5">
+    <div className="border-t border-slate-100 pt-5">
       <button onClick={() => setOpen((o) => !o)}
-        className="w-full flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-stone-400 hover:text-stone-600 transition-colors"
+        className="w-full flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-colors"
         aria-expanded={open}>
         <span>Lump Sum Payments</span>
         <div className="flex items-center gap-2">
@@ -79,7 +79,7 @@ export default function LumpSumByYear({
                   }}>
                   <p className="text-xs mb-1" style={{ color: "var(--ink-faint)" }}>After Yr {year}</p>
                   <div className="relative">
-                    <span className="absolute left-1.5 top-1/2 -translate-y-1/2 text-stone-400 text-xs">$</span>
+                    <span className="absolute left-1.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs">$</span>
                     <input type="text" inputMode="numeric" placeholder="0"
                       value={isFocused ? (rawValues[year] ?? "") : value > 0 ? value.toLocaleString("en-CA") : ""}
                       onChange={(e) => setRawValues((p) => ({ ...p, [year]: e.target.value.replace(/[^0-9]/g, "") }))}
@@ -89,7 +89,7 @@ export default function LumpSumByYear({
                         const v = parseInt(rawValues[year] ?? "0", 10);
                         setLumpSumForYear(year, isNaN(v) ? 0 : v);
                       }}
-                      className="w-full bg-white border border-stone-200 rounded text-xs text-stone-900 pl-4 pr-1 py-1.5 focus:outline-none focus:border-green-700 placeholder-stone-300"
+                      className="w-full bg-white border border-slate-200 rounded text-xs text-slate-900 pl-4 pr-1 py-1.5 focus:outline-none focus:border-blue-600 placeholder-stone-300"
                     />
                   </div>
                 </div>
