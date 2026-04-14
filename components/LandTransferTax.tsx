@@ -23,7 +23,7 @@ export default function LandTransferTax({ inputs, setField }: Props) {
     [inputs.homePrice, inputs.province, inputs.city, inputs.isFirstTimeBuyer],
   );
 
-  // LTT only applies on purchase — early return AFTER all hooks
+  // LTT only applies on purchase, early return AFTER all hooks
   if (inputs.mortgageMode !== "purchase") return null;
 
   return (

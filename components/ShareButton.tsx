@@ -38,14 +38,14 @@ export default function ShareButton({ url, variant = "default" }: Props) {
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
               <path d="M2 7l3 3 7-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-            Link copied — share with anyone
+            Link copied, share with anyone
           </>
         ) : (
           <>
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
               <path d="M5 4H3.5A1.5 1.5 0 002 5.5v5A1.5 1.5 0 003.5 12h5A1.5 1.5 0 0010 10.5V9M6 2h4.5A1.5 1.5 0 0112 3.5V8A1.5 1.5 0 0110.5 9.5h-4A1.5 1.5 0 015 8V3.5A1.5 1.5 0 016.5 2z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
             </svg>
-            Share this calculation
+            Save and share your numbers
           </>
         )}
       </button>

@@ -12,17 +12,17 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://crystalkey.ca/cmhc-calculator" },
   openGraph: {
     title: "CMHC Mortgage Insurance Calculator Canada 2026 | CrystalKey",
-    description: "Calculate your CMHC mortgage insurance premium. Updated for December 2024 rules — $1.5M insured limit.",
+    description: "Calculate your CMHC mortgage insurance premium. Updated for December 2024 rules, $1.5M insured limit.",
     url: "https://crystalkey.ca/cmhc-calculator",
   },
 };
 
 const FAQ = [
-  { question: "What is CMHC insurance and who needs it?", answer: "CMHC mortgage default insurance is required for any home purchase in Canada where the down payment is less than 20% and the price is $1.5 million or under. It protects the lender, not you, in case you default — but you pay the premium." },
-  { question: "How much does CMHC insurance cost?", answer: "The CMHC premium is 4.00% for 5%–9.99% down, 3.10% for 10%–14.99% down, and 2.80% for 15%–19.99% down. The premium is added to your mortgage balance — not paid at closing." },
-  { question: "Is CMHC insurance paid upfront?", answer: "The premium is added to your mortgage balance. However, Ontario charges 8% RST, Quebec 9% QST, and Saskatchewan 6% PST on the premium — these provincial taxes are due at closing as a cash payment." },
-  { question: "Can I avoid CMHC insurance?", answer: "Yes — by making a down payment of 20% or more. The RRSP Home Buyers Plan allows first-time buyers to withdraw up to $60,000 per person tax-free, which can help reach the 20% threshold." },
-  { question: "What changed in December 2024?", answer: "The federal government raised the insured mortgage limit from $1 million to $1.5 million. Buyers purchasing homes between $1M and $1.5M can now access CMHC insurance with less than 20% down — previously impossible." },
+  { question: "What is CMHC insurance and who needs it?", answer: "CMHC mortgage default insurance is required for any home purchase in Canada where the down payment is less than 20% and the price is $1.5 million or under. It protects the lender, not you, in case you default, but you pay the premium." },
+  { question: "How much does CMHC insurance cost?", answer: "The CMHC premium is 4.00% for 5%–9.99% down, 3.10% for 10%–14.99% down, and 2.80% for 15%–19.99% down. The premium is added to your mortgage balance, not paid at closing." },
+  { question: "Is CMHC insurance paid upfront?", answer: "The premium is added to your mortgage balance. However, Ontario charges 8% RST, Quebec 9% QST, and Saskatchewan 6% PST on the premium, these provincial taxes are due at closing as a cash payment." },
+  { question: "Can I avoid CMHC insurance?", answer: "Yes, by making a down payment of 20% or more. The RRSP Home Buyers Plan allows first-time buyers to withdraw up to $60,000 per person tax-free, which can help reach the 20% threshold." },
+  { question: "What changed in December 2024?", answer: "The federal government raised the insured mortgage limit from $1 million to $1.5 million. Buyers purchasing homes between $1M and $1.5M can now access CMHC insurance with less than 20% down, previously impossible." },
 ];
 
 export default function CMHCPage() {

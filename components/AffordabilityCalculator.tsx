@@ -111,13 +111,13 @@ export default function AffordabilityCalculator({
 
       {open && (
         <div className="border-t border-neutral-100">
-          {/* Inline summary — always visible at top */}
+          {/* Inline summary, always visible at top */}
           <div className="px-5 py-4 grid grid-cols-2 gap-3">
             {[
               { key: "GDS", pct: gds, limit: GDS_LIMIT, color: gdsColor,
                 tip: "GDS measures housing costs as % of income. Includes mortgage P&I, property tax, heating, 50% condo fees. Limit: 39%." },
               { key: "TDS", pct: tds, limit: TDS_LIMIT, color: tdsColor,
-                tip: "TDS adds all other debts to GDS — car loans, student loans, credit card minimums. Limit: 44%." },
+                tip: "TDS adds all other debts to GDS, car loans, student loans, credit card minimums. Limit: 44%." },
             ].map(({ key, pct, limit, color, tip }) => (
               <div key={key} className="rounded-xl bg-white border border-neutral-100 p-3">
                 <div className="flex items-center justify-between mb-1">
@@ -152,7 +152,7 @@ export default function AffordabilityCalculator({
           {/* Inputs */}
           <div className="px-5 py-4 space-y-4 border-t border-neutral-100">
             <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
-              Enter your gross (pre-tax) income — this is what lenders use. Pre-filled with $100K as a round starting point.
+              Enter your gross (pre-tax) income, this is what lenders use. Pre-filled with $100K as a round starting point.
             </p>
             <div className="grid grid-cols-2 gap-3">
               {[

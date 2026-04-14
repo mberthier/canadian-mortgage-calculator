@@ -8,7 +8,7 @@ import AffordabilityClient from "./AffordabilityClient";
 
 export const metadata: Metadata = {
   title: "Mortgage Affordability & Stress Test Calculator Canada 2026",
-  description: "Find out how much mortgage you can afford in Canada and whether you pass the stress test. GDS/TDS ratios, qualifying rate, and max purchase price — updated for 2026.",
+  description: "Find out how much mortgage you can afford in Canada and whether you pass the stress test. GDS/TDS ratios, qualifying rate, and max purchase price, updated for 2026.",
   alternates: { canonical: "https://crystalkey.ca/affordability" },
   openGraph: {
     title: "Mortgage Affordability & Stress Test Calculator Canada 2026 | CrystalKey",
@@ -19,12 +19,12 @@ export const metadata: Metadata = {
 
 const FAQ = [
   { question: "How much mortgage can I afford in Canada?", answer: "Canadian lenders use two ratios: GDS must be 39% or less, and TDS must be 44% or less, both calculated at the stress test rate (your rate + 2%, minimum 5.25%). A rough rule: you can typically afford a home worth 4–5× your gross household income, depending on debts and down payment." },
-  { question: "What is the GDS ratio in Canada?", answer: "GDS (Gross Debt Service) measures your housing costs as a percentage of gross income — mortgage P&I, property taxes, monthly heating costs, and 50% of condo fees. CMHC raised the maximum GDS from 32% to 39% in December 2024." },
-  { question: "What is the TDS ratio?", answer: "TDS (Total Debt Service) adds all other debt obligations to your GDS — car loans, student loans, credit card minimums, lines of credit. Maximum is 44%. Reducing non-mortgage debt is one of the most effective ways to improve your qualifying position." },
+  { question: "What is the GDS ratio in Canada?", answer: "GDS (Gross Debt Service) measures your housing costs as a percentage of gross income, mortgage P&I, property taxes, monthly heating costs, and 50% of condo fees. CMHC raised the maximum GDS from 32% to 39% in December 2024." },
+  { question: "What is the TDS ratio?", answer: "TDS (Total Debt Service) adds all other debt obligations to your GDS, car loans, student loans, credit card minimums, lines of credit. Maximum is 44%. Reducing non-mortgage debt is one of the most effective ways to improve your qualifying position." },
   { question: "What is the mortgage stress test?", answer: "The stress test requires lenders to verify you can afford payments at the greater of your contract rate + 2% or 5.25%. At today's best rate of ~3.89%, the stress test rate is 5.89%. This protects borrowers from payment shock if rates rise at renewal." },
   { question: "Does the stress test apply at renewal?", answer: "If you renew with your existing lender, the stress test does not apply. Since November 2024, straight switches to a new lender at renewal also no longer require re-qualification. If you increase the mortgage amount, the stress test applies to the new amount." },
   { question: "What income do I need for a $700,000 mortgage?", answer: "At a stress test rate of ~5.89% with 25-year amortization, a $700,000 mortgage requires approximately $175,000 in gross household income to pass GDS limits, assuming $4,800/year property tax, $150/mo heating, and no other debts." },
-  { question: "Did affordability rules change in 2024?", answer: "Yes — significantly. Effective December 15, 2024: the CMHC insured limit was raised from $1M to $1.5M; GDS limit raised from 32% to 39%; and minimum down payment thresholds updated. These changes meaningfully increased what many Canadians can qualify for." },
+  { question: "Did affordability rules change in 2024?", answer: "Yes, significantly. Effective December 15, 2024: the CMHC insured limit was raised from $1M to $1.5M; GDS limit raised from 32% to 39%; and minimum down payment thresholds updated. These changes meaningfully increased what many Canadians can qualify for." },
 ];
 
 export default function AffordabilityPage() {
@@ -39,7 +39,7 @@ export default function AffordabilityPage() {
                 Mortgage Affordability & Stress Test
               </h1>
               <p className="text-lg" style={{ color: "var(--ink-muted)" }}>
-                Your lender runs these exact numbers before saying yes. Find out where you stand — and what rate they'll actually test you at.
+                Your lender runs these exact numbers before saying yes. Find out where you stand, and what rate they'll actually test you at.
               </p>
             </div>
             <div className="shrink-0 w-32 hidden sm:block"><IllustrationAffordability /></div>
@@ -52,7 +52,7 @@ export default function AffordabilityPage() {
           <section>
             <h2 className="text-2xl font-semibold mb-4 tracking-tight" style={{ color: "var(--ink)" }}>How affordability works in Canada</h2>
             <div className="space-y-4 text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>
-              <p>Canadian lenders apply two standardized tests — GDS and TDS — both calculated at the <strong className="text-neutral-700">stress test rate</strong> (the higher of your contract rate + 2% or 5.25%), not your actual rate. CMHC raised the GDS limit from 32% to 39% in December 2024, meaningfully increasing qualifying power.</p>
+              <p>Canadian lenders apply two standardized tests. GDS and TDS, both calculated at the <strong className="text-neutral-700">stress test rate</strong> (the higher of your contract rate + 2% or 5.25%), not your actual rate. CMHC raised the GDS limit from 32% to 39% in December 2024, meaningfully increasing qualifying power.</p>
               <p>Your maximum purchase price is determined by whichever constraint binds first. Adding a co-applicant, reducing debts, or increasing your down payment all improve your position.</p>
             </div>
           </section>

@@ -28,15 +28,15 @@ const TIPS = {
   homePrice:    "The purchase price of the property you're buying.",
   downPayment:  "The upfront cash payment. Minimum is 5% for homes under $500K, 5%+10% on $500K–$1.5M, and 20% above $1.5M.",
   cmhc:         "CMHC mortgage default insurance is required when your down payment is under 20%. The premium (2.8%–4.0%) is added to your mortgage balance.",
-  interestRate: "Canadian mortgage rates are compounded semi-annually by law — unlike the US where monthly compounding is standard. Our math correctly applies this.",
+  interestRate: "Canadian mortgage rates are compounded semi-annually by law, unlike the US where monthly compounding is standard. Our math correctly applies this.",
   amortization: "Total time to pay off your mortgage. 25 years is most common. Longer = lower payments but more total interest.",
   term:         "Length of your current mortgage contract. After it ends, you renew at prevailing rates. Most Canadians choose 5-year fixed.",
-  frequency:    "Accelerated bi-weekly splits your monthly payment in half, paid every 2 weeks. You make 26 payments = 13 months equivalent — saving significant interest.",
+  frequency:    "Accelerated bi-weekly splits your monthly payment in half, paid every 2 weeks. You make 26 payments = 13 months equivalent, saving significant interest.",
   propertyTax:  "Annual property tax from your municipality. Typically 0.5%–1.5% of assessed value. Your lender may collect this monthly.",
   homeInsurance:"Required by your lender. Typically $1,000–$3,000/year depending on property type and location.",
   condoFees:    "Monthly condo or strata fees. Lenders include 50% of condo fees in your GDS ratio calculation.",
   heatingCost:  "Estimated monthly heating costs. Included in your GDS ratio by lenders when assessing affordability.",
-  balance:      "Your remaining mortgage balance — what you currently owe your lender.",
+  balance:      "Your remaining mortgage balance, what you currently owe your lender.",
   homeValue:    "Current market value of your home. Used to calculate loan-to-value (LTV) ratio.",
   cashOut:      "Additional equity you want to access through refinancing. Total loan cannot exceed 80% of home value.",
   ltv:          "Loan-to-Value: your mortgage balance ÷ home value. Lenders cap refinances at 80% LTV.",
@@ -165,7 +165,7 @@ export default function CalculatorForm({
                 {formatCurrency(inputs.downPayment)} ·{" "}
                 {inputs.downPaymentPercent < 20
                   ? <span style={{ color: "var(--amber)" }}>+{formatCurrency(cmhcPremium, 0)} CMHC added to your mortgage<Tooltip content={TIPS.cmhc} /></span>
-                  : <span style={{ color: "var(--green-mid)" }}>20%+ down — no CMHC ✓</span>}
+                  : <span style={{ color: "var(--green-mid)" }}>20%+ down, no CMHC ✓</span>}
               </span>
             </div>
             {errors.downPayment && <p className="text-xs text-red-600 mt-0.5">{errors.downPayment}</p>}
@@ -252,7 +252,7 @@ export default function CalculatorForm({
           : { background: "var(--green-light)", color: "var(--green)", border: "1px solid var(--green-border)" }}
         aria-expanded={showMore}
       >
-        <span>{showMore ? "Hide options" : "More options — amortization, term, frequency…"}</span>
+        <span>{showMore ? "Hide options" : "More options, amortization, term, frequency…"}</span>
         <span className="text-base font-semibold">{showMore ? "−" : "+"}</span>
       </button>
 

@@ -88,7 +88,7 @@ function CurrencyInput({ id, label, tip, value, onChange, placeholder, suffix, r
         <label className={`${lbl} flex items-center`}>{label}{tip && <Tooltip content={tip} />}</label>
         <div className="relative">
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 text-sm">$</span>
-          <div className={`${inp} pl-7 bg-neutral-50 text-neutral-500`}>{value > 0 ? value.toLocaleString("en-CA") : "—"}</div>
+          <div className={`${inp} pl-7 bg-neutral-50 text-neutral-500`}>{value > 0 ? value.toLocaleString("en-CA") : " - "}</div>
         </div>
       </div>
     );
@@ -190,6 +190,51 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
             onChange={setHomePrice} placeholder="750,000" />
           {errors.homePrice && <p className="text-xs text-red-600 -mt-2">{errors.homePrice}</p>}
 
+          {/* Mortgage type */}
+          <div>
+            <label className={`${lbl} flex items-center`}>
+              Mortgage type
+              <Tooltip content="Insured: under $1.5M purchase price with less than 20% down. You pay a CMHC premium but typically get lower rates. Insurable: under $1.5M, 20%+ down, 25-year max amortization. No CMHC premium, but lenders can still pool-insure these and often offer competitive rates. Uninsurable: over $1.5M, or 30-year amortization, or a refinance. Conventional mortgage with no insurance option, typically slightly higher rates." />
+            </label>
+            <div className="grid grid-cols-3 gap-1.5 p-1 rounded-xl" style={{ background: "#eeeeee" }}>
+              {([
+                { value: "insured"      as const, label: "Insured",       sub: "Under 20% down" },
+                { value: "insurable"    as const, label: "Insurable",     sub: "20%+ down, under $1.5M" },
+                { value: "uninsurable"  as const, label: "Uninsurable",   sub: "Over $1.5M or 30yr" },
+              ] as const).map((opt) => {
+                const active = inputs.mortgageType === opt.value;
+                return (
+                  <button key={opt.value} type="button"
+                    onClick={() => setField("mortgageType", opt.value)}
+                    className="rounded-lg py-2 px-1 text-center transition-all"
+                    style={active ? { background: "#fff", boxShadow: "0 1px 3px rgba(0,0,0,0.08)" } : {}}>
+                    <p className="text-xs font-semibold" style={{ color: active ? "var(--green)" : "var(--ink-muted)" }}>
+                      {opt.label}
+                    </p>
+                    <p className="text-xs mt-0.5 hidden sm:block" style={{ color: "var(--ink-faint)", opacity: active ? 1 : 0.7 }}>
+                      {opt.sub}
+                    </p>
+                  </button>
+                );
+              })}
+            </div>
+            {inputs.mortgageType === "insured" && (
+              <p className="text-xs mt-2 leading-relaxed" style={{ color: "var(--ink-muted)" }}>
+                With less than 20% down, CMHC mortgage default insurance is required. The premium is added to your mortgage balance and you pay interest on it over the full amortization.
+              </p>
+            )}
+            {inputs.mortgageType === "insurable" && (
+              <p className="text-xs mt-2 leading-relaxed" style={{ color: "var(--ink-muted)" }}>
+                20%+ down with a purchase price under $1.5M and a 25-year max amortization. No CMHC premium, but lenders can still pool-insure these mortgages, often resulting in competitive rates similar to insured mortgages.
+              </p>
+            )}
+            {inputs.mortgageType === "uninsurable" && (
+              <p className="text-xs mt-2 leading-relaxed" style={{ color: "var(--ink-muted)" }}>
+                Mortgages over $1.5M, with a 30-year amortization, or on a refinance cannot be insured. These are conventional mortgages, typically priced 0.10 to 0.25% higher than insurable mortgages.
+              </p>
+            )}
+          </div>
+
           {/* Down payment */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
@@ -239,8 +284,8 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
             {inputs.homePrice > 0 && (
               <p className="text-xs mt-1.5">
                 {outputs.cmhcPremium > 0
-                  ? <span style={{ color: "var(--amber)" }}>CMHC applies — {formatCurrency(outputs.cmhcPremium, 0)} added to mortgage</span>
-                  : <span style={{ color: "var(--green-mid)" }}>20%+ down — no CMHC required ✓</span>}
+                  ? <span style={{ color: "var(--amber)" }}>CMHC applies, {formatCurrency(outputs.cmhcPremium, 0)} added to mortgage</span>
+                  : <span style={{ color: "var(--green-mid)" }}>20%+ down, no CMHC required ✓</span>}
               </p>
             )}
           </div>
@@ -257,7 +302,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
           <Divider label="Mortgage" />
 
           <RateInput id="rate" label="Interest rate"
-            tip="Canadian mortgage rates compound semi-annually by law — our calculator applies this correctly."
+            tip="Canadian mortgage rates compound semi-annually by law, our calculator applies this correctly."
             value={inputs.interestRate} onChange={(v) => setField("interestRate", v)}
             showSlider sliderNote={`Qualifying (stress test): ${stressRate.toFixed(2)}%`} />
           {errors.interestRate && <p className="text-xs text-red-600 -mt-2">{errors.interestRate}</p>}
@@ -295,7 +340,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
           {showCosts && (
             <div className="space-y-3 pl-3 border-l-2" style={{ borderColor: "#e5e5e5" }}>
               <CurrencyInput id="heat" label="Monthly heating costs"
-                tip="Lenders include your monthly heating cost in the GDS ratio. This covers gas, oil, and electric heating specifically — not general electricity, internet, or water. If unknown, lenders use $150/mo as a default."
+                tip="Lenders include your monthly heating cost in the GDS ratio. This covers gas, oil, and electric heating specifically, not general electricity, internet, or water. If unknown, lenders use $150/mo as a default."
                 value={inputs.heatingCost} onChange={(v) => setField("heatingCost", v)} suffix="/mo" />
               <CurrencyInput id="insurance" label="Home insurance"
                 tip="Required by your lender. Typically $1,000–$3,000/year."
@@ -306,7 +351,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
           {/* Closing costs section */}
           <Divider label="Closing costs" />
 
-          {/* LTT — read-only calculated */}
+          {/* LTT, read-only calculated */}
           {inputs.homePrice > 0 && (
             <div className="rounded-lg px-3 py-2.5 text-xs space-y-1.5 border"
               style={{ background: "#fafafa", borderColor: "#e8e8e8" }}>
@@ -349,7 +394,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
           {showRepay && (
             <div className="space-y-4 pl-3 border-l-2" style={{ borderColor: "#e5e5e5" }}>
               <SelectField id="freq" label="Payment frequency"
-                tip="Accelerated bi-weekly = 26 half-monthly payments/year — equivalent to one extra monthly payment per year."
+                tip="Accelerated bi-weekly = 26 half-monthly payments/year, equivalent to one extra monthly payment per year."
                 value={inputs.paymentFrequency}
                 onChange={(v) => setField("paymentFrequency", v as PaymentFrequency)}>
                 {(Object.entries(FREQUENCY_LABELS) as [PaymentFrequency, string][]).map(([k, v]) => (
@@ -372,7 +417,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
                 value={inputs.extraPayment} onChange={(v) => setField("extraPayment", v)} />
               {inputs.extraPayment > 0 && (
                 <p className="text-xs" style={{ color: "var(--green-mid)" }}>
-                  ✓ Adding {formatCurrency(inputs.extraPayment, 0)}/payment — see projected savings in the Insights panel.
+                  ✓ Adding {formatCurrency(inputs.extraPayment, 0)}/payment, see projected savings in the Insights panel.
                 </p>
               )}
 
@@ -437,7 +482,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
           {errors.currentBalance && <p className="text-xs text-red-600 -mt-2">{errors.currentBalance}</p>}
 
           <RateInput id="current-rate" label="Current rate"
-            tip="Your expiring contracted rate — used to calculate what you pay now for comparison."
+            tip="Your expiring contracted rate, used to calculate what you pay now for comparison."
             value={inputs.currentRate} onChange={(v) => setField("currentRate", v)} />
 
           <SelectField id="amort-renewal" label="Remaining amortization"
@@ -457,8 +502,8 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
           {outputs.currentPayment > 0 && (
             <div className="rounded-lg px-3 py-2.5 text-sm flex justify-between border"
               style={{ background: "#fafafa", borderColor: "#e8e8e8" }}>
-              <span style={{ color: "var(--ink-mid)" }}>Current payment at {inputs.currentRate > 0 ? inputs.currentRate.toFixed(2) : "—"}%</span>
-              <span className="font-semibold text-neutral-800">{outputs.currentPayment > 0 ? formatCurrency(outputs.currentPayment, 2) : "—"}</span>
+              <span style={{ color: "var(--ink-mid)" }}>Current payment at {inputs.currentRate > 0 ? inputs.currentRate.toFixed(2) : " - "}%</span>
+              <span className="font-semibold text-neutral-800">{outputs.currentPayment > 0 ? formatCurrency(outputs.currentPayment, 2) : " - "}</span>
             </div>
           )}
 
@@ -548,21 +593,21 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
               <span className="font-semibold" style={{ color: outputs.ltv > 0.8 ? "#ef4444" : "var(--green)" }}>
                 {formatCurrency(Math.max(0, inputs.homeValue - inputs.currentBalance), 0)}
                 {" "}({(Math.max(0, 1 - outputs.ltv) * 100).toFixed(0)}%)
-                {outputs.ltv > 0.8 && " — above 80% LTV cap"}
+                {outputs.ltv > 0.8 && ", above 80% LTV cap"}
               </span>
             </div>
           )}
           {errors.ltv && <p className="text-xs text-red-600">{errors.ltv}</p>}
 
           <RateInput id="current-rate-refi" label="Current rate"
-            tip="Your existing contracted rate — used to compare current vs new payment."
+            tip="Your existing contracted rate, used to compare current vs new payment."
             value={inputs.currentRate} onChange={(v) => setField("currentRate", v)} />
 
           {outputs.currentPayment > 0 && (
             <div className="rounded-lg px-3 py-2.5 text-sm flex justify-between border"
               style={{ background: "#fafafa", borderColor: "#e8e8e8" }}>
-              <span style={{ color: "var(--ink-mid)" }}>Current payment at {inputs.currentRate > 0 ? inputs.currentRate.toFixed(2) : "—"}%</span>
-              <span className="font-semibold text-neutral-800">{outputs.currentPayment > 0 ? formatCurrency(outputs.currentPayment, 2) : "—"}</span>
+              <span style={{ color: "var(--ink-mid)" }}>Current payment at {inputs.currentRate > 0 ? inputs.currentRate.toFixed(2) : " - "}%</span>
+              <span className="font-semibold text-neutral-800">{outputs.currentPayment > 0 ? formatCurrency(outputs.currentPayment, 2) : " - "}</span>
             </div>
           )}
 

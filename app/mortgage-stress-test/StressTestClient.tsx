@@ -78,8 +78,8 @@ export default function StressTestClient() {
             : { background: "#fef2f2", borderColor: "#fecaca" }}>
           <p className="font-semibold text-sm" style={{ color: passes ? "var(--green)" : "var(--red)" }}>
             {passes
-              ? `✓  You pass the stress test — GDS ${gds.toFixed(1)}% is within the 39% limit`
-              : `✗  You don't pass — GDS ${gds.toFixed(1)}% exceeds the 39% limit at the stress test rate`}
+              ? `✓  You pass the stress test. GDS ${gds.toFixed(1)}% is within the 39% limit`
+              : `✗  You don't pass. GDS ${gds.toFixed(1)}% exceeds the 39% limit at the stress test rate`}
           </p>
           <p className="text-xs mt-1" style={{ color: passes ? "var(--green-mid)" : "#991b1b" }}>
             Actual monthly payment: {formatCurrency(monthlyActual, 0)} · Stress test payment: {formatCurrency(monthlyStress, 0)} · Down: {downPct.toFixed(1)}%

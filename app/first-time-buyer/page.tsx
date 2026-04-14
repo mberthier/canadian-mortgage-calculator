@@ -6,7 +6,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import FAQAccordion from "@/components/FAQAccordion";
 
 export const metadata: Metadata = {
-  title: "First-Time Home Buyer Guide Canada 2026 — Programs, CMHC & RRSP",
+  title: "First-Time Home Buyer Guide Canada 2026. Programs, CMHC & RRSP",
   description: "Complete guide for first-time home buyers in Canada. CMHC insurance, stress test, land transfer tax rebates, RRSP Home Buyers Plan, and FHSA explained clearly.",
   alternates: { canonical: "https://crystalkey.ca/first-time-buyer" },
   openGraph: {
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 };
 
 const FAQ = [
-  { question: "What programs are available for first-time buyers in Canada?", answer: "Key federal programs include: the Home Buyers Plan (withdraw up to $60,000/person from RRSP tax-free), the First Home Savings Account (FHSA — save up to $40,000 tax-free toward a first home), and the First-Time Home Buyers Tax Credit ($1,500 federal tax saving). Provinces also offer their own LTT rebates." },
+  { question: "What programs are available for first-time buyers in Canada?", answer: "Key federal programs include: the Home Buyers Plan (withdraw up to $60,000/person from RRSP tax-free), the First Home Savings Account (FHSA, save up to $40,000 tax-free toward a first home), and the First-Time Home Buyers Tax Credit ($1,500 federal tax saving). Provinces also offer their own LTT rebates." },
   { question: "What is the First Home Savings Account (FHSA)?", answer: "The FHSA is a registered account allowing first-time buyers to contribute up to $8,000/year (lifetime limit $40,000) with tax-deductible contributions and tax-free withdrawals for a home purchase. Unused room carries forward one year. It combines RRSP and TFSA benefits." },
   { question: "How much do I need for a down payment as a first-time buyer?", answer: "Minimum is 5% for homes under $500,000; 5% on first $500K plus 10% on the $500K-$1.5M portion; and 20% above $1.5M. As a first-time buyer, RRSP withdrawals (up to $60K/person via HBP) and FHSA savings can help reach these thresholds." },
   { question: "Do first-time buyers get a land transfer tax rebate?", answer: "In several provinces, yes. Ontario rebates up to $4,000 (plus $4,475 in Toronto). BC offers full exemption under $500K and partial rebate up to $835K. Manitoba rebates up to $3,500. PEI rebates up to $2,000." },

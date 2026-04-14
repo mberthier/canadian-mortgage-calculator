@@ -16,12 +16,12 @@ export default function IllustrationRates() {
       <text x="6" y="69" fontSize="8" fill="#999999" fontFamily="sans-serif">4%</text>
       <text x="6" y="47" fontSize="8" fill="#999999" fontFamily="sans-serif">6%</text>
 
-      {/* 5yr Fixed rate line (blue → now green family) — goes up then down */}
+      {/* 5yr Fixed rate line (blue → now green family), goes up then down */}
       <path d="M28 100 L50 90 L70 72 L90 54 L106 50 L120 52 L136 58 L152 66 L170 68 L186 66"
         stroke="#dbeafe" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"
         strokeDasharray="5 3"/>
 
-      {/* BoC overnight rate line — sharp rise, nine steps down */}
+      {/* BoC overnight rate line, sharp rise, nine steps down */}
       <path d="M28 108 L46 108 L46 86 L64 86 L64 70 L80 70 L80 55 L96 55 L96 55 L110 55
                L110 63 L122 63 L122 70 L134 70 L134 80 L148 80 L148 88 L162 88 L162 88 L186 88"
         stroke="#1068A8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>

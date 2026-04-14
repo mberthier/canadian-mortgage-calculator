@@ -85,7 +85,7 @@ export default function FirstTimeBuyerGuide({
       {open && (
         <div className="mt-4 space-y-5">
           <p className="text-xs leading-relaxed" style={{ color: "var(--ink-faint)" }}>
-            Buying your first home in Canada? Here's exactly what you need to know — explained with your actual numbers.
+            Buying your first home in Canada? Here's exactly what you need to know, explained with your actual numbers.
           </p>
 
           {/* First-time buyer toggle */}
@@ -112,7 +112,7 @@ export default function FirstTimeBuyerGuide({
 
           {/* Steps */}
           <div className="space-y-0">
-            {/* Step 1 — Down payment */}
+            {/* Step 1. Down payment */}
             <Step number={1} title="How much do you need for a down payment?">
               <div className="space-y-2 text-xs" style={{ color: "var(--ink-mid)" }}>
                 <p>In Canada, the minimum down payment depends on the purchase price:</p>
@@ -148,11 +148,11 @@ export default function FirstTimeBuyerGuide({
               </div>
             </Step>
 
-            {/* Step 2 — CMHC */}
+            {/* Step 2. CMHC */}
             <Step number={2} title="What is CMHC insurance and do you need it?">
               <div className="space-y-2 text-xs" style={{ color: "var(--ink-mid)" }}>
                 <p>
-                  If your down payment is <strong className="text-neutral-700">less than 20%</strong>, the federal government requires you to buy mortgage default insurance through CMHC. The premium is added to your mortgage — you don't pay it upfront.
+                  If your down payment is <strong className="text-neutral-700">less than 20%</strong>, the federal government requires you to buy mortgage default insurance through CMHC. The premium is added to your mortgage, you don't pay it upfront.
                 </p>
                 <div className="rounded-lg overflow-hidden border border-neutral-100">
                   <table className="w-full text-xs">
@@ -186,17 +186,17 @@ export default function FirstTimeBuyerGuide({
                 ) : (
                   <div className="rounded-lg px-3 py-2 border"
                     style={{ background: "var(--green-light)", borderColor: "var(--green-border)", color: "var(--green)" }}>
-                    Your {downPercent.toFixed(1)}% down payment is 20%+ — no CMHC required. ✓
+                    Your {downPercent.toFixed(1)}% down payment is 20%+, no CMHC required. ✓
                   </div>
                 )}
               </div>
             </Step>
 
-            {/* Step 3 — Stress Test */}
+            {/* Step 3. Stress Test */}
             <Step number={3} title="What is the mortgage stress test?">
               <div className="space-y-2 text-xs" style={{ color: "var(--ink-mid)" }}>
                 <p>
-                  Before approving your mortgage, your lender must verify you can afford payments at a higher rate — either your contract rate <strong className="text-neutral-700">+ 2%</strong> or <strong className="text-neutral-700">5.25%</strong>, whichever is higher.
+                  Before approving your mortgage, your lender must verify you can afford payments at a higher rate, either your contract rate <strong className="text-neutral-700">+ 2%</strong> or <strong className="text-neutral-700">5.25%</strong>, whichever is higher.
                 </p>
                 <p>This protects you from defaulting if rates rise at renewal.</p>
                 {interestRate > 0 && (
@@ -210,8 +210,8 @@ export default function FirstTimeBuyerGuide({
               </div>
             </Step>
 
-            {/* Step 4 — LTT */}
-            <Step number={4} title="Land transfer tax — and your rebate">
+            {/* Step 4. LTT */}
+            <Step number={4} title="Land transfer tax, and your rebate">
               <div className="space-y-2 text-xs" style={{ color: "var(--ink-mid)" }}>
                 <p>
                   When you buy a home, you pay a <strong className="text-neutral-700">land transfer tax</strong> to your province (and Toronto charges an additional municipal LTT).
@@ -261,8 +261,8 @@ export default function FirstTimeBuyerGuide({
               </div>
             </Step>
 
-            {/* Step 5 — RRSP */}
-            <Step number={5} title="The Home Buyers' Plan — use your RRSP">
+            {/* Step 5. RRSP */}
+            <Step number={5} title="The Home Buyers' Plan, use your RRSP">
               <div className="text-xs space-y-2" style={{ color: "var(--ink-mid)" }}>
                 <p>
                   First-time buyers can withdraw up to <strong className="text-neutral-700">$60,000 per person</strong> from their RRSP tax-free to use toward a down payment (increased from $35K in 2024).
@@ -272,7 +272,7 @@ export default function FirstTimeBuyerGuide({
                 </p>
                 <div className="rounded-lg px-3 py-2 border"
                   style={{ background: "var(--green-light)", borderColor: "var(--green-border)", color: "var(--green)" }}>
-                  If both you and a partner qualify, this could significantly boost your down payment — potentially enough to reach 20% and avoid CMHC entirely.
+                  If both you and a partner qualify, this could significantly boost your down payment, potentially enough to reach 20% and avoid CMHC entirely.
                 </div>
               </div>
             </Step>

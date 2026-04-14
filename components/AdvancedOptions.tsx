@@ -68,7 +68,7 @@ export default function AdvancedOptions({ inputs, setField }: Props) {
       {open && (
         <div className="mt-4 space-y-4">
           <CurrencyField id="extra" label="Extra Payment per Period"
-            hint="Added to every scheduled payment — shortens amortization"
+            hint="Added to every scheduled payment, shortens amortization"
             value={inputs.extraPayment} onChange={(v) => setField("extraPayment", v)} />
           <CurrencyField id="closing" label="Closing Costs"
             hint={isPurchase ? "Legal fees, inspection, title insurance, adjustments" : "Legal fees for renewal/refinance (~$500–$1,500)"}

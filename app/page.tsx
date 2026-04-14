@@ -25,7 +25,7 @@ import { formatCurrency } from "@/lib/formatters";
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  name: "CrystalKey — Canadian Mortgage Calculator",
+  name: "CrystalKey. Canadian Mortgage Calculator",
   url: "https://crystalkey.ca",
   description:
     "Canada's most comprehensive mortgage calculator. CMHC, land transfer tax, GDS/TDS, amortization schedule, stress test, and total upfront costs.",
@@ -68,8 +68,8 @@ function ResultsNarrative({
         {" "}Equity at renewal:{" "}
         <span className="font-semibold" style={{ color: "var(--green)" }}>{equity}%</span>
         {parseInt(equity) >= 20
-          ? " — above 20%, so you can switch lenders freely at renewal."
-          : " — below 20%, CMHC rules would apply if you refinanced."}
+          ? ", above 20%, so you can switch lenders freely at renewal."
+          : ", below 20%, CMHC rules would apply if you refinanced."}
       </div>
     );
   }
@@ -137,13 +137,13 @@ export default function Home() {
             </p>
           </div>
 
-          {/* ── Mode selector — above everything ── */}
+          {/* ── Mode selector, above everything ── */}
           <ModeSelector mode={inputs.mortgageMode} onChange={setMode} />
 
           {/* ── Two-column layout ── */}
           <div className="grid grid-cols-1 lg:grid-cols-[360px,1fr] gap-8 items-start">
 
-            {/* Left — guided inputs only */}
+            {/* Left, guided inputs only */}
             <aside>
               <div className="rounded-2xl bg-white p-5"
                 style={{ border: "1px solid #e8e8e8" }}>
@@ -166,11 +166,11 @@ export default function Home() {
                 />
               </div>
               <p className="text-xs mt-4 px-1 leading-relaxed" style={{ color: "var(--ink-faint)" }}>
-                Estimates only — not financial advice. Consult a licensed broker before decisions.
+                Estimates only, not financial advice. Consult a licensed broker before decisions.
               </p>
             </aside>
 
-            {/* Right — results, insights, charts */}
+            {/* Right, results, insights, charts */}
             <main className="space-y-5 pb-24 lg:pb-0">
               {/* Payment hero */}
               <SummaryCards outputs={outputs} inputs={inputs} shareURL={shareURL} />
@@ -178,13 +178,13 @@ export default function Home() {
               {/* Plain English summary */}
               <ResultsNarrative outputs={outputs} inputs={inputs} />
 
-              {/* Insights — dynamic, contextual */}
+              {/* Insights, dynamic, contextual */}
               <InsightsPanel inputs={inputs} outputs={outputs} />
 
-              {/* Cash at closing — purchase only */}
+              {/* Cash at closing, purchase only */}
               <CashSummary inputs={inputs} outputs={outputs} />
 
-              {/* View amortization shortcut — above charts */}
+              {/* View amortization shortcut, above charts */}
               {outputs.amortizationSchedule.length > 0 && (
                 <button
                   onClick={() => {
@@ -203,7 +203,7 @@ export default function Home() {
                 </button>
               )}
 
-              {/* Charts — fully mode-aware */}
+              {/* Charts, fully mode-aware */}
               {outputs.amortizationSchedule.length > 0 && (
                 <>
                   {/* PURCHASE: full chart suite */}
@@ -233,7 +233,7 @@ export default function Home() {
                     </>
                   )}
 
-                  {/* RENEWAL: principal/interest split only — no fabricated equity */}
+                  {/* RENEWAL: principal/interest split only, no fabricated equity */}
                   {inputs.mortgageMode === "renewal" && (
                     <div className="bg-white rounded-2xl p-5 border border-neutral-100">
                       <PrincipalInterestByYear
@@ -278,7 +278,7 @@ export default function Home() {
                     </>
                   )}
 
-                  {/* Amortization table — all modes */}
+                  {/* Amortization table, all modes */}
                   <div data-section="amortization-table">
                     <AmortizationTable
                       schedule={outputs.amortizationSchedule}
@@ -287,17 +287,17 @@ export default function Home() {
                     />
                   </div>
 
-                  {/* Renewal rate scenarios — all modes */}
+                  {/* Renewal rate scenarios, all modes */}
                   <div data-section="stress-test">
                     <StressTest outputs={outputs} inputs={inputs} />
                   </div>
 
-                  {/* Scenario comparison — all modes */}
+                  {/* Scenario comparison, all modes */}
                   <div data-section="scenario-comparison">
                     <MortgageComparison inputs={inputs} loanAmount={outputs.loanAmount} />
                   </div>
 
-                  {/* Can you afford this? — purchase only */}
+                  {/* Can you afford this?, purchase only */}
                   {isPurchase && (
                     <div data-section="affordability">
                       <AffordabilityCalculator
@@ -312,7 +312,7 @@ export default function Home() {
                     </div>
                   )}
 
-                  {/* Explore more — very bottom */}
+                  {/* Explore more, very bottom */}
                   <FeatureDiscovery />
                 </>
               )}

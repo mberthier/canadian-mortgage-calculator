@@ -7,7 +7,7 @@ import BreakPenaltyCalculatorClient from "./BreakPenaltyCalculatorClient";
 
 export const metadata: Metadata = {
   title: "Mortgage Break Penalty Calculator Canada 2026",
-  description: "Calculate your Canadian mortgage break penalty — 3-month interest vs IRD. Find out exactly what it costs to exit your mortgage early before you refinance or sell.",
+  description: "Calculate your Canadian mortgage break penalty. 3-month interest vs IRD. Find out exactly what it costs to exit your mortgage early before you refinance or sell.",
   alternates: { canonical: "https://crystalkey.ca/mortgage-break-penalty" },
   openGraph: {
     title: "Mortgage Break Penalty Calculator Canada 2026 | CrystalKey",
@@ -23,7 +23,7 @@ const FAQ = [
   },
   {
     question: "What is the Interest Rate Differential (IRD)?",
-    answer: "The IRD is the difference between your contracted mortgage rate and the lender's current rate for the remaining term, multiplied by your outstanding balance and the time remaining. When rates have fallen significantly since you locked in, the IRD can be very large — sometimes $15,000–$30,000 or more on big bank mortgages.",
+    answer: "The IRD is the difference between your contracted mortgage rate and the lender's current rate for the remaining term, multiplied by your outstanding balance and the time remaining. When rates have fallen significantly since you locked in, the IRD can be very large, sometimes $15,000–$30,000 or more on big bank mortgages.",
   },
   {
     question: "When would you break a mortgage?",
@@ -31,7 +31,7 @@ const FAQ = [
   },
   {
     question: "Are mortgage break penalties the same at all lenders?",
-    answer: "No — this is one of the most important differences between lenders. Major Canadian banks calculate IRD using posted rates (not discounted rates), which significantly inflates the penalty. Monoline lenders typically use contract rates for IRD, resulting in much lower penalties. This is a key reason to consider monoline lenders when getting a mortgage.",
+    answer: "No, this is one of the most important differences between lenders. Major Canadian banks calculate IRD using posted rates (not discounted rates), which significantly inflates the penalty. Monoline lenders typically use contract rates for IRD, resulting in much lower penalties. This is a key reason to consider monoline lenders when getting a mortgage.",
   },
   {
     question: "Can I avoid a mortgage break penalty?",
@@ -59,7 +59,7 @@ export default function BreakPenaltyPage() {
                 Mortgage Break Penalty Calculator
               </h1>
               <p className="text-lg" style={{ color: "var(--ink-muted)" }}>
-                Breaking your mortgage before the term ends costs money. Find out exactly how much — before you commit to anything.
+                Breaking your mortgage before the term ends costs money. Find out exactly how much, before you commit to anything.
               </p>
             </div>
           </div>
@@ -74,13 +74,13 @@ export default function BreakPenaltyPage() {
             </h2>
             <div className="space-y-4 text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>
               <p>
-                When you sign a closed mortgage, you're committing to the full term. Breaking that contract — whether to refinance, sell, or pay off early — triggers a prepayment penalty. Canadian law requires lenders to disclose how they calculate this penalty, but the methods vary significantly.
+                When you sign a closed mortgage, you're committing to the full term. Breaking that contract, whether to refinance, sell, or pay off early, triggers a prepayment penalty. Canadian law requires lenders to disclose how they calculate this penalty, but the methods vary significantly.
               </p>
               <p>
                 For <strong className="text-neutral-800">variable-rate mortgages</strong>, the penalty is always three months' interest on your outstanding balance. Straightforward, predictable, and usually not that large.
               </p>
               <p>
-                For <strong className="text-neutral-800">fixed-rate mortgages</strong>, you pay the greater of three months' interest or the Interest Rate Differential (IRD). The IRD is where things get complicated — and expensive.
+                For <strong className="text-neutral-800">fixed-rate mortgages</strong>, you pay the greater of three months' interest or the Interest Rate Differential (IRD). The IRD is where things get complicated, and expensive.
               </p>
             </div>
           </section>
@@ -91,7 +91,7 @@ export default function BreakPenaltyPage() {
             </h2>
             <div className="space-y-4 text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>
               <p>
-                Major Canadian banks calculate IRD using their <strong className="text-neutral-800">posted rates</strong> — the advertised rates nobody actually pays — rather than the discounted rate you actually received. This artificially deflates the "current rate" used in the IRD calculation, making the rate differential (and therefore the penalty) much larger than it should be.
+                Major Canadian banks calculate IRD using their <strong className="text-neutral-800">posted rates</strong>, the advertised rates nobody actually pays, rather than the discounted rate you actually received. This artificially deflates the "current rate" used in the IRD calculation, making the rate differential (and therefore the penalty) much larger than it should be.
               </p>
               <p>
                 Monoline lenders (non-bank lenders like First National, MCAP, and others) typically calculate IRD using your actual contracted rate, resulting in penalties that are far more reasonable. This difference can mean paying $2,000 vs $20,000 for the same remaining term and balance.

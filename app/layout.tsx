@@ -6,7 +6,7 @@ const SITE_URL = "https://crystalkey.ca";
 const SITE_NAME = "CrystalKey";
 const TITLE = "Canadian Mortgage Calculator | CrystalKey";
 const DESCRIPTION =
-  "Canada's most comprehensive mortgage calculator. Calculate payments, CMHC insurance, land transfer tax, amortization schedule, stress test, and total upfront costs — free and accurate.";
+  "Canada's most comprehensive mortgage calculator. Calculate payments, CMHC insurance, land transfer tax, amortization schedule, stress test, and total upfront costs, free and accurate.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
       url: `${SITE_URL}/og-image.png`,
       width: 1200,
       height: 630,
-      alt: "CrystalKey — Canadian Mortgage Calculator",
+      alt: "CrystalKey. Canadian Mortgage Calculator",
     }],
   },
   twitter: {

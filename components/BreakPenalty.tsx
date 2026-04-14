@@ -44,7 +44,7 @@ export default function BreakPenalty() {
       {open && (
         <div className="px-5 pb-5 border-t border-neutral-100 pt-4 space-y-5">
           <p className="text-xs leading-relaxed" style={{ color: "var(--ink-faint)" }}>
-            If you break your mortgage before the term ends — to refinance, sell, or switch lenders — your lender will charge a prepayment penalty. For fixed mortgages it's the greater of <strong className="text-neutral-600">3-months' interest</strong> or the <strong className="text-neutral-600">Interest Rate Differential (IRD)</strong>. Variable mortgages are always 3-months' interest.
+            If you break your mortgage before the term ends, to refinance, sell, or switch lenders, your lender will charge a prepayment penalty. For fixed mortgages it's the greater of <strong className="text-neutral-600">3-months' interest</strong> or the <strong className="text-neutral-600">Interest Rate Differential (IRD)</strong>. Variable mortgages are always 3-months' interest.
           </p>
 
           <div className="grid grid-cols-2 gap-3">

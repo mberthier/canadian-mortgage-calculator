@@ -41,7 +41,7 @@ export default function CMHCCalculatorClient() {
           </div>
           <div>
             <label className="block text-xs font-medium text-neutral-500 mb-1.5 uppercase tracking-wide">
-              Down Payment — {formatCurrency(down, 0)}
+              Down Payment, {formatCurrency(down, 0)}
             </label>
             <div className="relative">
               <input type="number" min="5" max="99" step="0.5" value={downPct}
@@ -115,7 +115,7 @@ export default function CMHCCalculatorClient() {
           <div className="text-center py-4">
             <p className="text-2xl font-semibold mb-1" style={{ color: "var(--green)" }}>No CMHC Required ✓</p>
             <p className="text-sm" style={{ color: "var(--green-mid)" }}>
-              Your {downPct.toFixed(1)}% down payment is at or above 20% — no mortgage default insurance needed.
+              Your {downPct.toFixed(1)}% down payment is at or above 20%, no mortgage default insurance needed.
             </p>
             <p className="text-base font-semibold mt-3 text-neutral-800">
               Monthly payment: {formatCurrency(paymentWithout, 2)}

@@ -116,11 +116,7 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
           </div>
         )}
 
-        {shareURL && (
-          <div className="mt-4 pt-4 border-t" style={{ borderColor: "rgba(255,255,255,0.2)" }}>
-            <ShareButton url={shareURL} variant="hero" />
-          </div>
-        )}
+
       </div>
 
       {/* ── Mode-specific metrics ──────────────────────────────────────────── */}
@@ -145,7 +141,7 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
             sub={hasCMHC ? `Incl. ${formatCurrency(outputs.cmhcPremium, 0)} CMHC` : "No CMHC required"}
             tip={hasCMHC
               ? "Your mortgage includes the CMHC insurance premium added to your principal. You pay interest on it for the full amortization."
-              : "20%+ down — no CMHC mortgage default insurance required."} />
+              : "20%+ down, no CMHC mortgage default insurance required."} />
         </div>
       )}
 
@@ -155,7 +151,7 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
           <Metric label="Interest this term"
             value={formatCurrency(termInterest, 0, true)}
             sub={`Over ${inputs.termYears}-yr term`}
-            tip="Total interest you'll pay during this term only — not the full amortization. Reducing your balance before renewal day lowers this." />
+            tip="Total interest you'll pay during this term only, not the full amortization. Reducing your balance before renewal day lowers this." />
           <Metric label="Principal paid"
             value={formatCurrency(termPrincipal, 0, true)}
             sub={`This ${inputs.termYears}-yr term`}
@@ -163,7 +159,7 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
           <Metric label="Balance at renewal"
             value={formatCurrency(outputs.termEndBalance, 0, true)}
             sub={`After ${inputs.termYears}-yr term`}
-            tip="Your outstanding balance when this term ends — the amount your next rate will be applied to." />
+            tip="Your outstanding balance when this term ends, the amount your next rate will be applied to." />
           <Metric label="Total interest left"
             value={formatCurrency(outputs.totalInterest, 0, true)}
             sub={`Over ${inputs.renewalAmortization || inputs.amortizationYears} yr remaining`}
@@ -187,13 +183,13 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
             sub={`After ${inputs.termYears}-yr term`}
             tip="What you'll owe when this new term ends." />
           <Metric label="Available equity"
-            value={inputs.homeValue > 0 ? formatCurrency(Math.max(0, inputs.homeValue * 0.8 - outputs.loanAmount), 0, true) : "—"}
+            value={inputs.homeValue > 0 ? formatCurrency(Math.max(0, inputs.homeValue * 0.8 - outputs.loanAmount), 0, true) : " - "}
             sub="Up to 80% LTV remaining"
             tip="Additional equity you could still access while staying within the 80% LTV refinance limit." />
         </div>
       )}
 
-      {/* CMHC notice — purchase only */}
+      {/* CMHC notice, purchase only */}
       {hasCMHC && mode === "purchase" && (
         <div className="px-5 py-3 border-t border-neutral-100 flex items-start gap-2"
           style={{ background: "#fffbeb" }}>
@@ -204,7 +200,7 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
           <p className="text-xs leading-relaxed" style={{ color: "#92400e" }}>
             <span className="font-semibold">CMHC mortgage insurance applies.</span>{" "}
             Your {(inputs.downPaymentPercent).toFixed(1)}% down payment triggers a{" "}
-            {formatCurrency(outputs.cmhcPremium, 0)} premium added to your mortgage — not due at closing,
+            {formatCurrency(outputs.cmhcPremium, 0)} premium added to your mortgage, not due at closing,
             but you'll pay interest on it for the full amortization period.
             {outputs.cmhcProvincialTax > 0 && (
               <span> Provincial tax on the premium ({formatCurrency(outputs.cmhcProvincialTax, 0)}) is due at closing.</span>

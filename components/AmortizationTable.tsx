@@ -187,7 +187,7 @@ export default function AmortizationTable({ schedule, frequency, termYears }: Pr
                         <td className="px-4 py-2.5 text-right tabular-nums">
                           {hasLump
                             ? <span className="font-semibold text-blue-700">{formatCurrency(row.totalLumpSum)}</span>
-                            : <span className="text-neutral-300">—</span>}
+                            : <span className="text-neutral-300"> - </span>}
                         </td>
                       )}
                       <td className="px-4 py-2.5 text-right font-semibold text-neutral-900 tabular-nums">{formatCurrency(row.endBalance)}</td>
@@ -211,7 +211,7 @@ export default function AmortizationTable({ schedule, frequency, termYears }: Pr
                         <td className="px-4 py-2 text-right tabular-nums text-xs">
                           {hasLump
                             ? <span className="font-semibold text-blue-700">{formatCurrency(row.lumpSum!)}</span>
-                            : <span className="text-neutral-300">—</span>}
+                            : <span className="text-neutral-300"> - </span>}
                         </td>
                       )}
                       <td className="px-4 py-2 text-right font-medium text-neutral-900 tabular-nums text-xs">{formatCurrency(row.balance)}</td>

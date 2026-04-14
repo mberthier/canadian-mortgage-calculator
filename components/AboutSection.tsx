@@ -16,12 +16,12 @@ export default function AboutSection() {
           {
             Illustration: IllustrationFormula,
             title: "Most calculators use the wrong formula",
-            body: "Canadian mortgages compound semi-annually by law — not monthly like in the US. That difference quietly inflates your estimated payment on most sites. Ours applies the correct Interest Act formula so the numbers you see are the numbers you'll actually pay.",
+            body: "Canadian mortgages compound semi-annually by law, not monthly like in the US. That difference quietly inflates your estimated payment on most sites. Ours applies the correct Interest Act formula so the numbers you see are the numbers you'll actually pay.",
           },
           {
             Illustration: IllustrationReceipt,
             title: "The number that matters is bigger than your down payment",
-            body: "By the time you close, you've paid your down payment, CMHC insurance (if applicable), land transfer tax for your province, GST on a new build, legal fees, and title insurance. We show all of it — not just the easy part.",
+            body: "By the time you close, you've paid your down payment, CMHC insurance (if applicable), land transfer tax for your province, GST on a new build, legal fees, and title insurance. We show all of it, not just the easy part.",
           },
           {
             Illustration: IllustrationCalendar,

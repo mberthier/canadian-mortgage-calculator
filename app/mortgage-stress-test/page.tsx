@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 const FAQ = [
   { question: "What is the Canadian mortgage stress test?", answer: "The stress test requires lenders to verify you can afford your mortgage at the greater of your contract rate + 2% or 5.25%. It applies to all mortgages from federally regulated lenders, both insured and uninsured, and was introduced to protect Canadians from rising rates at renewal." },
   { question: "What is the stress test rate in 2026?", answer: "The floor is 5.25%. At today's best 5-year fixed rate of 3.89%, your stress test rate is 5.89% (3.89% + 2%). At a variable rate of 3.35%, the stress test rate is also 5.35% (3.35% + 2%)." },
-  { question: "Does the stress test apply at renewal?", answer: "If you renew with your existing lender, the stress test does not apply. Since November 2024, straight switches to a new lender at renewal also no longer require re-qualification under the stress test — a significant policy change." },
+  { question: "Does the stress test apply at renewal?", answer: "If you renew with your existing lender, the stress test does not apply. Since November 2024, straight switches to a new lender at renewal also no longer require re-qualification under the stress test, a significant policy change." },
   { question: "How much does the stress test reduce my maximum mortgage?", answer: "The stress test reduces qualifying power by roughly 15-20% compared to qualifying at your actual rate. If you qualify for $600,000 at your contract rate, you might only qualify for $500,000-$510,000 after the stress test." },
   { question: "Can I avoid the mortgage stress test?", answer: "The stress test applies to federally regulated lenders (banks). Some provincial credit unions don't apply it. Private lenders are exempt but charge higher rates. In practice, most Canadians are subject to the stress test." },
 ];
@@ -46,7 +46,7 @@ export default function StressTestPage() {
           <section>
             <h2 className="text-2xl font-semibold mb-3 tracking-tight" style={{ color: "var(--ink)" }}>How the Canadian mortgage stress test works</h2>
             <div className="space-y-3 text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>
-              <p>Introduced in 2016 and expanded in 2018, the stress test ensures Canadians can handle higher rates at renewal. Lenders calculate your GDS and TDS ratios at the stress test rate — not your actual rate — before approving your mortgage.</p>
+              <p>Introduced in 2016 and expanded in 2018, the stress test ensures Canadians can handle higher rates at renewal. Lenders calculate your GDS and TDS ratios at the stress test rate, not your actual rate, before approving your mortgage.</p>
               <p>The stress test rate is the greater of your contract rate + 2% or 5.25%. With today's rates around 3.89% fixed, most borrowers face a stress test rate of 5.89%.</p>
               <p>The stress test was designed exactly for what happened in 2022–2023 when rates spiked: borrowers who passed the stress test could handle the higher payments; those who hadn't been stress tested couldn't.</p>
             </div>

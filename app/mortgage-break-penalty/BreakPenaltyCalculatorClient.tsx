@@ -148,7 +148,7 @@ export default function BreakPenaltyCalculatorClient() {
                 For fixed mortgages, you pay the greater of 3-month interest ({formatCurrency(result.threeMonthInterest, 0)}) or the IRD ({formatCurrency(result.ird, 0)}).
                 {result.ird > result.threeMonthInterest
                   ? " The IRD is higher because your contracted rate is significantly above current rates."
-                  : " 3-month interest is higher — your contracted rate is close to current rates."}
+                  : " 3-month interest is higher, your contracted rate is close to current rates."}
               </p>
             )}
           </div>

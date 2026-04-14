@@ -30,7 +30,7 @@ export default function AmortizationChart({
     const first = schedule[0];
     const initialBalance = first ? Math.round(first.balance + first.principal) : 0;
 
-    // Year 0 — starting point
+    // Year 0, starting point
     points.push({
       year: 0,
       balance: initialBalance,

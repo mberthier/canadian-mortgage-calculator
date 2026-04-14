@@ -1,14 +1,14 @@
 export default function IllustrationStressTest() {
   return (
     <svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      {/* Background gradient band — the "ceiling" */}
+      {/* Background gradient band, the "ceiling" */}
       <rect x="20" y="52" width="160" height="14" rx="4" fill="#f0f0f0"/>
       <rect x="20" y="52" width="160" height="4" rx="4" fill="#dbeafe"/>
 
       {/* Ceiling label */}
       <text x="148" y="64" fontSize="9" fill="#999999" fontFamily="sans-serif">5.25%</text>
 
-      {/* Rate line going up — past the ceiling */}
+      {/* Rate line going up, past the ceiling */}
       <path d="M24 118 L52 110 L80 102 L100 90 L114 72 L122 40"
         stroke="#1068A8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
 

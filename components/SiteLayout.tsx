@@ -49,7 +49,7 @@ export default function SiteLayout({ children }: Props) {
               ))}
             </nav>
 
-            {/* Mobile nav — first 5 only */}
+            {/* Mobile nav, first 5 only */}
             <nav className="flex lg:hidden items-center gap-0.5 overflow-x-auto" aria-label="Mobile navigation">
               {NAV_LINKS.slice(0, 5).map(({ href, label }) => (
                 <Link key={href} href={href}

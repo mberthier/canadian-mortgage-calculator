@@ -1,4 +1,4 @@
-// Formula illustration — correct Canadian math
+// Formula illustration, correct Canadian math
 export function IllustrationFormula() {
   return (
     <svg viewBox="0 0 80 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -11,7 +11,7 @@ export function IllustrationFormula() {
   );
 }
 
-// Receipt illustration — every upfront cost
+// Receipt illustration, every upfront cost
 export function IllustrationReceipt() {
   return (
     <svg viewBox="0 0 80 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -27,7 +27,7 @@ export function IllustrationReceipt() {
   );
 }
 
-// Calendar illustration — rules updated
+// Calendar illustration, rules updated
 export function IllustrationCalendar() {
   return (
     <svg viewBox="0 0 80 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">

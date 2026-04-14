@@ -19,7 +19,7 @@ const MODES: {
     value:   "purchase",
     label:   "Purchase",
     tagline: "Buying a home",
-    desc:    "See your real payment, CMHC costs, land transfer tax, and total upfront cash. Know the full picture before you make an offer.",
+    desc:    "See your real payment, CMHC costs, land transfer tax, and total upfront cash needed. Know the full picture before you make an offer.",
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
         strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -32,7 +32,7 @@ const MODES: {
     value:   "renewal",
     label:   "Renewal",
     tagline: "Term ending soon",
-    desc:    "Your lender's renewal offer is rarely their best. Compare rates, see your payment change, and decide whether to stay or switch — you can now switch lenders at renewal without re-qualifying.",
+    desc:    "Your lender's renewal offer is rarely their best. Compare rates, see your payment change, and know that you can now switch lenders at renewal without re-qualifying.",
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
         strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -46,7 +46,7 @@ const MODES: {
     value:   "refinance",
     label:   "Refinance",
     tagline: "Access equity or lower your rate",
-    desc:    "Restructure your existing mortgage to get a better rate, access home equity, or consolidate debt. Understand the break penalty cost before committing.",
+    desc:    "Access your home equity, lower your rate, or consolidate debt. Run the numbers including break penalty costs before making any decisions.",
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
         strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -59,7 +59,16 @@ const MODES: {
 
 export default function ModeSelector({ mode, onChange }: Props) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
+    <div className="mb-8">
+      <div className="mb-5 text-center">
+        <p className="text-2xl font-semibold tracking-tight" style={{ color: "var(--ink)" }}>
+          What brings you here today?
+        </p>
+        <p className="text-sm mt-1.5" style={{ color: "var(--ink-muted)" }}>
+          Pick your scenario and we will do the rest.
+        </p>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
       {MODES.map((m) => {
         const active = mode === m.value;
         return (
@@ -107,6 +116,7 @@ export default function ModeSelector({ mode, onChange }: Props) {
           </button>
         );
       })}
+      </div>
     </div>
   );
 }

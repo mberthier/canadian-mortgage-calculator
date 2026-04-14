@@ -190,7 +190,7 @@ export default function MortgageComparison({ inputs, loanAmount }: Props) {
                   <td className="px-4 py-2.5 text-right text-xs font-medium text-neutral-400">
                     {(scenarioB.actualAmortYears - scenarioA.actualAmortYears) !== 0
                       ? `${(scenarioB.actualAmortYears - scenarioA.actualAmortYears) > 0 ? "+" : ""}${(scenarioB.actualAmortYears - scenarioA.actualAmortYears).toFixed(1)} yrs`
-                      : "—"}
+                      : " - "}
                   </td>
                 </tr>
               </tbody>

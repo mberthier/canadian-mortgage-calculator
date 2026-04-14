@@ -44,7 +44,7 @@ export default function LumpSumByYear({
       {open && (
         <div className="mt-4 space-y-3">
           <p className="text-xs leading-relaxed" style={{ color: "var(--ink-faint)" }}>
-            Applied on your mortgage anniversary date — after the last payment of Year N,
+            Applied on your mortgage anniversary date, after the last payment of Year N,
             reducing the balance before Year N+1's first payment.
           </p>
 

@@ -18,7 +18,7 @@ export default function IllustrationHero() {
       <rect x="132" y="74" width="8" height="10" rx="2" fill="#1068A8"/>
       <rect x="116" y="74" width="8" height="16" rx="2" fill="#1068A8"/>
 
-      {/* Sparkle lines — crystal reference */}
+      {/* Sparkle lines, crystal reference */}
       <line x1="160" y1="14" x2="160" y2="24" stroke="#0d5a96" strokeWidth="2" strokeLinecap="round"/>
       <line x1="160" y1="56" x2="160" y2="66" stroke="#0d5a96" strokeWidth="2" strokeLinecap="round"/>
       <line x1="134" y1="40" x2="144" y2="40" stroke="#0d5a96" strokeWidth="2" strokeLinecap="round"/>
@@ -32,7 +32,7 @@ export default function IllustrationHero() {
       <path d="M30 120 L30 100 L44 88 L58 100 L58 120 Z" stroke="#999999" strokeWidth="1.5" fill="#f0f0f0" strokeLinejoin="round"/>
       <rect x="37" y="108" width="14" height="12" rx="1" fill="#dbeafe"/>
 
-      {/* Dollar/chart tick marks — financial context */}
+      {/* Dollar/chart tick marks, financial context */}
       <path d="M10 115 L20 105 L28 112" stroke="#dbeafe" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   );

@@ -42,6 +42,7 @@ export interface MortgageInputs {
 
   // Switches
   includeCMHC:        boolean;
+  mortgageType:       "insured" | "insurable" | "uninsurable"; // purchase only
   closingCosts:       number;
 
   // Location

@@ -12,7 +12,7 @@ export default function IllustrationGlossary() {
       {/* Spine */}
       <rect x="97" y="18" width="6" height="100" rx="3" fill="#1068A8"/>
 
-      {/* Left page lines — text */}
+      {/* Left page lines, text */}
       <line x1="36" y1="38" x2="90" y2="38" stroke="#dbeafe" strokeWidth="1.5" strokeLinecap="round"/>
       <line x1="36" y1="48" x2="82" y2="48" stroke="#dbeafe" strokeWidth="1.5" strokeLinecap="round"/>
       <line x1="36" y1="58" x2="88" y2="58" stroke="#dbeafe" strokeWidth="1.5" strokeLinecap="round"/>
@@ -20,7 +20,7 @@ export default function IllustrationGlossary() {
       <line x1="36" y1="78" x2="86" y2="78" stroke="#dbeafe" strokeWidth="1.5" strokeLinecap="round"/>
       <line x1="36" y1="88" x2="80" y2="88" stroke="#dbeafe" strokeWidth="1.5" strokeLinecap="round"/>
 
-      {/* Right page — highlighted term */}
+      {/* Right page, highlighted term */}
       <rect x="110" y="34" width="54" height="14" rx="3" fill="#dbeafe"/>
       <line x1="110" y1="56" x2="160" y2="56" stroke="#999999" strokeWidth="1.5" strokeLinecap="round"/>
       <line x1="110" y1="64" x2="155" y2="64" stroke="#999999" strokeWidth="1.5" strokeLinecap="round"/>
@@ -30,7 +30,7 @@ export default function IllustrationGlossary() {
       {/* Magnifying glass */}
       <circle cx="152" cy="104" r="18" fill="white" stroke="#1068A8" strokeWidth="3"/>
       <circle cx="152" cy="104" r="12" fill="#eff6ff"/>
-      {/* A inside mag glass — glossary reference */}
+      {/* A inside mag glass, glossary reference */}
       <text x="146" y="110" fontSize="14" fill="#1068A8" fontFamily="serif" fontWeight="700">A</text>
       {/* Handle */}
       <line x1="164" y1="116" x2="178" y2="130" stroke="#1068A8" strokeWidth="4" strokeLinecap="round"/>
