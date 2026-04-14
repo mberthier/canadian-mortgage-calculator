@@ -16,6 +16,7 @@ interface Props {
     ltv: number;
     interestSavedByLumpSums: number;
     paymentsSavedByLumpSums: number;
+    currentPayment: number;
     ltt: { net: number; provincial: number; municipal: number; firstTimeBuyerRebate: number };
     gstHst: { net: number };
   };
@@ -163,14 +164,10 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
   const [showCosts, setShowCosts]       = useState(false);
   const [showRepay, setShowRepay]       = useState(false);
   const [showLumpSum, setShowLumpSum]   = useState(false);
-  // For renewal/refinance: track current (old) rate separately from new rate
-  const [currentRate, setCurrentRate]   = useState(inputs.interestRate);
   const mode = inputs.mortgageMode;
   const stressRate = Math.max(inputs.interestRate + 2, 5.25);
 
-  const currentPayment = inputs.currentBalance > 0 && currentRate > 0
-    ? calculateMortgagePayment(inputs.currentBalance, currentRate, inputs.amortizationYears, inputs.paymentFrequency)
-    : 0;
+  // currentPayment comes from outputs.currentPayment (computed in mortgageMath)
 
   const lumpSumTotal = Object.values(inputs.lumpSumsByYear).reduce((s, v) => s + (v || 0), 0);
   const yearsSaved = Math.floor(outputs.paymentsSavedByLumpSums / 12);
@@ -441,7 +438,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
 
           <RateInput id="current-rate" label="Current rate"
             tip="Your expiring contracted rate — used to calculate what you pay now for comparison."
-            value={currentRate} onChange={setCurrentRate} />
+            value={inputs.currentRate} onChange={(v) => setField("currentRate", v)} />
 
           <SelectField id="amort-renewal" label="Remaining amortization"
             tip="Years left on your original amortization schedule."
@@ -457,11 +454,11 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
             ))}
           </SelectField>
 
-          {currentPayment > 0 && (
+          {outputs.currentPayment > 0 && (
             <div className="rounded-lg px-3 py-2.5 text-sm flex justify-between border"
               style={{ background: "#fafafa", borderColor: "#e8e8e8" }}>
-              <span style={{ color: "var(--ink-mid)" }}>Current payment at {currentRate.toFixed(2)}%</span>
-              <span className="font-semibold text-neutral-800">{formatCurrency(currentPayment, 2)}</span>
+              <span style={{ color: "var(--ink-mid)" }}>Current payment at {inputs.currentRate > 0 ? inputs.currentRate.toFixed(2) : "—"}%</span>
+              <span className="font-semibold text-neutral-800">{outputs.currentPayment > 0 ? formatCurrency(outputs.currentPayment, 2) : "—"}</span>
             </div>
           )}
 
@@ -473,11 +470,18 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
             showSlider sliderNote={`Qualifying (stress test): ${stressRate.toFixed(2)}%`} />
           {errors.interestRate && <p className="text-xs text-red-600 -mt-2">{errors.interestRate}</p>}
 
-          <SelectField id="new-term" label="New term"
-            tip="The length of the new contract you're renewing into."
-            value={inputs.termYears} onChange={(v) => setField("termYears", Number(v))}>
-            {TERM_OPTIONS.map((y) => <option key={y} value={y}>{y} yr{y !== 1 ? "s" : ""}</option>)}
-          </SelectField>
+          <div className="grid grid-cols-2 gap-3">
+            <SelectField id="new-term" label="New term"
+              tip="The length of the new contract you're renewing into."
+              value={inputs.termYears} onChange={(v) => setField("termYears", Number(v))}>
+              {TERM_OPTIONS.map((y) => <option key={y} value={y}>{y} yr{y !== 1 ? "s" : ""}</option>)}
+            </SelectField>
+            <SelectField id="new-amort" label="New amortization"
+              tip="You can extend or shorten the amortization at renewal. Shorter = more interest savings; longer = lower payment."
+              value={inputs.renewalAmortization} onChange={(v) => setField("renewalAmortization", Number(v))}>
+              {AMORTIZATION_OPTIONS.map((y) => <option key={y} value={y}>{y} yrs</option>)}
+            </SelectField>
+          </div>
 
           <MoreToggle open={showRepay} onToggle={() => setShowRepay(o => !o)} label="Repay faster" />
           {showRepay && (
@@ -552,13 +556,13 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
 
           <RateInput id="current-rate-refi" label="Current rate"
             tip="Your existing contracted rate — used to compare current vs new payment."
-            value={currentRate} onChange={setCurrentRate} />
+            value={inputs.currentRate} onChange={(v) => setField("currentRate", v)} />
 
-          {currentPayment > 0 && (
+          {outputs.currentPayment > 0 && (
             <div className="rounded-lg px-3 py-2.5 text-sm flex justify-between border"
               style={{ background: "#fafafa", borderColor: "#e8e8e8" }}>
-              <span style={{ color: "var(--ink-mid)" }}>Current payment at {currentRate.toFixed(2)}%</span>
-              <span className="font-semibold text-neutral-800">{formatCurrency(currentPayment, 2)}</span>
+              <span style={{ color: "var(--ink-mid)" }}>Current payment at {inputs.currentRate > 0 ? inputs.currentRate.toFixed(2) : "—"}%</span>
+              <span className="font-semibold text-neutral-800">{outputs.currentPayment > 0 ? formatCurrency(outputs.currentPayment, 2) : "—"}</span>
             </div>
           )}
 

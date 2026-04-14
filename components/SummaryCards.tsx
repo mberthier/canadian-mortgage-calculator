@@ -67,6 +67,23 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
             </div>
           </div>
         )}
+        {inputs.mortgageMode === "renewal" && outputs.currentPayment > 0 && (
+          <div className="flex flex-wrap gap-3 mt-3">
+            <div className="rounded-lg px-3 py-1.5 text-xs" style={{ background: "rgba(255,255,255,0.12)" }}>
+              <span style={{ color: "rgba(255,255,255,0.7)" }}>Was: </span>
+              <span className="font-semibold text-white">{formatCurrency(outputs.currentPayment, 2)}</span>
+            </div>
+            <div className="rounded-lg px-3 py-1.5 text-xs" style={{ background: "rgba(255,255,255,0.12)" }}>
+              {outputs.periodicPayment > outputs.currentPayment ? (
+                <><span style={{ color: "rgba(255,255,255,0.7)" }}>Change: </span>
+                <span className="font-semibold text-white">+{formatCurrency(outputs.periodicPayment - outputs.currentPayment, 2)}</span></>
+              ) : (
+                <><span style={{ color: "rgba(255,255,255,0.7)" }}>Saves: </span>
+                <span className="font-semibold text-white">−{formatCurrency(outputs.currentPayment - outputs.periodicPayment, 2)}</span></>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Share button — prominent, in the hero */}
         {shareURL && (

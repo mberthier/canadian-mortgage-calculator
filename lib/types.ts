@@ -18,9 +18,11 @@ export interface MortgageInputs {
   downPaymentPercent: number;
 
   // Renewal / refinance fields
-  currentBalance:     number;
-  homeValue:          number;   // refinance: needed for LTV check
-  cashOutAmount:      number;   // refinance: equity withdrawn
+  currentBalance:      number;
+  currentRate:         number;   // renewal/refinance: existing contracted rate
+  renewalAmortization: number;   // renewal: new amortization (may differ from remaining)
+  homeValue:           number;   // refinance: needed for LTV check
+  cashOutAmount:       number;   // refinance: equity withdrawn
 
   // Common
   interestRate:       number;
@@ -115,6 +117,8 @@ export interface MortgageOutputs {
   // CMHC comparison (purchase mode, when CMHC applies)
   paymentWithoutCMHC:           number;
   loanWithoutCMHC:              number;
+  // Renewal comparison
+  currentPayment:               number;   // payment at currentRate (renewal mode)
 }
 
 export interface ValidationErrors {

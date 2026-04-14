@@ -300,11 +300,16 @@ export function calculateMortgage(
   city: string,
   isFirstTimeBuyer: boolean,
   isNewBuild: boolean,
+  currentRate: number = 0,
+  renewalAmortization: number = 0,
 ): MortgageOutputs {
   // ── Loan amount by mode ──────────────────────────────────────────────────
   const isPurchase  = mode === "purchase";
   const isRenewal   = mode === "renewal";
   const isRefinance = mode === "refinance";
+
+  // For renewal: use renewalAmortization if > 0, otherwise fall back to amortizationYears
+  const amortForCalc = isRenewal && renewalAmortization > 0 ? renewalAmortization : amortizationYears;
 
   const minimumDownPayment = isPurchase ? calculateMinimumDownPayment(homePrice) : 0;
   const isValidDownPayment = isPurchase
@@ -335,11 +340,11 @@ export function calculateMortgage(
   const insuredMortgage = loanAmount; // for purchase, already includes CMHC
 
   // ── Payment calculation ───────────────────────────────────────────────────
-  const periodicPayment = calculateMortgagePayment(loanAmount, annualRate, amortizationYears, frequency);
+  const periodicPayment = calculateMortgagePayment(loanAmount, annualRate, amortForCalc, frequency);
   const ppy             = getPaymentsPerYear(frequency);
 
   const amortizationSchedule = generateAmortizationSchedule(
-    loanAmount, annualRate, amortizationYears, frequency,
+    loanAmount, annualRate, amortForCalc, frequency,
     periodicPayment, extraPayment, lumpSumsByYear,
   );
 
@@ -354,7 +359,7 @@ export function calculateMortgage(
   const hasLumpSums = Object.values(lumpSumsByYear).some((v) => v > 0);
   if (hasLumpSums) {
     const noLumps = generateAmortizationSchedule(
-      loanAmount, annualRate, amortizationYears, frequency, periodicPayment, extraPayment, {},
+      loanAmount, annualRate, amortForCalc, frequency, periodicPayment, extraPayment, {},
     );
     const intNoLumps = noLumps[noLumps.length - 1]?.cumulativeInterest ?? 0;
     interestSavedByLumpSums = Math.max(0, intNoLumps - totalInterest);
@@ -362,7 +367,7 @@ export function calculateMortgage(
   }
 
   // ── Monthly ownership ─────────────────────────────────────────────────────
-  const monthlyPayment        = calculateMortgagePayment(loanAmount, annualRate, amortizationYears, "monthly");
+  const monthlyPayment        = calculateMortgagePayment(loanAmount, annualRate, amortForCalc, "monthly");
   const totalMonthlyOwnership = monthlyPayment + propertyTax / 12 + condoFees + heatingCost + homeInsurance / 12;
 
   // ── Term summary ──────────────────────────────────────────────────────────
@@ -374,7 +379,7 @@ export function calculateMortgage(
 
   // ── Stress test ───────────────────────────────────────────────────────────
   const stressTestRate    = Math.max(annualRate + 2, 5.25);
-  const stressTestPayment = calculateMortgagePayment(loanAmount, stressTestRate, amortizationYears, frequency);
+  const stressTestPayment = calculateMortgagePayment(loanAmount, stressTestRate, amortForCalc, frequency);
 
   // ── LTT / GST/HST (purchase only) ────────────────────────────────────────
   const ltt    = isPurchase ? calculateLandTransferTax(homePrice, province, city, isFirstTimeBuyer)
@@ -389,8 +394,12 @@ export function calculateMortgage(
     : closingCosts;
 
   // ── Without-CMHC comparison (purchase mode) ───────────────────────────────
-  const loanWithoutCMHC   = isPurchase ? Math.max(0, homePrice * 0.8) : 0;
-  const paymentWithoutCMHC = isPurchase ? calculateMortgagePayment(loanWithoutCMHC, annualRate, amortizationYears, frequency) : 0;
+  const loanWithoutCMHC    = isPurchase ? Math.max(0, homePrice * 0.8) : 0;
+  const paymentWithoutCMHC  = isPurchase ? calculateMortgagePayment(loanWithoutCMHC, annualRate, amortizationYears, frequency) : 0;
+  // Renewal: current payment at old contracted rate + remaining amortization
+  const currentPayment      = isRenewal && currentRate > 0 && currentBalance > 0
+    ? calculateMortgagePayment(currentBalance, currentRate, amortizationYears, frequency)
+    : 0;
 
   return {
     periodicPayment,
@@ -423,5 +432,6 @@ export function calculateMortgage(
     totalUpfrontCash,
     paymentWithoutCMHC,
     loanWithoutCMHC,
+    currentPayment,
   };
 }

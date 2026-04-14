@@ -84,6 +84,8 @@ function initInputs(): MortgageInputs {
     downPayment,
     downPaymentPercent,
     currentBalance:      overrides.currentBalance      ?? DEFAULTS.currentBalance,
+    currentRate:         DEFAULTS.currentRate,
+    renewalAmortization: DEFAULTS.renewalAmortization,
     homeValue:           overrides.homeValue           ?? DEFAULTS.homeValue,
     cashOutAmount:       DEFAULTS.cashOutAmount,
     interestRate:        overrides.interestRate        ?? DEFAULTS.interestRate,
@@ -172,6 +174,7 @@ export function useMortgageCalculator() {
     inputs.extraPayment, inputs.lumpSumsByYear,
     inputs.includeCMHC, inputs.closingCosts,
     inputs.province, inputs.city, inputs.isFirstTimeBuyer, inputs.isNewBuild,
+    inputs.currentRate, inputs.renewalAmortization,
   ), [inputs]);
 
   const errors = useMemo<ValidationErrors>(() => {

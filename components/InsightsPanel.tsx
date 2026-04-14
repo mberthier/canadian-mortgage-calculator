@@ -146,26 +146,43 @@ function getInsights(inputs: MortgageInputs, outputs: MortgageOutputs): Insight[
 
   // ── Renewal ───────────────────────────────────────────────────────────────
   if (mode === "renewal") {
-    const diff = outputs.periodicPayment - outputs.paymentWithoutCMHC;
-    const pct  = outputs.paymentWithoutCMHC > 0 ? (diff / outputs.paymentWithoutCMHC) * 100 : 0;
+    // Only show payment comparison when we have a valid current rate to compare against
+    const hasCurrent = outputs.currentPayment > 0;
+    const diff = hasCurrent ? outputs.periodicPayment - outputs.currentPayment : 0;
+    const pct  = hasCurrent && outputs.currentPayment > 0 ? (diff / outputs.currentPayment) * 100 : 0;
 
-    if (diff > 300) {
+    if (hasCurrent) {
+      if (diff > 300) {
+        insights.push({
+          type: "warning", priority: 1,
+          headline: `Payment jumps ${formatCurrency(diff, 0)}/period (+${pct.toFixed(0)}%)`,
+          detail: "Significant payment shock at renewal. Build this into your budget now — consider a longer term to lock in stability if rates remain elevated.",
+        });
+      } else if (diff > 100) {
+        insights.push({
+          type: "caution", priority: 2,
+          headline: `Payment increases ${formatCurrency(diff, 0)}/period at renewal`,
+          detail: `A ${pct.toFixed(0)}% increase is manageable but worth planning for before renewal day.`,
+        });
+      } else if (diff >= 0 && diff <= 100) {
+        insights.push({
+          type: "win", priority: 2,
+          headline: `Payment barely changes at renewal (+${formatCurrency(diff, 0)}/period)`,
+          detail: "Your renewal rate is close to your current rate — minimal payment shock. A good opportunity to increase payments and pay down principal faster.",
+        });
+      } else if (diff < 0) {
+        insights.push({
+          type: "win", priority: 1,
+          headline: `Payment drops ${formatCurrency(Math.abs(diff), 0)}/period at renewal`,
+          detail: "Your new rate is lower. Consider keeping your payment at the old level — the extra amount goes straight to principal and saves significant total interest.",
+        });
+      }
+    } else {
+      // No current rate entered — show info prompt
       insights.push({
-        type: "warning", priority: 1,
-        headline: `Payment jumps ${formatCurrency(diff, 0)}/month (+${pct.toFixed(0)}%)`,
-        detail: "This is a significant payment shock. Build this into your budget now — consider locking in for a longer term if rates are expected to stay elevated.",
-      });
-    } else if (diff > 100) {
-      insights.push({
-        type: "caution", priority: 2,
-        headline: `Payment increases ${formatCurrency(diff, 0)}/month at renewal`,
-        detail: `A ${pct.toFixed(0)}% increase is manageable but worth planning for. Stress-test your budget at this new level before renewal day.`,
-      });
-    } else if (diff < -100) {
-      insights.push({
-        type: "win", priority: 1,
-        headline: `Payment drops ${formatCurrency(Math.abs(diff), 0)}/month at renewal`,
-        detail: "With a lower rate, consider keeping your payment the same as before — the extra amount goes straight to principal and saves significant interest.",
+        type: "info", priority: 3,
+        headline: "Enter your current rate to compare payments",
+        detail: "Fill in your expiring contracted rate above to see how your payment changes at renewal.",
       });
     }
 

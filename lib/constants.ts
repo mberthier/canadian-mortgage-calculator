@@ -79,6 +79,8 @@ export const DEFAULTS = {
   heatingCost:         0,
   homeInsurance:       0,
   extraPayment:        0,
+  currentRate:         3.5,
+  renewalAmortization: 25,
   lumpSumsByYear:      {} as Record<number, number>,
   includeCMHC:         false,
   closingCosts:        0,
