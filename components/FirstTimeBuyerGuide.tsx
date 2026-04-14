@@ -125,15 +125,15 @@ export default function FirstTimeBuyerGuide({
                       </tr>
                     </thead>
                     <tbody>
-                      <tr className={homePrice <= 500_000 ? "bg-green-50" : ""}>
+                      <tr className={homePrice <= 500_000 ? "bg-blue-50" : ""}>
                         <td className="px-3 py-2 text-slate-600">Under $500,000</td>
                         <td className="px-3 py-2 text-right font-medium text-slate-800">5%</td>
                       </tr>
-                      <tr className={homePrice > 500_000 && homePrice <= 1_500_000 ? "bg-green-50" : ""}>
+                      <tr className={homePrice > 500_000 && homePrice <= 1_500_000 ? "bg-blue-50" : ""}>
                         <td className="px-3 py-2 text-slate-600">$500K – $1.5M</td>
                         <td className="px-3 py-2 text-right font-medium text-slate-800">5% + 10% over $500K</td>
                       </tr>
-                      <tr className={homePrice > 1_500_000 ? "bg-green-50" : ""}>
+                      <tr className={homePrice > 1_500_000 ? "bg-blue-50" : ""}>
                         <td className="px-3 py-2 text-slate-600">Over $1.5M</td>
                         <td className="px-3 py-2 text-right font-medium text-slate-800">20%</td>
                       </tr>

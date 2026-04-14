@@ -19,7 +19,7 @@ interface Props {
   ltv: number;
 }
 
-const inp    = "w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-700/20 focus:border-blue-600 transition-colors placeholder-stone-300";
+const inp    = "w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-700/20 focus:border-blue-600 transition-colors placeholder-slate-300";
 const inpErr = "w-full px-3 py-2.5 rounded-lg border border-red-300 bg-red-50 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-red-300 transition-colors";
 const lbl    = "text-xs font-medium text-slate-500 uppercase tracking-wide";
 const sel    = "w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-700/20 focus:border-blue-600 transition-colors appearance-none cursor-pointer";

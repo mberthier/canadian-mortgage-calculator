@@ -89,7 +89,7 @@ export default function LumpSumByYear({
                         const v = parseInt(rawValues[year] ?? "0", 10);
                         setLumpSumForYear(year, isNaN(v) ? 0 : v);
                       }}
-                      className="w-full bg-white border border-slate-200 rounded text-xs text-slate-900 pl-4 pr-1 py-1.5 focus:outline-none focus:border-blue-600 placeholder-stone-300"
+                      className="w-full bg-white border border-slate-200 rounded text-xs text-slate-900 pl-4 pr-1 py-1.5 focus:outline-none focus:border-blue-600 placeholder-slate-300"
                     />
                   </div>
                 </div>
