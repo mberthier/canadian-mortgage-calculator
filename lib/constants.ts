@@ -83,7 +83,6 @@ export const DEFAULTS = {
   renewalAmortization: 25,
   lumpSumsByYear:      {} as Record<number, number>,
   includeCMHC:         false,
-  mortgageType:        "insured" as const,
   closingCosts:        0,
   province:            "ON",
   city:                "",

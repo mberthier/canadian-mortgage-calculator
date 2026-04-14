@@ -175,8 +175,18 @@ export default function Home() {
               {/* Payment hero */}
               <SummaryCards outputs={outputs} inputs={inputs} shareURL={shareURL} />
 
-              {/* Plain English summary */}
-              <ResultsNarrative outputs={outputs} inputs={inputs} />
+              {/* Plain English summary + share */}
+              <div className="space-y-2">
+                <ResultsNarrative outputs={outputs} inputs={inputs} />
+                {shareURL && (
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
+                      All inputs are saved in the link
+                    </p>
+                    <ShareButton url={shareURL} />
+                  </div>
+                )}
+              </div>
 
               {/* Insights, dynamic, contextual */}
               <InsightsPanel inputs={inputs} outputs={outputs} />

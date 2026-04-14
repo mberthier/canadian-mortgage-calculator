@@ -99,7 +99,6 @@ function initInputs(): MortgageInputs {
     extraPayment:        DEFAULTS.extraPayment,
     lumpSumsByYear:      DEFAULTS.lumpSumsByYear,
     includeCMHC:         downPaymentPercent < 20,
-    mortgageType:        (downPaymentPercent < 20 ? "insured" : "insurable") as "insured" | "insurable" | "uninsurable",
     closingCosts:        DEFAULTS.closingCosts,
     province:            overrides.province            ?? DEFAULTS.province,
     city:                DEFAULTS.city,

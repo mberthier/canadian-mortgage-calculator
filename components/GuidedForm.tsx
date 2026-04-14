@@ -190,50 +190,39 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
             onChange={setHomePrice} placeholder="750,000" />
           {errors.homePrice && <p className="text-xs text-red-600 -mt-2">{errors.homePrice}</p>}
 
-          {/* Mortgage type */}
-          <div>
-            <label className={`${lbl} flex items-center`}>
-              Mortgage type
-              <Tooltip content="Insured: under $1.5M purchase price with less than 20% down. You pay a CMHC premium but typically get lower rates. Insurable: under $1.5M, 20%+ down, 25-year max amortization. No CMHC premium, but lenders can still pool-insure these and often offer competitive rates. Uninsurable: over $1.5M, or 30-year amortization, or a refinance. Conventional mortgage with no insurance option, typically slightly higher rates." />
-            </label>
-            <div className="grid grid-cols-3 gap-1.5 p-1 rounded-xl" style={{ background: "#eeeeee" }}>
-              {([
-                { value: "insured"      as const, label: "Insured",       sub: "Under 20% down" },
-                { value: "insurable"    as const, label: "Insurable",     sub: "20%+ down, under $1.5M" },
-                { value: "uninsurable"  as const, label: "Uninsurable",   sub: "Over $1.5M or 30yr" },
-              ] as const).map((opt) => {
-                const active = inputs.mortgageType === opt.value;
-                return (
-                  <button key={opt.value} type="button"
-                    onClick={() => setField("mortgageType", opt.value)}
-                    className="rounded-lg py-2 px-1 text-center transition-all"
-                    style={active ? { background: "#fff", boxShadow: "0 1px 3px rgba(0,0,0,0.08)" } : {}}>
-                    <p className="text-xs font-semibold" style={{ color: active ? "var(--green)" : "var(--ink-muted)" }}>
-                      {opt.label}
-                    </p>
-                    <p className="text-xs mt-0.5 hidden sm:block" style={{ color: "var(--ink-faint)", opacity: active ? 1 : 0.7 }}>
-                      {opt.sub}
-                    </p>
-                  </button>
-                );
-              })}
-            </div>
-            {inputs.mortgageType === "insured" && (
-              <p className="text-xs mt-2 leading-relaxed" style={{ color: "var(--ink-muted)" }}>
-                With less than 20% down, CMHC mortgage default insurance is required. The premium is added to your mortgage balance and you pay interest on it over the full amortization.
-              </p>
-            )}
-            {inputs.mortgageType === "insurable" && (
-              <p className="text-xs mt-2 leading-relaxed" style={{ color: "var(--ink-muted)" }}>
-                20%+ down with a purchase price under $1.5M and a 25-year max amortization. No CMHC premium, but lenders can still pool-insure these mortgages, often resulting in competitive rates similar to insured mortgages.
-              </p>
-            )}
-            {inputs.mortgageType === "uninsurable" && (
-              <p className="text-xs mt-2 leading-relaxed" style={{ color: "var(--ink-muted)" }}>
-                Mortgages over $1.5M, with a 30-year amortization, or on a refinance cannot be insured. These are conventional mortgages, typically priced 0.10 to 0.25% higher than insurable mortgages.
-              </p>
-            )}
-          </div>
+          {/* Mortgage type — computed, not selectable */}
+          {inputs.homePrice > 0 && (() => {
+            const isUninsurable = inputs.homePrice > 1_500_000 || inputs.amortizationYears > 25;
+            const isInsured     = !isUninsurable && inputs.downPaymentPercent < 20;
+            const isInsurable   = !isUninsurable && !isInsured;
+            const type   = isInsured ? "insured" : isInsurable ? "insurable" : "uninsurable";
+            const config = {
+              insured: {
+                label: "Insured mortgage",
+                desc:  "Under 20% down requires CMHC mortgage default insurance. The premium is added to your balance and you pay interest on it for the full amortization.",
+                bg: "#fffbeb", border: "#fde68a", text: "#92400e",
+              },
+              insurable: {
+                label: "Insurable mortgage",
+                desc:  "20% or more down, under $1.5M, and 25-year max amortization. No CMHC premium required. Lenders can still pool-insure these mortgages, which often means rates comparable to insured mortgages.",
+                bg: "#f0fdf4", border: "#bbf7d0", text: "#15803d",
+              },
+              uninsurable: {
+                label: "Uninsurable mortgage",
+                desc:  inputs.homePrice > 1_500_000
+                  ? "Purchases over $1.5M cannot be insured. This is a conventional mortgage, typically priced 0.10 to 0.25% higher than insurable mortgages."
+                  : "A 30-year amortization makes this mortgage uninsurable. Expect rates slightly higher than on insured or insurable products.",
+                bg: "#fafafa", border: "#e5e5e5", text: "#555555",
+              },
+            }[type];
+            return (
+              <div className="rounded-lg px-3 py-2.5 border text-xs"
+                style={{ background: config.bg, borderColor: config.border }}>
+                <p className="font-semibold mb-0.5" style={{ color: config.text }}>{config.label}</p>
+                <p className="leading-relaxed" style={{ color: "var(--ink-muted)" }}>{config.desc}</p>
+              </div>
+            );
+          })()}
 
           {/* Down payment */}
           <div>
