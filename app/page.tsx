@@ -425,6 +425,7 @@ export default function Home() {
   const isRefinance = mode === "refinance";
 
   const hasResults = (() => {
+    if (!inputs.province) return false; // province required for all modes
     if (isPurchase)  return inputs.homePrice > 0 && inputs.downPaymentPercent > 0 && inputs.interestRate > 0;
     if (isRenewal)   return inputs.currentBalance > 0 && inputs.interestRate > 0;
     if (isRefinance) return inputs.homeValue > 0 && inputs.currentBalance > 0 && inputs.interestRate > 0;

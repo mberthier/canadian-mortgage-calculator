@@ -95,15 +95,7 @@ export default function AffordabilityCalculator({
         <div className="flex items-start gap-3">
           <div>
             <p className="text-sm font-semibold text-neutral-800 text-left">Can you actually afford this?</p>
-            {/* Show summary even when collapsed */}
-            {!open && currentHomePrice > 0 && monthlyIncome > 0 && (
-              <p className="text-xs mt-0.5 text-left"
-                style={{ color: qualifies ? "var(--green-mid)" : "#ef4444" }}>
-                GDS {gds.toFixed(1)}% · TDS {tds.toFixed(1)}%
-                {" "}· {qualifies ? "✓ Likely qualifies" : "✗ May not qualify"}
-                {" at "}{formatCurrency(annualIncome + coIncome, 0)}/yr income
-              </p>
-            )}
+
           </div>
         </div>
         <span className="text-neutral-400 text-lg shrink-0 ml-3">{open ? "−" : "+"}</span>

@@ -190,19 +190,22 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
             <option value="">Select your province</option>
             {PROVINCES.map((p) => <option key={p.code} value={p.code}>{p.name}</option>)}
           </SelectField>
-          {inputs.province && (
-            <div className="rounded-lg px-3 py-2 text-xs -mt-2"
-              style={{ background: "var(--green-light)", borderColor: "var(--green-border)" }}>
-              {(outputs.ltt.provincial > 0 || outputs.ltt.municipal > 0)
-                ? <span style={{ color: "var(--green-mid)" }}>
-                    Land transfer tax applies in {inputs.province === "ON" ? "Ontario" : inputs.province === "BC" ? "British Columbia" : inputs.province}. We will calculate the exact amount once you enter a home price.
-                  </span>
-                : <span style={{ color: "var(--green-mid)" }}>
+          {inputs.province && (() => {
+            // Provinces with no provincial LTT
+            const noLTT = ["AB","SK","NB","NS","NL","PE","MB","NT","NU","YT"];
+            const hasNoLTT = noLTT.includes(inputs.province);
+            if (hasNoLTT) {
+              return (
+                <div className="rounded-lg px-3 py-2 text-xs -mt-2"
+                  style={{ background: "var(--green-light)", borderColor: "var(--green-border)" }}>
+                  <span style={{ color: "var(--green-mid)" }}>
                     No provincial land transfer tax in this province.
                   </span>
-              }
-            </div>
-          )}
+                </div>
+              );
+            }
+            return null; // provinces with LTT — don't show anything, LTT will appear in closing costs
+          })()}
 
           {/* ── ESSENTIAL ──────────────────────────────────── */}
           <CurrencyInput id="home-price" label="Home price"
@@ -284,9 +287,6 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
           {showRefine && (
             <div className="space-y-4 pt-1">
               {/* Term + amortization — defaults are 5yr/25yr (most common in Canada) */}
-              <p className="text-xs -mb-1" style={{ color: "var(--ink-faint)" }}>
-                Defaults to 5-year term and 25-year amortization. Change if your situation differs.
-              </p>
               <div className="grid grid-cols-2 gap-3">
                 <SelectField id="term" label="Term"
                   tip="Length of your mortgage contract before renewal. Most Canadians choose 5-year fixed."
@@ -504,9 +504,6 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
                 {AMORTIZATION_OPTIONS.map((y) => <option key={y} value={y}>{y} years</option>)}
               </SelectField>
 
-              <p className="text-xs -mb-1" style={{ color: "var(--ink-faint)" }}>
-                Defaults to 5-year term and 25-year amortization. Change if renewing on different terms.
-              </p>
               <div className="grid grid-cols-2 gap-3">
                 <SelectField id="new-term" label="New term"
                   tip="The length of the new contract you are renewing into."
@@ -652,9 +649,6 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
                 </div>
               )}
 
-              <p className="text-xs -mb-1" style={{ color: "var(--ink-faint)" }}>
-                Defaults to 5-year term and 25-year amortization. Adjust if refinancing on different terms.
-              </p>
               <div className="grid grid-cols-2 gap-3">
                 <SelectField id="new-term-refi" label="New term"
                   value={inputs.termYears} onChange={(v) => setField("termYears", Number(v))}>
