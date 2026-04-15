@@ -72,6 +72,21 @@ export default function CashSummary({ inputs, outputs }: Props) {
             Closing costs are estimated at $1,500. Add your actual figure in Advanced options.
           </p>
         )}
+
+        {/* Monthly carrying cost — moved here from the metrics grid */}
+        {outputs.totalMonthlyOwnership > 0 && (
+          <div className="pt-3 mt-1 border-t border-neutral-100">
+            <div className="flex justify-between text-sm">
+              <span style={{ color: "var(--ink-mid)" }}>
+                Monthly carrying cost
+                <span className="text-xs ml-1" style={{ color: "var(--ink-faint)" }}>(mortgage + tax + heat)</span>
+              </span>
+              <span className="font-medium tabular-nums" style={{ color: "var(--ink)" }}>
+                {formatCurrency(outputs.totalMonthlyOwnership, 0)}/mo
+              </span>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
