@@ -190,39 +190,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
             onChange={setHomePrice} placeholder="750,000" />
           {errors.homePrice && <p className="text-xs text-red-600 -mt-2">{errors.homePrice}</p>}
 
-          {/* Mortgage type — computed, not selectable */}
-          {inputs.homePrice > 0 && (() => {
-            const isUninsurable = inputs.homePrice > 1_500_000 || inputs.amortizationYears > 25;
-            const isInsured     = !isUninsurable && inputs.downPaymentPercent < 20;
-            const isInsurable   = !isUninsurable && !isInsured;
-            const type   = isInsured ? "insured" : isInsurable ? "insurable" : "uninsurable";
-            const config = {
-              insured: {
-                label: "Insured mortgage",
-                desc:  "Under 20% down requires CMHC mortgage default insurance. The premium is added to your balance and you pay interest on it for the full amortization.",
-                bg: "#fffbeb", border: "#fde68a", text: "#92400e",
-              },
-              insurable: {
-                label: "Insurable mortgage",
-                desc:  "20% or more down, under $1.5M, and 25-year max amortization. No CMHC premium required. Lenders can still pool-insure these mortgages, which often means rates comparable to insured mortgages.",
-                bg: "#f0fdf4", border: "#bbf7d0", text: "#15803d",
-              },
-              uninsurable: {
-                label: "Uninsurable mortgage",
-                desc:  inputs.homePrice > 1_500_000
-                  ? "Purchases over $1.5M cannot be insured. This is a conventional mortgage, typically priced 0.10 to 0.25% higher than insurable mortgages."
-                  : "A 30-year amortization makes this mortgage uninsurable. Expect rates slightly higher than on insured or insurable products.",
-                bg: "#fafafa", border: "#e5e5e5", text: "#555555",
-              },
-            }[type];
-            return (
-              <div className="rounded-lg px-3 py-2.5 border text-xs"
-                style={{ background: config.bg, borderColor: config.border }}>
-                <p className="font-semibold mb-0.5" style={{ color: config.text }}>{config.label}</p>
-                <p className="leading-relaxed" style={{ color: "var(--ink-muted)" }}>{config.desc}</p>
-              </div>
-            );
-          })()}
+
 
           {/* Down payment */}
           <div>

@@ -100,6 +100,27 @@ function getInsights(inputs: MortgageInputs, outputs: MortgageOutputs): Insight[
       });
     }
 
+    // 6b. Insurable insight
+    if (down >= 20 && price <= 1_500_000 && inputs.amortizationYears <= 25) {
+      ins.push({
+        type: "info", priority: 4,
+        headline: "Your mortgage qualifies as insurable",
+        detail: `With ${down.toFixed(0)}% down, a purchase price under $1.5M, and a 25-year amortization, lenders can still pool-insure this mortgage even without a CMHC premium. Ask your broker specifically for insurable pricing. You may get rates close to what insured buyers see, despite paying no insurance premium.`,
+      });
+    }
+
+    // 6c. Uninsurable insight
+    if (price > 1_500_000 || inputs.amortizationYears > 25) {
+      const reason = price > 1_500_000
+        ? "purchases over $1.5M"
+        : "a 30-year amortization";
+      ins.push({
+        type: "info", priority: 4,
+        headline: "Your mortgage is uninsurable. Shopping around matters more here.",
+        detail: `Mortgages on ${reason} cannot be insured. This is conventional pricing, typically 0.10 to 0.25% higher than insurable mortgages. At this tier, the spread between lenders is wider. Working with a broker who can access multiple lenders will save you more than on a standard insured purchase.`,
+      });
+    }
+
     // 7. First-time buyer rebate
     if (inputs.isFirstTimeBuyer && outputs.ltt.firstTimeBuyerRebate > 0) {
       ins.push({
@@ -139,7 +160,7 @@ function getInsights(inputs: MortgageInputs, outputs: MortgageOutputs): Insight[
         ins.push({
           type: "win", priority: 3,
           headline: `Extra ${formatCurrency(inputs.extraPayment, 0)}/payment cuts ${t} off your amortization`,
-          detail: "Extra payments hit principal directly, no interest. The earlier in your amortization you make them, the more interest they eliminate because every dollar of principal you remove today carries interest for the entire remaining term.",
+          detail: "Extra payments reduce your principal directly, which eliminates future interest on that amount. The earlier in your amortization you make them, the more interest they eliminate because every dollar of principal you remove today carries interest for the entire remaining term.",
         });
       }
     }
@@ -151,7 +172,7 @@ function getInsights(inputs: MortgageInputs, outputs: MortgageOutputs): Insight[
       const t   = yrs > 0 && rem > 0 ? `${yrs}yr ${rem}mo` : yrs > 0 ? `${yrs} years` : `${rem} months`;
       ins.push({
         type: "win", priority: 2,
-        headline: `Annual lump sums save ${formatCurrency(outputs.interestSavedByLumpSums, 0)} and cut ${t} off`,
+        headline: `Annual lump sums save ${formatCurrency(outputs.interestSavedByLumpSums, 0)} in interest and cut ${t} off your amortization`,
         detail: "Lump sums applied on your anniversary date reduce the principal that all future interest is calculated on, the leverage is significant. Most mortgages allow 10–20% of the original balance per year without any prepayment penalty.",
       });
     }
@@ -242,7 +263,7 @@ function getInsights(inputs: MortgageInputs, outputs: MortgageOutputs): Insight[
           ins.push({
             type: "opportunity", priority: 2,
             headline: `Shortening to 20 years costs only ${formatCurrency(extraPerPeriod, 0)}/period more`,
-            detail: `Renewal is the ideal moment to shorten your amortization, you avoid breaking any existing contract. Paying ${formatCurrency(extraPerPeriod, 0)} more per period saves roughly ${formatCurrency(intSaved, 0, true)} in total interest. You're essentially buying years of financial freedom.`,
+            detail: `Renewal is the ideal moment to shorten your amortization, you avoid breaking any existing contract. Paying ${formatCurrency(extraPerPeriod, 0)} more per period saves approximately ${formatCurrency(intSaved, 0, true)} in total interest charges. You're essentially buying years of financial freedom.`,
           });
         }
       }
