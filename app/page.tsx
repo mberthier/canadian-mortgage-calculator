@@ -79,8 +79,8 @@ function ResultsNarrative({
           {" "}At renewal you will owe <H>{balance}</H> with{" "}
           <H color={canSwitch ? "var(--green)" : "var(--amber)"}>{equityPct.toFixed(0)}% equity</H>
           {canSwitch
-            ? " — enough to shop any lender freely without re-qualifying."
-            : " — still below 20%, so CMHC rules would apply if you chose to refinance."}
+            ? ", enough to shop any lender freely without re-qualifying."
+            : ", still below 20%, so CMHC rules would apply if you chose to refinance."}
         </p>
         <p className="text-xs mt-2.5 pt-2.5 border-t" style={{ color: "var(--ink-muted)", borderColor: "var(--green-border)" }}>
           Total interest over {inputs.amortizationYears} years at this rate:{" "}
@@ -151,7 +151,7 @@ function ResultsNarrative({
   return null;
 }
 
-// ── ContextualExplore — 2-3 relevant links based on mode + inputs ────────────
+// ── ContextualExplore. 2-3 relevant links based on mode + inputs ────────────
 function ContextualExplore({ mode, hasCMHC, isFirstTimeBuyer }: {
   mode: string; hasCMHC: boolean; isFirstTimeBuyer: boolean;
 }) {
@@ -212,7 +212,7 @@ function ContextualExplore({ mode, hasCMHC, isFirstTimeBuyer }: {
   );
 }
 
-// ── BreakdownSection — charts + tools collapsed behind a toggle ───────────────
+// ── BreakdownSection, charts + tools collapsed behind a toggle ───────────────
 function BreakdownSection({ outputs, inputs, isPurchase, isRefinance }: {
   outputs: ReturnType<typeof useMortgageCalculator>["outputs"];
   inputs:  ReturnType<typeof useMortgageCalculator>["inputs"];
@@ -237,7 +237,7 @@ function BreakdownSection({ outputs, inputs, isPurchase, isRefinance }: {
             <line x1="12" y1="20" x2="12" y2="4"/>
             <line x1="6" y1="20" x2="6" y2="14"/>
           </svg>
-          {open ? "Hide detailed breakdown" : "See full breakdown — charts, amortization table, and more"}
+          {open ? "Hide detailed breakdown" : "See full breakdown, charts, amortization table, and more"}
         </span>
         <svg width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true"
           style={{ transform: open ? "rotate(180deg)" : "none", transition: "transform 0.15s", flexShrink: 0 }}>
@@ -348,7 +348,7 @@ function BreakdownSection({ outputs, inputs, isPurchase, isRefinance }: {
         </div>
       )}
 
-      {/* Contextual explore links — always visible at bottom */}
+      {/* Contextual explore links, always visible at bottom */}
       <ContextualExplore
         mode={inputs.mortgageMode}
         hasCMHC={outputs.cmhcPremium > 0}
@@ -358,7 +358,7 @@ function BreakdownSection({ outputs, inputs, isPurchase, isRefinance }: {
   );
 }
 
-// ── Empty state — shown before user enters essential fields ──────────────────
+// ── Empty state, shown before user enters essential fields ──────────────────
 function EmptyState({ mode, hasPrice, hasRate, hasProvince }: {
   mode: string; hasPrice: boolean; hasRate: boolean; hasProvince: boolean;
 }) {
@@ -429,7 +429,7 @@ function EmptyState({ mode, hasPrice, hasRate, hasProvince }: {
 
       {doneCount > 0 && doneCount < steps.length && (
         <p className="text-xs mt-5" style={{ color: "var(--green)" }}>
-          Almost there — {steps.length - doneCount} more field{steps.length - doneCount > 1 ? "s" : ""} to go
+          Almost there, {steps.length - doneCount} more field{steps.length - doneCount > 1 ? "s" : ""} to go
         </p>
       )}
     </div>
@@ -506,7 +506,7 @@ export default function Home() {
               </p>
             </aside>
 
-            {/* Right — results */}
+            {/* Right, results */}
             <main className="space-y-5 pb-24 lg:pb-0">
               {!hasResults ? (
                 <EmptyState
@@ -522,10 +522,10 @@ export default function Home() {
               {/* Plain English summary */}
               <ResultsNarrative outputs={outputs} inputs={inputs} />
 
-              {/* Cash at closing — purchase only */}
+              {/* Cash at closing, purchase only */}
               <CashSummary inputs={inputs} outputs={outputs} />
 
-              {/* Can you afford this? — purchase only, before insights */}
+              {/* Can you afford this?, purchase only, before insights */}
               {isPurchase && (
                 <AffordabilityCalculator
                   currentHomePrice={inputs.homePrice}
@@ -541,12 +541,12 @@ export default function Home() {
               {/* Insights */}
               <InsightsPanel inputs={inputs} outputs={outputs} />
 
-              {/* Stress test — what if rates go up? */}
+              {/* Stress test, what if rates go up? */}
               {outputs.amortizationSchedule.length > 0 && (
                 <StressTest outputs={outputs} inputs={inputs} />
               )}
 
-              {/* Charts + tools — collapsed breakdown */}
+              {/* Charts + tools, collapsed breakdown */}
               {outputs.amortizationSchedule.length > 0 && (
                 <BreakdownSection
                   outputs={outputs}

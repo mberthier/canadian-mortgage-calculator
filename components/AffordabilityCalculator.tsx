@@ -89,7 +89,7 @@ export default function AffordabilityCalculator({
 
   return (
     <div ref={sectionRef} className="rounded-2xl bg-white border border-neutral-100 overflow-hidden">
-      {/* Header — always visible */}
+      {/* Header, always visible */}
       <div className="px-5 pt-4 pb-3 border-b border-neutral-100 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -112,7 +112,7 @@ export default function AffordabilityCalculator({
       {!open && (
         <div className="px-5 py-3">
           <p className="text-sm text-neutral-600">
-            Enter your income to calculate your GDS and TDS ratios — the two numbers lenders use to decide if you qualify.
+            Enter your income to calculate your GDS and TDS ratios, the two numbers lenders use to decide if you qualify.
           </p>
         </div>
       )}
@@ -129,7 +129,7 @@ export default function AffordabilityCalculator({
             </div>
           )}
 
-          {/* GDS/TDS gauges + verdict — only when income entered */}
+          {/* GDS/TDS gauges + verdict, only when income entered */}
           {(annualIncome > 0 || coIncome > 0) && (
             <>
               <div className="px-5 py-4 grid grid-cols-2 gap-3">
@@ -170,14 +170,14 @@ export default function AffordabilityCalculator({
           {/* Inputs */}
           <div className="px-5 py-4 space-y-4 border-t border-neutral-100">
             <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
-              Enter your gross (pre-tax) annual income — lenders use this to calculate how much you qualify for.
+              Enter your gross (pre-tax) annual income, lenders use this to calculate how much you qualify for.
             </p>
             <div className="grid grid-cols-2 gap-3">
               {([
                 {
                   label: "Gross annual income",
                   value: annualIncome, set: setIncome,
-                  tip: "Your total pre-tax income from all sources — employment, self-employment, rental income. This is what lenders use, not your take-home pay.",
+                  tip: "Your total pre-tax income from all sources, employment, self-employment, rental income. This is what lenders use, not your take-home pay.",
                   placeholder: "e.g. 95,000",
                 },
                 {
@@ -189,7 +189,7 @@ export default function AffordabilityCalculator({
                 {
                   label: "Monthly debts",
                   value: monthlyDebts, set: setDebts,
-                  tip: "Monthly minimum payments on all existing debts: car loans, student loans, credit card minimums, lines of credit, child support. Do not include the mortgage you are calculating — that is already included in TDS.",
+                  tip: "Monthly minimum payments on all existing debts: car loans, student loans, credit card minimums, lines of credit, child support. Do not include the mortgage you are calculating, that is already included in TDS.",
                   placeholder: "e.g. 500",
                 },
               ] as const).map(({ label, value, set, tip, placeholder }) => (

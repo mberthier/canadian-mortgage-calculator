@@ -118,23 +118,27 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
           {formatCurrency(outputs.periodicPayment, 2)}
         </p>
 
-        {/* Sub-line — confirms what's being calculated */}
+        {/* Sub-line, confirms what's being calculated */}
         {heroSub && (
           <p className="text-sm mt-2" style={{ color: "rgba(255,255,255,0.6)" }}>
             {heroSub}
           </p>
         )}
 
-        {/* CMHC — single pill showing premium added to mortgage */}
+        {/* CMHC: per-payment cost + premium amount */}
         {hasCMHC && (
           <div className="flex flex-wrap gap-2 mt-3">
             <div className="rounded-lg px-3 py-1.5 text-xs" style={{ background: "rgba(255,255,255,0.12)" }}>
-              <span style={{ color: "rgba(255,255,255,0.7)" }}>CMHC premium: </span>
-              <span className="font-semibold text-white">{formatCurrency(outputs.cmhcPremium, 0)} added to mortgage</span>
+              <span style={{ color: "rgba(255,255,255,0.7)" }}>CMHC adds: </span>
+              <span className="font-semibold text-white">{formatCurrency(outputs.periodicPayment - outputs.paymentWithoutCMHC, 2)}/payment</span>
+            </div>
+            <div className="rounded-lg px-3 py-1.5 text-xs" style={{ background: "rgba(255,255,255,0.12)" }}>
+              <span style={{ color: "rgba(255,255,255,0.7)" }}>Premium: </span>
+              <span className="font-semibold text-white">{formatCurrency(outputs.cmhcPremium, 0)} added to balance</span>
             </div>
             {outputs.cmhcProvincialTax > 0 && (
               <div className="rounded-lg px-3 py-1.5 text-xs" style={{ background: "rgba(255,255,255,0.12)" }}>
-                <span style={{ color: "rgba(255,255,255,0.7)" }}>Provincial tax due at closing: </span>
+                <span style={{ color: "rgba(255,255,255,0.7)" }}>Provincial tax at closing: </span>
                 <span className="font-semibold text-white">{formatCurrency(outputs.cmhcProvincialTax, 0)}</span>
               </div>
             )}
@@ -178,7 +182,7 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
 
       {/* ── Metrics ──────────────────────────────────────────────────────── */}
 
-      {/* PURCHASE — term view + zoom-out total interest */}
+      {/* PURCHASE, term view + zoom-out total interest */}
       {mode === "purchase" && (
         <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-y divide-neutral-100">
           <Metric

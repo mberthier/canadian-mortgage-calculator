@@ -73,7 +73,7 @@ export default function CashSummary({ inputs, outputs }: Props) {
           </p>
         )}
 
-        {/* Monthly carrying cost — only show when costs are actually entered */}
+        {/* Monthly carrying cost, only show when costs are actually entered */}
         {(inputs.propertyTax > 0 || inputs.heatingCost > 0 || inputs.condoFees > 0 || inputs.homeInsurance > 0) && (
           <div className="pt-3 mt-1 border-t border-neutral-100">
             <div className="flex justify-between items-baseline">

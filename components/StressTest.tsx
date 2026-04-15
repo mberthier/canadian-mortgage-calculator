@@ -42,7 +42,7 @@ export default function StressTest({ outputs, inputs }: Props) {
 
   return (
     <div ref={sectionRef} className="rounded-2xl bg-white border border-neutral-100 overflow-hidden">
-      {/* Header — always visible */}
+      {/* Header, always visible */}
       <div className="px-5 pt-4 pb-3 border-b border-neutral-100 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -65,7 +65,7 @@ export default function StressTest({ outputs, inputs }: Props) {
       {!open && (
         <div className="px-5 py-3">
           <p className="text-sm text-neutral-600">
-            See your payment at +0.5%, +1%, and +2% — so you know what you can handle before you commit to a rate.
+            See your payment at +0.5%, +1%, and +2%, so you know what you can handle before you commit to a rate.
           </p>
         </div>
       )}

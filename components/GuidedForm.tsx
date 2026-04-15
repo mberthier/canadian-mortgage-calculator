@@ -89,7 +89,7 @@ function CurrencyInput({ id, label, tip, value, onChange, placeholder, suffix, r
         <label className={`${lbl} flex items-center`}>{label}{tip && <Tooltip content={tip} />}</label>
         <div className="relative">
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 text-sm">$</span>
-          <div className={`${inp} pl-7 bg-neutral-50 text-neutral-500`}>{value > 0 ? value.toLocaleString("en-CA") : "—"}</div>
+          <div className={`${inp} pl-7 bg-neutral-50 text-neutral-500`}>{value > 0 ? value.toLocaleString("en-CA") : " - "}</div>
         </div>
       </div>
     );
@@ -204,7 +204,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
                 </div>
               );
             }
-            return null; // provinces with LTT — don't show anything, LTT will appear in closing costs
+            return null; // provinces with LTT, don't show anything, LTT will appear in closing costs
           })()}
 
           {/* ── ESSENTIAL ──────────────────────────────────── */}
@@ -265,7 +265,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
             {inputs.homePrice > 0 && inputs.downPaymentPercent > 0 && (
               <p className="text-xs mt-1.5">
                 {outputs.cmhcPremium > 0
-                  ? <span style={{ color: "var(--amber)" }}>CMHC applies — {formatCurrency(outputs.cmhcPremium, 0)} added to mortgage</span>
+                  ? <span style={{ color: "var(--amber)" }}>CMHC applies, {formatCurrency(outputs.cmhcPremium, 0)} added to mortgage</span>
                   : <span style={{ color: "var(--green-mid)" }}>20%+ down, no CMHC required ✓</span>}
               </p>
             )}
@@ -286,7 +286,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
 
           {showRefine && (
             <div className="space-y-4 pt-1">
-              {/* Term + amortization — defaults are 5yr/25yr (most common in Canada) */}
+              {/* Term + amortization, defaults are 5yr/25yr (most common in Canada) */}
               <div className="grid grid-cols-2 gap-3">
                 <SelectField id="term" label="Term"
                   tip="Length of your mortgage contract before renewal. Most Canadians choose 5-year fixed."
@@ -407,7 +407,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
                 value={inputs.extraPayment} onChange={(v) => setField("extraPayment", v)} />
               {inputs.extraPayment > 0 && (
                 <p className="text-xs" style={{ color: "var(--green-mid)" }}>
-                  Extra payments go directly to principal — see the impact in Insights above.
+                  Extra payments go directly to principal, see the impact in Insights above.
                 </p>
               )}
 
@@ -480,7 +480,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
           {errors.currentBalance && <p className="text-xs text-red-600 -mt-2">{errors.currentBalance}</p>}
 
           <RateInput id="new-rate" label="New interest rate"
-            tip="The rate you expect at renewal. Check broker rates for best available — you can switch lenders without re-qualifying."
+            tip="The rate you expect at renewal. Check broker rates for best available, you can switch lenders without re-qualifying."
             value={inputs.interestRate} onChange={(v) => setField("interestRate", v)}
             showSlider sliderNote={inputs.interestRate > 0 ? `Stress test qualifying rate: ${stressRate.toFixed(2)}%` : undefined} />
           {errors.interestRate && <p className="text-xs text-red-600 -mt-2">{errors.interestRate}</p>}
@@ -616,7 +616,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
               <span className="font-semibold" style={{ color: outputs.ltv > 0.8 ? "#ef4444" : "var(--green)" }}>
                 {formatCurrency(Math.max(0, inputs.homeValue - inputs.currentBalance), 0)}
                 {" "}({(Math.max(0, 1 - outputs.ltv) * 100).toFixed(0)}%)
-                {outputs.ltv > 0.8 && " — above 80% LTV cap"}
+                {outputs.ltv > 0.8 && ", above 80% LTV cap"}
               </span>
             </div>
           )}
