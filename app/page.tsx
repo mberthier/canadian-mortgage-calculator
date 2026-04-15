@@ -15,7 +15,6 @@ import AmortizationTable from "@/components/AmortizationTable";
 import StressTest from "@/components/StressTest";
 import AffordabilityCalculator from "@/components/AffordabilityCalculator";
 import MortgageComparison from "@/components/MortgageComparison";
-import FeatureDiscovery from "@/components/FeatureDiscovery";
 import ShareButton from "@/components/ShareButton";
 import Wordmark from "@/components/Wordmark";
 import { useMortgageCalculator } from "@/hooks/useMortgageCalculator";
@@ -108,6 +107,232 @@ function ResultsNarrative({
   }
 
   return null;
+}
+
+// ── ContextualExplore — 2-3 relevant links based on mode + inputs ────────────
+function ContextualExplore({ mode, hasCMHC, isFirstTimeBuyer }: {
+  mode: string; hasCMHC: boolean; isFirstTimeBuyer: boolean;
+}) {
+  const links = mode === "purchase"
+    ? [
+        hasCMHC && { label: "CMHC Insurance", sub: "Understand your premium", href: "/cmhc-calculator" },
+        isFirstTimeBuyer && { label: "First-Time Buyers", sub: "Programs and rebates", href: "/first-time-buyer" },
+        !isFirstTimeBuyer && { label: "Land Transfer Tax", sub: "All provinces", href: "/land-transfer-tax" },
+        { label: "Affordability", sub: "How much can you borrow?", href: "/affordability" },
+      ].filter(Boolean).slice(0, 3)
+    : mode === "renewal"
+      ? [
+          { label: "Rate History", sub: "See where rates have been", href: "/mortgage-rates" },
+          { label: "Break Penalty", sub: "Cost to exit your current mortgage", href: "/mortgage-break-penalty" },
+          { label: "Mortgage Glossary", sub: "Every term explained", href: "/glossary" },
+        ]
+      : [
+          { label: "Break Penalty", sub: "Calculate your break penalty first", href: "/mortgage-break-penalty" },
+          { label: "Affordability", sub: "Confirm you qualify", href: "/affordability" },
+          { label: "Rate History", sub: "See where rates have been", href: "/mortgage-rates" },
+        ];
+
+  const ICONS: Record<string, string> = {
+    "/cmhc-calculator":      "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z",
+    "/land-transfer-tax":    "M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8zM14 2v6h6",
+    "/affordability":        "M12 2a10 10 0 100 20A10 10 0 0012 2zm0 6v6l4 2",
+    "/mortgage-rates":       "M22 12h-4l-3 9L9 3l-3 9H2",
+    "/mortgage-break-penalty": "M12 22V12M12 12L7 7M12 12l5-5",
+    "/first-time-buyer":     "M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2zM9 22V12h6v10",
+    "/glossary":             "M4 19.5A2.5 2.5 0 016.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z",
+  };
+
+  return (
+    <div className="rounded-2xl border border-neutral-100 bg-white overflow-hidden">
+      <div className="px-5 py-3.5 border-b border-neutral-100">
+        <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--ink-faint)" }}>
+          Related tools
+        </p>
+      </div>
+      <div className="p-4 grid grid-cols-1 sm:grid-cols-3 gap-2">
+        {(links as { label: string; sub: string; href: string }[]).map(({ label, sub, href }) => (
+          <a key={href} href={href}
+            className="flex items-start gap-2.5 px-3 py-2.5 rounded-xl text-left transition-all hover:bg-neutral-50 border"
+            style={{ borderColor: "#e8e8e8" }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+              className="mt-0.5 shrink-0" style={{ color: "var(--green)" }} aria-hidden="true">
+              <path d={ICONS[href] ?? "M12 2a10 10 0 100 20A10 10 0 0012 2z"}/>
+            </svg>
+            <div>
+              <p className="text-xs font-semibold leading-tight" style={{ color: "var(--ink)" }}>{label}</p>
+              <p className="text-xs mt-0.5" style={{ color: "var(--ink-faint)" }}>{sub}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── BreakdownSection — charts + tools collapsed behind a toggle ───────────────
+function BreakdownSection({ outputs, inputs, isPurchase, isRefinance }: {
+  outputs: ReturnType<typeof useMortgageCalculator>["outputs"];
+  inputs:  ReturnType<typeof useMortgageCalculator>["inputs"];
+  isPurchase:  boolean;
+  isRefinance: boolean;
+}) {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <div className="space-y-5">
+      {/* Toggle */}
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center justify-between px-5 py-3.5 rounded-2xl border transition-colors text-sm font-medium"
+        style={open
+          ? { background: "#fff", borderColor: "#e8e8e8", color: "var(--ink-mid)" }
+          : { background: "var(--green-light)", borderColor: "var(--green-border)", color: "var(--green)" }}>
+        <span className="flex items-center gap-2">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <line x1="18" y1="20" x2="18" y2="10"/>
+            <line x1="12" y1="20" x2="12" y2="4"/>
+            <line x1="6" y1="20" x2="6" y2="14"/>
+          </svg>
+          {open ? "Hide detailed breakdown" : "See full breakdown — charts, amortization table, and more"}
+        </span>
+        <svg width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true"
+          style={{ transform: open ? "rotate(180deg)" : "none", transition: "transform 0.15s", flexShrink: 0 }}>
+          <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
+
+      {open && (
+        <div className="space-y-5">
+          {/* PURCHASE charts */}
+          {isPurchase && (
+            <>
+              {(inputs.propertyTax > 0 || inputs.heatingCost > 0 || inputs.condoFees > 0) && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="bg-white rounded-2xl p-5 border border-neutral-100">
+                    <PaymentBreakdownChart outputs={outputs} inputs={inputs} />
+                  </div>
+                  <div className="bg-white rounded-2xl p-5 border border-neutral-100">
+                    <AmortizationChart
+                      schedule={outputs.amortizationSchedule}
+                      amortizationYears={inputs.amortizationYears}
+                      frequency={inputs.paymentFrequency}
+                      homePrice={inputs.homePrice}
+                      showEquity={true}
+                    />
+                  </div>
+                </div>
+              )}
+              {!(inputs.propertyTax > 0 || inputs.heatingCost > 0 || inputs.condoFees > 0) && (
+                <div className="bg-white rounded-2xl p-5 border border-neutral-100">
+                  <AmortizationChart
+                    schedule={outputs.amortizationSchedule}
+                    amortizationYears={inputs.amortizationYears}
+                    frequency={inputs.paymentFrequency}
+                    homePrice={inputs.homePrice}
+                    showEquity={true}
+                  />
+                </div>
+              )}
+              <div className="bg-white rounded-2xl p-5 border border-neutral-100">
+                <PrincipalInterestByYear
+                  schedule={outputs.amortizationSchedule}
+                  amortizationYears={inputs.amortizationYears}
+                  frequency={inputs.paymentFrequency}
+                />
+              </div>
+            </>
+          )}
+
+          {/* RENEWAL charts */}
+          {inputs.mortgageMode === "renewal" && (
+            <div className="bg-white rounded-2xl p-5 border border-neutral-100">
+              <PrincipalInterestByYear
+                schedule={outputs.amortizationSchedule}
+                amortizationYears={inputs.renewalAmortization || inputs.amortizationYears}
+                frequency={inputs.paymentFrequency}
+              />
+            </div>
+          )}
+
+          {/* REFINANCE charts */}
+          {isRefinance && (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                {(inputs.propertyTax > 0 || inputs.heatingCost > 0 || inputs.condoFees > 0) && (
+                  <div className="bg-white rounded-2xl p-5 border border-neutral-100">
+                    <PaymentBreakdownChart outputs={outputs} inputs={inputs} />
+                  </div>
+                )}
+                <div className="bg-white rounded-2xl p-5 border border-neutral-100">
+                  <AmortizationChart
+                    schedule={outputs.amortizationSchedule}
+                    amortizationYears={inputs.amortizationYears}
+                    frequency={inputs.paymentFrequency}
+                    homePrice={inputs.homeValue > 0 ? inputs.homeValue : inputs.currentBalance}
+                    initialEquity={inputs.homeValue > 0
+                      ? Math.max(0, inputs.homeValue - inputs.currentBalance)
+                      : 0}
+                    showEquity={inputs.homeValue > 0}
+                    title="Balance & equity over remaining amortization"
+                  />
+                </div>
+              </div>
+              <div className="bg-white rounded-2xl p-5 border border-neutral-100">
+                <PrincipalInterestByYear
+                  schedule={outputs.amortizationSchedule}
+                  amortizationYears={inputs.amortizationYears}
+                  frequency={inputs.paymentFrequency}
+                />
+              </div>
+            </>
+          )}
+
+          {/* Amortization table */}
+          <div data-section="amortization-table">
+            <AmortizationTable
+              schedule={outputs.amortizationSchedule}
+              frequency={inputs.paymentFrequency}
+              termYears={inputs.termYears}
+            />
+          </div>
+
+          {/* Stress test */}
+          <div data-section="stress-test">
+            <StressTest outputs={outputs} inputs={inputs} />
+          </div>
+
+          {/* Scenario comparison */}
+          <div data-section="scenario-comparison">
+            <MortgageComparison inputs={inputs} loanAmount={outputs.loanAmount} />
+          </div>
+
+          {/* Affordability — purchase only */}
+          {isPurchase && (
+            <div data-section="affordability">
+              <AffordabilityCalculator
+                currentHomePrice={inputs.homePrice}
+                currentRate={inputs.interestRate}
+                currentAmortization={inputs.amortizationYears}
+                currentPropertyTax={inputs.propertyTax}
+                currentHeating={inputs.heatingCost}
+                currentCondoFees={inputs.condoFees}
+                currentDownPayment={inputs.downPayment}
+              />
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Contextual explore links — always visible at bottom */}
+      <ContextualExplore
+        mode={inputs.mortgageMode}
+        hasCMHC={outputs.cmhcPremium > 0}
+        isFirstTimeBuyer={inputs.isFirstTimeBuyer}
+      />
+    </div>
+  );
 }
 
 // ── Empty state — shown before user enters essential fields ──────────────────
@@ -275,137 +500,14 @@ export default function Home() {
               {/* Insights, dynamic, contextual */}
               <InsightsPanel inputs={inputs} outputs={outputs} />
 
-              {/* View amortization shortcut, above charts */}
+              {/* Charts, tools, explore — collapsed breakdown section */}
               {outputs.amortizationSchedule.length > 0 && (
-                <button
-                  onClick={() => {
-                    const el = document.querySelector("[data-section=\"amortization-table\"]");
-                    if (el) {
-                      el.dispatchEvent(new CustomEvent("open-section", { bubbles: true }));
-                      setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
-                    }
-                  }}
-                  className="text-xs font-medium flex items-center gap-1.5 self-start"
-                  style={{ color: "var(--green)" }}>
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                    <path d="M2 3h8M2 6h8M2 9h5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                  </svg>
-                  View full amortization schedule ↓
-                </button>
-              )}
-
-              {/* Charts, fully mode-aware */}
-              {outputs.amortizationSchedule.length > 0 && (
-                <>
-                  {/* PURCHASE: full chart suite */}
-                  {isPurchase && (
-                    <>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        <div className="bg-white rounded-2xl p-5 border border-neutral-100">
-                          <PaymentBreakdownChart outputs={outputs} inputs={inputs} />
-                        </div>
-                        <div className="bg-white rounded-2xl p-5 border border-neutral-100">
-                          <AmortizationChart
-                            schedule={outputs.amortizationSchedule}
-                            amortizationYears={inputs.amortizationYears}
-                            frequency={inputs.paymentFrequency}
-                            homePrice={inputs.homePrice}
-                            showEquity={true}
-                          />
-                        </div>
-                      </div>
-                      <div className="bg-white rounded-2xl p-5 border border-neutral-100">
-                        <PrincipalInterestByYear
-                          schedule={outputs.amortizationSchedule}
-                          amortizationYears={inputs.amortizationYears}
-                          frequency={inputs.paymentFrequency}
-                        />
-                      </div>
-                    </>
-                  )}
-
-                  {/* RENEWAL: principal/interest split only, no fabricated equity */}
-                  {inputs.mortgageMode === "renewal" && (
-                    <div className="bg-white rounded-2xl p-5 border border-neutral-100">
-                      <PrincipalInterestByYear
-                        schedule={outputs.amortizationSchedule}
-                        amortizationYears={inputs.renewalAmortization || inputs.amortizationYears}
-                        frequency={inputs.paymentFrequency}
-                      />
-                    </div>
-                  )}
-
-                  {/* REFINANCE: balance chart with real starting equity, plus principal/interest */}
-                  {inputs.mortgageMode === "refinance" && (
-                    <>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        {/* Ownership pie only if costs were entered */}
-                        {(inputs.propertyTax > 0 || inputs.heatingCost > 0 || inputs.condoFees > 0) && (
-                          <div className="bg-white rounded-2xl p-5 border border-neutral-100">
-                            <PaymentBreakdownChart outputs={outputs} inputs={inputs} />
-                          </div>
-                        )}
-                        <div className="bg-white rounded-2xl p-5 border border-neutral-100">
-                          <AmortizationChart
-                            schedule={outputs.amortizationSchedule}
-                            amortizationYears={inputs.amortizationYears}
-                            frequency={inputs.paymentFrequency}
-                            homePrice={inputs.homeValue > 0 ? inputs.homeValue : inputs.currentBalance}
-                            initialEquity={inputs.homeValue > 0
-                              ? Math.max(0, inputs.homeValue - inputs.currentBalance)
-                              : 0}
-                            showEquity={inputs.homeValue > 0}
-                            title="Balance & equity over remaining amortization"
-                          />
-                        </div>
-                      </div>
-                      <div className="bg-white rounded-2xl p-5 border border-neutral-100">
-                        <PrincipalInterestByYear
-                          schedule={outputs.amortizationSchedule}
-                          amortizationYears={inputs.amortizationYears}
-                          frequency={inputs.paymentFrequency}
-                        />
-                      </div>
-                    </>
-                  )}
-
-                  {/* Amortization table, all modes */}
-                  <div data-section="amortization-table">
-                    <AmortizationTable
-                      schedule={outputs.amortizationSchedule}
-                      frequency={inputs.paymentFrequency}
-                      termYears={inputs.termYears}
-                    />
-                  </div>
-
-                  {/* Renewal rate scenarios, all modes */}
-                  <div data-section="stress-test">
-                    <StressTest outputs={outputs} inputs={inputs} />
-                  </div>
-
-                  {/* Scenario comparison, all modes */}
-                  <div data-section="scenario-comparison">
-                    <MortgageComparison inputs={inputs} loanAmount={outputs.loanAmount} />
-                  </div>
-
-                  {/* Can you afford this?, purchase only */}
-                  {isPurchase && (
-                    <div data-section="affordability">
-                      <AffordabilityCalculator
-                        currentHomePrice={inputs.homePrice}
-                        currentRate={inputs.interestRate}
-                        currentAmortization={inputs.amortizationYears}
-                        currentPropertyTax={inputs.propertyTax}
-                        currentHeating={inputs.heatingCost}
-                        currentCondoFees={inputs.condoFees}
-                        currentDownPayment={inputs.downPayment}
-                      />
-                    </div>
-                  )}
-
-                  {/* Explore more, very bottom */}
-                  <FeatureDiscovery />
-                </>
+                <BreakdownSection
+                  outputs={outputs}
+                  inputs={inputs}
+                  isPurchase={isPurchase}
+                  isRefinance={isRefinance}
+                />
               )}
               </>
               )}
