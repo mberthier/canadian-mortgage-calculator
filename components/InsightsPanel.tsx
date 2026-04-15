@@ -535,49 +535,54 @@ function RateGateCTA({ inputs, outputs }: { inputs: MortgageInputs; outputs: Mor
   );
 }
 
-// ── Badge config ───────────────────────────────────────────────────────────────
-const BADGES: Record<InsightType, { bg: string; border: string; text: string; label: string; icon: React.ReactNode }> = {
-  win: {
-    bg: "#f0fdf4", border: "#bbf7d0", text: "#15803d", label: "Win",
-    icon: (
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M8 21h8M12 17v4M5 3h14l-2 7H7L5 3z" stroke="#15803d" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M7 10c0 2.8 2.2 5 5 5s5-2.2 5-5" stroke="#15803d" strokeWidth="2" strokeLinecap="round"/>
-      </svg>
-    ),
-  },
-  opportunity: {
-    bg: "#eff6ff", border: "#bfdbfe", text: "#1d4ed8", label: "Do this",
-    icon: (
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M9 18h6M10 22h4M12 2a7 7 0 017 7c0 2.4-1.2 4.5-3 5.7V17H8v-2.3C6.2 13.5 5 11.4 5 9a7 7 0 017-7z" stroke="#1d4ed8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    ),
-  },
+// ── Type styling — left border accent only, no coloured badges ───────────────
+const TYPE_STYLE: Record<InsightType, {
+  border: string;   // left border colour
+  icon:   React.ReactNode;
+}> = {
   warning: {
-    bg: "#fef2f2", border: "#fecaca", text: "#b91c1c", label: "Alert",
+    border: "#ef4444",
     icon: (
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M10.3 3.6L2 20h20L13.7 3.6a2 2 0 00-3.4 0z" stroke="#b91c1c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M12 10v4M12 17v.5" stroke="#b91c1c" strokeWidth="2" strokeLinecap="round"/>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M10.3 3.6L2 20h20L13.7 3.6a2 2 0 00-3.4 0z"
+          stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M12 10v4M12 17v.5" stroke="#ef4444" strokeWidth="2" strokeLinecap="round"/>
       </svg>
     ),
   },
   caution: {
-    bg: "#fffbeb", border: "#fde68a", text: "#92400e", label: "Heads up",
+    border: "#f59e0b",
     icon: (
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <circle cx="12" cy="12" r="9" stroke="#92400e" strokeWidth="2"/>
-        <path d="M12 8v4M12 15v.5" stroke="#92400e" strokeWidth="2" strokeLinecap="round"/>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" stroke="#f59e0b" strokeWidth="2"/>
+        <path d="M12 8v4M12 15v.5" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round"/>
+      </svg>
+    ),
+  },
+  opportunity: {
+    border: "var(--green)",
+    icon: (
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M9 18h6M10 22h4M12 2a7 7 0 017 7c0 2.4-1.2 4.5-3 5.7V17H8v-2.3C6.2 13.5 5 11.4 5 9a7 7 0 017-7z"
+          stroke="var(--green)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    ),
+  },
+  win: {
+    border: "var(--green)",
+    icon: (
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M20 6H4l2 8h12l2-8z" stroke="var(--green)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M12 14v4M8 18h8" stroke="var(--green)" strokeWidth="2" strokeLinecap="round"/>
       </svg>
     ),
   },
   info: {
-    bg: "#fafafa", border: "#e5e5e5", text: "#555555", label: "Note",
+    border: "#d1d5db",
     icon: (
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <circle cx="12" cy="12" r="9" stroke="#555" strokeWidth="2"/>
-        <path d="M12 11v6M12 8v.5" stroke="#555" strokeWidth="2" strokeLinecap="round"/>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" stroke="#9ca3af" strokeWidth="2"/>
+        <path d="M12 11v6M12 8v.5" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round"/>
       </svg>
     ),
   },
@@ -611,22 +616,26 @@ export default function InsightsPanel({ inputs, outputs }: Props) {
       {/* Rate gap CTA — first position when applicable */}
       <RateGateCTA inputs={inputs} outputs={outputs} />
 
-      {/* Insight rows */}
+      {/* Insight rows — left border accent, no coloured badges */}
       <div className="divide-y divide-neutral-50">
         {visible.map((ins, i) => {
-          const b = BADGES[ins.type];
+          const s = TYPE_STYLE[ins.type];
           return (
-            <div key={i} className="px-5 py-4 flex items-start gap-3">
-              <span className="inline-flex items-center justify-center gap-1 shrink-0 mt-0.5 px-2 py-0.5 rounded-full text-xs font-semibold border"
-                style={{ background: b.bg, borderColor: b.border, color: b.text, minWidth: "76px" }}>
-                {b.icon}
-                {b.label}
-              </span>
-              <div>
+            <div key={i} className="py-4 pr-5 flex items-start gap-0"
+              style={{ paddingLeft: "1.25rem" }}>
+              {/* Left border accent */}
+              <div className="shrink-0 w-0.5 self-stretch rounded-full mr-4 mt-0.5"
+                style={{ background: s.border, minHeight: "1rem" }} />
+              {/* Icon */}
+              <span className="shrink-0 mt-0.5 mr-3">{s.icon}</span>
+              {/* Content */}
+              <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold leading-snug text-neutral-900">
                   {ins.headline}
                 </p>
-                <p className="text-xs mt-1 leading-relaxed" style={{ color: "var(--ink-muted)" }}>{ins.detail}</p>
+                <p className="text-xs mt-1 leading-relaxed" style={{ color: "var(--ink-muted)" }}>
+                  {ins.detail}
+                </p>
                 {ins.brokerCTA && (
                   <p className="text-xs mt-1.5 font-medium" style={{ color: "var(--green)" }}>
                     {ins.brokerCTA}
@@ -638,7 +647,8 @@ export default function InsightsPanel({ inputs, outputs }: Props) {
                     style={{ color: "var(--green)" }}>
                     {ins.link.label}
                     <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
-                      <path d="M2 5h6M5 2l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M2 5h6M5 2l3 3-3 3" stroke="currentColor" strokeWidth="1.5"
+                        strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                   </Link>
                 )}
@@ -658,7 +668,8 @@ export default function InsightsPanel({ inputs, outputs }: Props) {
             <>Show less
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"
                 style={{ transform: "rotate(180deg)" }}>
-                <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5"
+                  strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </>
           ) : (
@@ -667,13 +678,13 @@ export default function InsightsPanel({ inputs, outputs }: Props) {
                 ? `${hidden} more insight${hidden !== 1 ? "s" : ""} — including your personalized rate savings`
                 : `${hidden} more insight${hidden !== 1 ? "s" : ""}`}
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5"
+                  strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </>
           )}
         </button>
       )}
-
     </div>
   );
 }
