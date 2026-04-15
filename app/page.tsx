@@ -525,7 +525,10 @@ export default function Home() {
               {/* Cash at closing, purchase only */}
               <CashSummary inputs={inputs} outputs={outputs} />
 
-              {/* Can you afford this?, purchase only, before insights */}
+              {/* Insights */}
+              <InsightsPanel inputs={inputs} outputs={outputs} />
+
+              {/* Can you afford this? — purchase only */}
               {isPurchase && (
                 <AffordabilityCalculator
                   currentHomePrice={inputs.homePrice}
@@ -537,9 +540,6 @@ export default function Home() {
                   currentDownPayment={inputs.downPayment}
                 />
               )}
-
-              {/* Insights */}
-              <InsightsPanel inputs={inputs} outputs={outputs} />
 
               {/* Stress test, what if rates go up? */}
               {outputs.amortizationSchedule.length > 0 && (

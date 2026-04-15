@@ -572,8 +572,8 @@ const TYPE_STYLE: Record<InsightType, {
     border: "var(--green)",
     icon: (
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M20 6H4l2 8h12l2-8z" stroke="var(--green)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M12 14v4M8 18h8" stroke="var(--green)" strokeWidth="2" strokeLinecap="round"/>
+        <circle cx="12" cy="12" r="9" stroke="var(--green)" strokeWidth="2"/>
+        <path d="M8 12l3 3 5-5" stroke="var(--green)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
       </svg>
     ),
   },
