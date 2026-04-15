@@ -73,15 +73,17 @@ export default function CashSummary({ inputs, outputs }: Props) {
           </p>
         )}
 
-        {/* Monthly carrying cost — moved here from the metrics grid */}
-        {outputs.totalMonthlyOwnership > 0 && (
+        {/* Monthly carrying cost — only show when costs are actually entered */}
+        {(inputs.propertyTax > 0 || inputs.heatingCost > 0 || inputs.condoFees > 0 || inputs.homeInsurance > 0) && (
           <div className="pt-3 mt-1 border-t border-neutral-100">
-            <div className="flex justify-between text-sm">
-              <span style={{ color: "var(--ink-mid)" }}>
-                Monthly carrying cost
-                <span className="text-xs ml-1" style={{ color: "var(--ink-faint)" }}>(mortgage + tax + heat)</span>
-              </span>
-              <span className="font-medium tabular-nums" style={{ color: "var(--ink)" }}>
+            <div className="flex justify-between items-baseline">
+              <div>
+                <p className="text-sm font-semibold text-neutral-800">All-in monthly cost</p>
+                <p className="text-xs mt-0.5" style={{ color: "var(--ink-faint)" }}>
+                  Mortgage{inputs.propertyTax > 0 ? " + tax" : ""}{inputs.heatingCost > 0 ? " + heat" : ""}{inputs.condoFees > 0 ? " + condo" : ""}{inputs.homeInsurance > 0 ? " + insurance" : ""}
+                </p>
+              </div>
+              <span className="text-lg font-bold tabular-nums" style={{ color: "var(--brand-teal)" }}>
                 {formatCurrency(outputs.totalMonthlyOwnership, 0)}/mo
               </span>
             </div>

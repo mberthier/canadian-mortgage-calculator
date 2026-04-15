@@ -95,7 +95,7 @@ function getInsights(inputs: MortgageInputs, outputs: MortgageOutputs): Insight[
       const gap = Math.round(qualifyingPmt - actualPmt);
       if (gap > 50) {
         ins.push({
-          type: "info", priority: 2,
+          type: "caution", priority: 2,
           headline: `Your lender qualifies you at ${stressRate.toFixed(2)}%, not ${inputs.interestRate.toFixed(2)}%`,
           detail: `The mortgage stress test adds ${formatCurrency(gap, 0)}/month to your qualifying payment. Lenders use this to confirm you can handle rate increases at renewal. It also caps your maximum purchase price — roughly ${Math.round((1 - inputs.interestRate / stressRate) * 100)}% lower than if you qualified at your contract rate.`,
         });

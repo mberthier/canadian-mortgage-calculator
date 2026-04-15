@@ -44,63 +44,105 @@ const jsonLd = {
   publisher: { "@type": "Organization", name: "CrystalKey", url: "https://crystalkey.ca" },
 };
 
+function H({ children, color }: { children: React.ReactNode; color?: string }) {
+  return <span className="font-semibold" style={{ color: color ?? "var(--ink)" }}>{children}</span>;
+}
+
 function ResultsNarrative({
   outputs, inputs,
 }: {
   outputs: ReturnType<typeof useMortgageCalculator>["outputs"];
-  inputs: ReturnType<typeof useMortgageCalculator>["inputs"];
+  inputs:  ReturnType<typeof useMortgageCalculator>["inputs"];
 }) {
-  const freq    = FREQUENCY_LABELS[inputs.paymentFrequency].toLowerCase();
-  const payment = formatCurrency(outputs.periodicPayment, 0);
-  const balance = formatCurrency(outputs.termEndBalance, 0, true);
-  const mode    = inputs.mortgageMode;
+  const freq     = FREQUENCY_LABELS[inputs.paymentFrequency].toLowerCase();
+  const balance  = formatCurrency(outputs.termEndBalance, 0, true);
+  const termInt  = formatCurrency(outputs.termInterestPaid, 0, true);
+  const termPrin = formatCurrency(outputs.termPrincipalPaid, 0, true);
+  const mode     = inputs.mortgageMode;
+
+  const box: React.CSSProperties = {
+    background: "var(--green-light)",
+    border: "1px solid var(--green-border)",
+    borderRadius: "1rem",
+    padding: "1rem 1.25rem",
+  };
 
   if (mode === "purchase" && inputs.homePrice > 0) {
-    const equity = (((inputs.homePrice - outputs.termEndBalance) / inputs.homePrice) * 100).toFixed(0);
+    const equityPct = (inputs.homePrice - outputs.termEndBalance) / inputs.homePrice * 100;
+    const canSwitch = equityPct >= 20;
     return (
-      <div className="pl-4 py-1 text-sm leading-relaxed"
-        style={{ borderLeft: "3px solid var(--brand-teal)", color: "var(--ink-mid)" }}>
-        At {inputs.interestRate}%, you pay{" "}
-        <span className="font-semibold text-neutral-900">{payment} {freq}</span>{" "}
-        for {inputs.termYears} years, leaving{" "}
-        <span className="font-semibold text-neutral-900">{balance}</span> at renewal.
-        {" "}Equity at renewal:{" "}
-        <span className="font-semibold" style={{ color: "var(--green)" }}>{equity}%</span>
-        {parseInt(equity) >= 20
-          ? ", above 20%, so you can switch lenders freely at renewal."
-          : ", below 20%, CMHC rules would apply if you refinanced."}
+      <div style={box}>
+        <p className="text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>
+          Over your {inputs.termYears}-year term you will eliminate{" "}
+          <H color="var(--green)">{termPrin}</H> of your mortgage balance and pay{" "}
+          <H>{termInt}</H> in interest.
+          {" "}At renewal you will owe <H>{balance}</H> with{" "}
+          <H color={canSwitch ? "var(--green)" : "var(--amber)"}>{equityPct.toFixed(0)}% equity</H>
+          {canSwitch
+            ? " — enough to shop any lender freely without re-qualifying."
+            : " — still below 20%, so CMHC rules would apply if you chose to refinance."}
+        </p>
+        <p className="text-xs mt-2.5 pt-2.5 border-t" style={{ color: "var(--ink-muted)", borderColor: "var(--green-border)" }}>
+          Total interest over {inputs.amortizationYears} years at this rate:{" "}
+          <span className="font-medium" style={{ color: "var(--ink)" }}>
+            {formatCurrency(outputs.totalInterest, 0, true)}
+          </span>. Accelerated payments or annual lump sums reduce this directly.
+        </p>
       </div>
     );
   }
 
   if (mode === "renewal" && inputs.currentBalance > 0) {
-    const termInt = formatCurrency(outputs.termInterestPaid, 0, true);
+    const hasCurrent = outputs.currentPayment > 0;
+    const diff = hasCurrent ? outputs.periodicPayment - outputs.currentPayment : 0;
     return (
-      <div className="pl-4 py-1 text-sm leading-relaxed"
-        style={{ borderLeft: "3px solid var(--brand-teal)", color: "var(--ink-mid)" }}>
-        At {inputs.interestRate}%, your new payment is{" "}
-        <span className="font-semibold text-neutral-900">{payment} {freq}</span>.{" "}
-        You'll pay{" "}
-        <span className="font-semibold text-neutral-900">{termInt} in interest</span>{" "}
-        this term and owe{" "}
-        <span className="font-semibold text-neutral-900">{balance}</span> at your next renewal.
+      <div style={box}>
+        <p className="text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>
+          This term you will pay <H>{termInt}</H> in interest and pay down{" "}
+          <H color="var(--green)">{termPrin}</H> of your balance.
+          {" "}At your next renewal you will owe <H>{balance}</H>.
+        </p>
+        {hasCurrent && Math.abs(diff) > 1 && (
+          <p className="text-xs mt-2.5 pt-2.5 border-t" style={{ color: "var(--ink-muted)", borderColor: "var(--green-border)" }}>
+            Payment {diff > 0 ? "increases" : "drops"} by{" "}
+            <span className="font-medium" style={{ color: "var(--ink)" }}>
+              {formatCurrency(Math.abs(diff), 0)}/{freq}
+            </span>{" "}
+            vs your current rate. Total interest remaining:{" "}
+            <span className="font-medium" style={{ color: "var(--ink)" }}>
+              {formatCurrency(outputs.totalInterest, 0, true)}
+            </span>.
+          </p>
+        )}
       </div>
     );
   }
 
   if (mode === "refinance" && inputs.currentBalance > 0) {
-    const equity = inputs.homeValue > 0
-      ? (((inputs.homeValue - outputs.loanAmount) / inputs.homeValue) * 100).toFixed(0)
+    const equityPct = inputs.homeValue > 0
+      ? (inputs.homeValue - outputs.loanAmount) / inputs.homeValue * 100
       : null;
+    const hasCurrent = outputs.currentPayment > 0;
+    const diff = hasCurrent ? outputs.periodicPayment - outputs.currentPayment : 0;
     return (
-      <div className="pl-4 py-1 text-sm leading-relaxed"
-        style={{ borderLeft: "3px solid var(--brand-teal)", color: "var(--ink-mid)" }}>
-        Your new mortgage is{" "}
-        <span className="font-semibold text-neutral-900">{formatCurrency(outputs.loanAmount, 0, true)}</span>{" "}
-        at {inputs.interestRate}%{inputs.cashOutAmount > 0 ? `, including ${formatCurrency(inputs.cashOutAmount, 0)} cash-out` : ""}.
-        {equity && (
-          <>{" "}Remaining equity after refinancing:{" "}
-          <span className="font-semibold" style={{ color: "var(--green)" }}>{equity}%</span>.</>
+      <div style={box}>
+        <p className="text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>
+          Your refinanced mortgage is <H>{formatCurrency(outputs.loanAmount, 0, true)}</H> at {inputs.interestRate}%
+          {inputs.cashOutAmount > 0 && <>, including <H color="var(--green)">{formatCurrency(inputs.cashOutAmount, 0)}</H> cash-out</>}.
+          {equityPct !== null && (
+            <>{" "}You retain{" "}
+            <H color={equityPct >= 20 ? "var(--green)" : "var(--amber)"}>{equityPct.toFixed(0)}% equity</H>.</>
+          )}
+        </p>
+        {hasCurrent && Math.abs(diff) > 1 && (
+          <p className="text-xs mt-2.5 pt-2.5 border-t" style={{ color: "var(--ink-muted)", borderColor: "var(--green-border)" }}>
+            Payment {diff > 0 ? "increases" : "drops"} by{" "}
+            <span className="font-medium" style={{ color: "var(--ink)" }}>
+              {formatCurrency(Math.abs(diff), 0)}/{freq}
+            </span>{" "}
+            vs your current rate. This term you will pay{" "}
+            <span className="font-medium" style={{ color: "var(--ink)" }}>{termInt}</span> in interest.
+          </p>
         )}
       </div>
     );
