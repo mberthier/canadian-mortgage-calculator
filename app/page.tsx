@@ -15,8 +15,8 @@ import AmortizationTable from "@/components/AmortizationTable";
 import StressTest from "@/components/StressTest";
 import AffordabilityCalculator from "@/components/AffordabilityCalculator";
 import MortgageComparison from "@/components/MortgageComparison";
-import ShareButton from "@/components/ShareButton";
 import FeatureDiscovery from "@/components/FeatureDiscovery";
+import ShareButton from "@/components/ShareButton";
 import Wordmark from "@/components/Wordmark";
 import { useMortgageCalculator } from "@/hooks/useMortgageCalculator";
 import { FREQUENCY_LABELS } from "@/lib/constants";
@@ -175,24 +175,14 @@ export default function Home() {
               {/* Payment hero */}
               <SummaryCards outputs={outputs} inputs={inputs} shareURL={shareURL} />
 
-              {/* Plain English summary + share */}
-              <div className="space-y-2">
-                <ResultsNarrative outputs={outputs} inputs={inputs} />
-                {shareURL && (
-                  <div className="flex items-center justify-between">
-                    <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
-                      All inputs are saved in the link
-                    </p>
-                    <ShareButton url={shareURL} />
-                  </div>
-                )}
-              </div>
+              {/* Plain English summary */}
+              <ResultsNarrative outputs={outputs} inputs={inputs} />
+
+              {/* Cash at closing — purchase only, above insights */}
+              <CashSummary inputs={inputs} outputs={outputs} />
 
               {/* Insights, dynamic, contextual */}
               <InsightsPanel inputs={inputs} outputs={outputs} />
-
-              {/* Cash at closing, purchase only */}
-              <CashSummary inputs={inputs} outputs={outputs} />
 
               {/* View amortization shortcut, above charts */}
               {outputs.amortizationSchedule.length > 0 && (

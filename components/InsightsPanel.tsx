@@ -452,7 +452,7 @@ export default function InsightsPanel({ inputs, outputs }: Props) {
       <div className="px-5 pt-4 pb-3">
         <div className="flex items-start gap-3">
           <span className="inline-flex items-center gap-1 shrink-0 mt-0.5 px-2 py-0.5 rounded-full text-xs font-semibold border"
-            style={{ background: primaryBadge.bg, borderColor: primaryBadge.border, color: primaryBadge.text }}>
+            style={{ background: primaryBadge.bg, borderColor: primaryBadge.border, color: primaryBadge.text, minWidth: "90px", justifyContent: "center" }}>
             {primaryBadge.icon}
             {primaryBadge.label}
           </span>
@@ -487,7 +487,7 @@ export default function InsightsPanel({ inputs, outputs }: Props) {
                 return (
                   <div key={i} className="flex items-start gap-2.5">
                     <span className="inline-flex items-center gap-1 shrink-0 mt-0.5 px-1.5 py-0.5 rounded-full text-xs font-semibold border"
-                      style={{ background: b.bg, borderColor: b.border, color: b.text, fontSize: "10px" }}>
+                      style={{ background: b.bg, borderColor: b.border, color: b.text, fontSize: "10px", minWidth: "84px", justifyContent: "center" }}>
                       {b.icon}
                       {b.label}
                     </span>

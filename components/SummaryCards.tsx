@@ -14,19 +14,21 @@ interface Props {
 }
 
 interface MetricProps {
-  label: string;
-  value: string;
-  sub?:  string;
-  tip?:  string;
+  label:   string;
+  value:   string;
+  sub?:    string;
+  tip?:    string;
   accent?: boolean;
 }
 
 function Metric({ label, value, sub, tip, accent }: MetricProps) {
   return (
     <div className="p-4">
-      <p className="text-xs font-medium uppercase tracking-wide flex items-center gap-0.5 mb-1"
-        style={{ color: "var(--ink-faint)" }}>
-        {label}{tip && <Tooltip content={tip} />}
+      {/* Fixed-height label row so all values align regardless of wrapping */}
+      <p className="text-xs font-medium uppercase tracking-wide flex items-start gap-0.5 mb-2"
+        style={{ color: "var(--ink-faint)", minHeight: "2.5rem" }}>
+        <span>{label}</span>
+        {tip && <Tooltip content={tip} />}
       </p>
       <p className="text-xl font-semibold"
         style={{ color: accent ? "var(--brand-teal)" : "#1a1a1a" }}>{value}</p>
@@ -40,12 +42,9 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
   const hasCMHC = outputs.cmhcPremium > 0;
   const freq    = FREQUENCY_LABELS[inputs.paymentFrequency];
 
-  // ── Renewal: term-specific interest and principal ──────────────────────────
-  const termInterest   = outputs.termInterestPaid ?? 0;
-  const termPrincipal  = outputs.termPrincipalPaid ?? 0;
+  const termInterest  = outputs.termInterestPaid ?? 0;
+  const termPrincipal = outputs.termPrincipalPaid ?? 0;
 
-  // ── Refinance: interest saved vs current rate ─────────────────────────────
-  // Use outputs.currentPayment (already computed at currentRate) vs new payment
   const refiInterestSaved = mode === "refinance" && outputs.currentPayment > 0
     ? Math.max(0, Math.round(
         (outputs.currentPayment - outputs.periodicPayment) * outputs.amortizationSchedule.length
@@ -55,12 +54,39 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
   return (
     <div className="rounded-2xl border border-neutral-100 shadow-sm overflow-hidden">
 
-      {/* Hero payment */}
+      {/* Hero — payment + share */}
       <div className="px-6 pt-6 pb-5" style={{ background: "var(--green)" }}>
-        <p className="text-xs font-semibold uppercase tracking-widest mb-1"
-          style={{ color: "rgba(255,255,255,0.65)" }}>
-          {freq} Payment
-        </p>
+        {/* Top row: label + share button */}
+        <div className="flex items-center justify-between mb-1">
+          <p className="text-xs font-semibold uppercase tracking-widest"
+            style={{ color: "rgba(255,255,255,0.65)" }}>
+            {freq} Mortgage Payment
+          </p>
+          {shareURL && (
+            <button
+              onClick={async () => {
+                try { await navigator.clipboard.writeText(shareURL); } catch {
+                  const el = document.createElement("textarea");
+                  el.value = shareURL;
+                  document.body.appendChild(el);
+                  el.select();
+                  document.execCommand("copy");
+                  document.body.removeChild(el);
+                }
+              }}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
+              style={{ background: "rgba(255,255,255,0.15)", color: "#fff", border: "1px solid rgba(255,255,255,0.3)" }}
+              title="Copy shareable link">
+              <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <path d="M5 4H3.5A1.5 1.5 0 002 5.5v5A1.5 1.5 0 003.5 12h5A1.5 1.5 0 0010 10.5V9M6 2h4.5A1.5 1.5 0 0112 3.5V8A1.5 1.5 0 0110.5 9.5h-4A1.5 1.5 0 015 8V3.5A1.5 1.5 0 016.5 2z"
+                  stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+              </svg>
+              Share
+            </button>
+          )}
+        </div>
+
+        {/* Payment number */}
         <p className="font-display leading-none mb-1" style={{ fontSize: 52, color: "#fff" }}>
           {formatCurrency(outputs.periodicPayment, 2)}
         </p>
@@ -81,7 +107,7 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
           </div>
         )}
 
-        {/* Renewal: current vs new payment */}
+        {/* Renewal: current vs new */}
         {mode === "renewal" && outputs.currentPayment > 0 && (
           <div className="flex flex-wrap gap-3 mt-3">
             <div className="rounded-lg px-3 py-1.5 text-xs" style={{ background: "rgba(255,255,255,0.12)" }}>
@@ -94,13 +120,13 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
                 <span className="font-semibold text-white">+{formatCurrency(outputs.periodicPayment - outputs.currentPayment, 2)}</span></>
               ) : (
                 <><span style={{ color: "rgba(255,255,255,0.7)" }}>Saves: </span>
-                <span className="font-semibold text-white">−{formatCurrency(outputs.currentPayment - outputs.periodicPayment, 2)}</span></>
+                <span className="font-semibold text-white">{formatCurrency(outputs.currentPayment - outputs.periodicPayment, 2)}/period</span></>
               )}
             </div>
           </div>
         )}
 
-        {/* Refinance: current vs new payment */}
+        {/* Refinance: current vs new */}
         {mode === "refinance" && outputs.currentPayment > 0 && (
           <div className="flex flex-wrap gap-3 mt-3">
             <div className="rounded-lg px-3 py-1.5 text-xs" style={{ background: "rgba(255,255,255,0.12)" }}>
@@ -109,17 +135,15 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
             </div>
             {refiInterestSaved > 0 && (
               <div className="rounded-lg px-3 py-1.5 text-xs" style={{ background: "rgba(255,255,255,0.12)" }}>
-                <span style={{ color: "rgba(255,255,255,0.7)" }}>Total interest saved: </span>
+                <span style={{ color: "rgba(255,255,255,0.7)" }}>Interest saved: </span>
                 <span className="font-semibold text-white">{formatCurrency(refiInterestSaved, 0, true)}</span>
               </div>
             )}
           </div>
         )}
-
-
       </div>
 
-      {/* ── Mode-specific metrics ──────────────────────────────────────────── */}
+      {/* Mode-specific metrics — fixed label height for alignment */}
 
       {/* PURCHASE */}
       {mode === "purchase" && (
@@ -160,7 +184,7 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
             value={formatCurrency(outputs.termEndBalance, 0, true)}
             sub={`After ${inputs.termYears}-yr term`}
             tip="Your outstanding balance when this term ends, the amount your next rate will be applied to." />
-          <Metric label="Total interest left"
+          <Metric label="Total interest remaining"
             value={formatCurrency(outputs.totalInterest, 0, true)}
             sub={`Over ${inputs.renewalAmortization || inputs.amortizationYears} yr remaining`}
             tip="Total interest remaining over your full amortization from today. Accelerated payments can reduce this significantly." />
@@ -189,7 +213,7 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
         </div>
       )}
 
-      {/* CMHC notice, purchase only */}
+      {/* CMHC notice */}
       {hasCMHC && mode === "purchase" && (
         <div className="px-5 py-3 border-t border-neutral-100 flex items-start gap-2"
           style={{ background: "#fffbeb" }}>
@@ -200,8 +224,8 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
           <p className="text-xs leading-relaxed" style={{ color: "#92400e" }}>
             <span className="font-semibold">CMHC mortgage insurance applies.</span>{" "}
             Your {(inputs.downPaymentPercent).toFixed(1)}% down payment triggers a{" "}
-            {formatCurrency(outputs.cmhcPremium, 0)} premium added to your mortgage, not due at closing,
-            but you'll pay interest on it for the full amortization period.
+            {formatCurrency(outputs.cmhcPremium, 0)} premium added to your mortgage. Not due at closing,
+            but you pay interest on it for the full amortization period.
             {outputs.cmhcProvincialTax > 0 && (
               <span> Provincial tax on the premium ({formatCurrency(outputs.cmhcProvincialTax, 0)}) is due at closing.</span>
             )}
