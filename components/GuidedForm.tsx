@@ -32,19 +32,24 @@ const sel = "w-full px-3 py-2.5 rounded-lg border border-neutral-200 bg-white te
 const lbl = "block text-xs font-medium text-neutral-500 uppercase tracking-wide mb-1.5";
 
 // ── Sub-components ─────────────────────────────────────────────────────────────
-function SectionToggle({ open, onToggle, label, hint }: {
+function SectionToggle({ open, onToggle, label, hint, variant = "blue" }: {
   open: boolean; onToggle: () => void; label: string; hint?: string;
+  variant?: "blue" | "teal";
 }) {
+  const closedStyle = variant === "teal"
+    ? { background: "#f0fdfa", color: "#0f766e", border: "1px solid #99f6e4" }
+    : { background: "var(--green-light)", color: "var(--green)", border: "1px solid var(--green-border)" };
+  const hintColor = variant === "teal" ? "#0d9488" : "var(--green-mid)";
   return (
     <button type="button" onClick={onToggle}
       className="w-full flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-colors"
       style={open
         ? { background: "#f5f5f5", color: "var(--ink-mid)", border: "1px solid #e0e0e0" }
-        : { background: "var(--green-light)", color: "var(--green)", border: "1px solid var(--green-border)" }}>
+        : closedStyle}>
       <div className="text-left">
         <span className="font-semibold">{open ? label : `+ ${label}`}</span>
         {!open && hint && (
-          <p className="text-xs font-normal mt-0.5" style={{ color: "var(--green-mid)" }}>{hint}</p>
+          <p className="text-xs font-normal mt-0.5" style={{ color: hintColor }}>{hint}</p>
         )}
       </div>
       <svg width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true"
@@ -178,6 +183,27 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
       ══════════════════════════════════════════════════════════════ */}
       {mode === "purchase" && (
         <>
+          {/* ── PROVINCE FIRST ─────────────────────────────── */}
+          <SelectField id="province" label="Where are you buying?"
+            tip="Province determines land transfer tax, CMHC provincial tax, and first-time buyer rebates."
+            value={inputs.province} onChange={(v) => setField("province", v)}>
+            <option value="">Select your province</option>
+            {PROVINCES.map((p) => <option key={p.code} value={p.code}>{p.name}</option>)}
+          </SelectField>
+          {inputs.province && (
+            <div className="rounded-lg px-3 py-2 text-xs -mt-2"
+              style={{ background: "var(--green-light)", borderColor: "var(--green-border)" }}>
+              {(outputs.ltt.provincial > 0 || outputs.ltt.municipal > 0)
+                ? <span style={{ color: "var(--green-mid)" }}>
+                    Land transfer tax applies in {inputs.province === "ON" ? "Ontario" : inputs.province === "BC" ? "British Columbia" : inputs.province}. We will calculate the exact amount once you enter a home price.
+                  </span>
+                : <span style={{ color: "var(--green-mid)" }}>
+                    No provincial land transfer tax in this province.
+                  </span>
+              }
+            </div>
+          )}
+
           {/* ── ESSENTIAL ──────────────────────────────────── */}
           <CurrencyInput id="home-price" label="Home price"
             value={inputs.homePrice} onChange={setHomePrice} placeholder="e.g. 750,000" />
@@ -247,14 +273,6 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
             value={inputs.interestRate} onChange={(v) => setField("interestRate", v)}
             showSlider sliderNote={inputs.interestRate > 0 ? `Stress test qualifying rate: ${stressRate.toFixed(2)}%` : undefined} />
           {errors.interestRate && <p className="text-xs text-red-600 -mt-2">{errors.interestRate}</p>}
-
-          {/* Province — essential for LTT and CMHC provincial tax */}
-          <SelectField id="province" label="Province"
-            tip="Used to calculate land transfer tax, CMHC provincial tax, and first-time buyer rebates."
-            value={inputs.province} onChange={(v) => setField("province", v)}>
-            <option value="">Select province</option>
-            {PROVINCES.map((p) => <option key={p.code} value={p.code}>{p.name}</option>)}
-          </SelectField>
 
           {/* ── REFINE YOUR ESTIMATE ───────────────────────── */}
           <SectionToggle
@@ -362,7 +380,8 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
             open={showRepay}
             onToggle={() => setShowRepay(o => !o)}
             label="Repay faster"
-            hint="See how extra payments reduce your total interest" />
+            hint="See how extra payments reduce your total interest"
+            variant="teal" />
 
           {showRepay && (
             <div className="space-y-4 pt-1 pl-3 border-l-2" style={{ borderColor: "#e5e5e5" }}>
@@ -443,6 +462,14 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
       ══════════════════════════════════════════════════════════════ */}
       {mode === "renewal" && (
         <>
+          {/* ── PROVINCE FIRST ─────────────────────────────── */}
+          <SelectField id="province-renewal" label="Where is your property?"
+            tip="Province affects applicable rules and any provincial calculations."
+            value={inputs.province} onChange={(v) => setField("province", v)}>
+            <option value="">Select your province</option>
+            {PROVINCES.map((p) => <option key={p.code} value={p.code}>{p.name}</option>)}
+          </SelectField>
+
           {/* ── ESSENTIAL ──────────────────────────────────── */}
           <CurrencyInput id="balance" label="Remaining balance"
             tip="Your outstanding mortgage balance at renewal."
@@ -510,7 +537,8 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
             open={showRepay}
             onToggle={() => setShowRepay(o => !o)}
             label="Repay faster"
-            hint="See how lump sums reduce your total interest at renewal" />
+            hint="See how lump sums reduce your total interest at renewal"
+            variant="teal" />
 
           {showRepay && (
             <div className="space-y-3 pt-1 pl-3 border-l-2" style={{ borderColor: "#e5e5e5" }}>
@@ -561,6 +589,14 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
       ══════════════════════════════════════════════════════════════ */}
       {mode === "refinance" && (
         <>
+          {/* ── PROVINCE FIRST ─────────────────────────────── */}
+          <SelectField id="province-refi" label="Where is your property?"
+            tip="Province affects applicable rules and calculations."
+            value={inputs.province} onChange={(v) => setField("province", v)}>
+            <option value="">Select your province</option>
+            {PROVINCES.map((p) => <option key={p.code} value={p.code}>{p.name}</option>)}
+          </SelectField>
+
           {/* ── ESSENTIAL ──────────────────────────────────── */}
           <CurrencyInput id="home-value" label="Home value"
             tip="Current market value. Refinances are capped at 80% loan-to-value."
@@ -641,7 +677,8 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
             open={showRepay}
             onToggle={() => setShowRepay(o => !o)}
             label="Repay faster"
-            hint="Model extra payments against your refinanced mortgage" />
+            hint="Model extra payments against your refinanced mortgage"
+            variant="teal" />
 
           {showRepay && (
             <div className="space-y-3 pt-1 pl-3 border-l-2" style={{ borderColor: "#e5e5e5" }}>
