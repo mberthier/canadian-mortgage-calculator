@@ -125,19 +125,19 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
           </p>
         )}
 
-        {/* CMHC pills */}
+        {/* CMHC — single pill showing premium added to mortgage */}
         {hasCMHC && (
           <div className="flex flex-wrap gap-2 mt-3">
             <div className="rounded-lg px-3 py-1.5 text-xs" style={{ background: "rgba(255,255,255,0.12)" }}>
-              <span style={{ color: "rgba(255,255,255,0.7)" }}>Without CMHC: </span>
-              <span className="font-semibold text-white">{formatCurrency(outputs.paymentWithoutCMHC, 2)}</span>
+              <span style={{ color: "rgba(255,255,255,0.7)" }}>CMHC premium: </span>
+              <span className="font-semibold text-white">{formatCurrency(outputs.cmhcPremium, 0)} added to mortgage</span>
             </div>
-            <div className="rounded-lg px-3 py-1.5 text-xs" style={{ background: "rgba(255,255,255,0.12)" }}>
-              <span style={{ color: "rgba(255,255,255,0.7)" }}>CMHC adds: </span>
-              <span className="font-semibold text-white">
-                {formatCurrency(outputs.periodicPayment - outputs.paymentWithoutCMHC, 2)}/payment
-              </span>
-            </div>
+            {outputs.cmhcProvincialTax > 0 && (
+              <div className="rounded-lg px-3 py-1.5 text-xs" style={{ background: "rgba(255,255,255,0.12)" }}>
+                <span style={{ color: "rgba(255,255,255,0.7)" }}>Provincial tax due at closing: </span>
+                <span className="font-semibold text-white">{formatCurrency(outputs.cmhcProvincialTax, 0)}</span>
+              </div>
+            )}
           </div>
         )}
 
@@ -259,25 +259,7 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
         </div>
       )}
 
-      {/* CMHC notice */}
-      {hasCMHC && mode === "purchase" && (
-        <div className="px-5 py-3 border-t border-neutral-100 flex items-start gap-2"
-          style={{ background: "#fffbeb" }}>
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0 mt-0.5" aria-hidden="true">
-            <circle cx="7" cy="7" r="6" stroke="#d97706" strokeWidth="1.5"/>
-            <path d="M7 4v4M7 9.5v.5" stroke="#d97706" strokeWidth="1.5" strokeLinecap="round"/>
-          </svg>
-          <p className="text-xs leading-relaxed" style={{ color: "#92400e" }}>
-            <span className="font-semibold">CMHC mortgage insurance applies.</span>{" "}
-            Your {inputs.downPaymentPercent.toFixed(1)}% down payment triggers a{" "}
-            {formatCurrency(outputs.cmhcPremium, 0)} premium added to your mortgage. Not due at closing,
-            but you pay interest on it for the full amortization period.
-            {outputs.cmhcProvincialTax > 0 && (
-              <span> Provincial tax on the premium ({formatCurrency(outputs.cmhcProvincialTax, 0)}) is due at closing.</span>
-            )}
-          </p>
-        </div>
-      )}
+
     </div>
   );
 }

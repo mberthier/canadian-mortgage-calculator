@@ -89,22 +89,38 @@ export default function AffordabilityCalculator({
 
   return (
     <div ref={sectionRef} className="rounded-2xl bg-white border border-neutral-100 overflow-hidden">
-      <button onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between px-5 py-4 hover:bg-neutral-50 transition-colors"
-        aria-expanded={open}>
-        <div className="flex items-start gap-3">
-          <div>
-            <p className="text-sm font-semibold text-neutral-800 text-left">Can you actually afford this?</p>
-
-          </div>
+      {/* Header — always visible */}
+      <div className="px-5 pt-4 pb-3 border-b border-neutral-100 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 2a10 10 0 100 20A10 10 0 0012 2zm0 6v6l4 2"
+              stroke="var(--brand-teal)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--brand-teal)" }}>
+            Can you actually afford this?
+          </p>
         </div>
-        <span className="text-neutral-400 text-lg shrink-0 ml-3">{open ? "−" : "+"}</span>
-      </button>
+        <button onClick={() => setOpen(o => !o)}
+          className="text-xs font-medium px-3 py-1.5 rounded-lg transition-colors"
+          style={open
+            ? { background: "#f0f0f0", color: "var(--ink-mid)" }
+            : { background: "var(--green-light)", color: "var(--green)", border: "1px solid var(--green-border)" }}
+          aria-expanded={open}>
+          {open ? "Close" : "Check qualification →"}
+        </button>
+      </div>
+      {!open && (
+        <div className="px-5 py-3">
+          <p className="text-sm text-neutral-600">
+            Enter your income to calculate your GDS and TDS ratios — the two numbers lenders use to decide if you qualify.
+          </p>
+        </div>
+      )}
 
       {open && (
         <div className="border-t border-neutral-100">
           {/* Prompt when no income yet */}
-          {annualIncome === 0 && (
+          {annualIncome === 0 && coIncome === 0 && (
             <div className="px-5 py-5 text-center border-b border-neutral-100">
               <p className="text-sm font-medium text-neutral-700 mb-1">Enter your income below to see your ratios</p>
               <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
@@ -114,7 +130,7 @@ export default function AffordabilityCalculator({
           )}
 
           {/* GDS/TDS gauges + verdict — only when income entered */}
-          {annualIncome > 0 && (
+          {(annualIncome > 0 || coIncome > 0) && (
             <>
               <div className="px-5 py-4 grid grid-cols-2 gap-3">
                 {[

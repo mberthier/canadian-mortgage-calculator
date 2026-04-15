@@ -42,14 +42,35 @@ export default function StressTest({ outputs, inputs }: Props) {
 
   return (
     <div ref={sectionRef} className="rounded-2xl bg-white border border-neutral-100 overflow-hidden">
-      <button onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between px-5 py-4 hover:bg-neutral-50 transition-colors"
-        aria-expanded={open}>
-        <p className="text-sm font-semibold text-neutral-800">What if rates go up at renewal?</p>
-        <span className="text-neutral-400 text-lg">{open ? "−" : "+"}</span>
-      </button>
+      {/* Header — always visible */}
+      <div className="px-5 pt-4 pb-3 border-b border-neutral-100 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"
+              stroke="var(--brand-teal)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--brand-teal)" }}>
+            What if rates go up at renewal?
+          </p>
+        </div>
+        <button onClick={() => setOpen(o => !o)}
+          className="text-xs font-medium px-3 py-1.5 rounded-lg transition-colors"
+          style={open
+            ? { background: "#f0f0f0", color: "var(--ink-mid)" }
+            : { background: "var(--green-light)", color: "var(--green)", border: "1px solid var(--green-border)" }}
+          aria-expanded={open}>
+          {open ? "Close" : "See rate scenarios →"}
+        </button>
+      </div>
+      {!open && (
+        <div className="px-5 py-3">
+          <p className="text-sm text-neutral-600">
+            See your payment at +0.5%, +1%, and +2% — so you know what you can handle before you commit to a rate.
+          </p>
+        </div>
+      )}
       {open && (
-      <div className="px-5 pb-5 border-t border-neutral-100 pt-4">
+      <div className="px-5 pb-5 pt-4">
       <p className="text-sm text-neutral-500 mb-4">
         If your rate changes when your {inputs.termYears}-year term ends, your {FREQUENCY_LABELS[inputs.paymentFrequency].toLowerCase()} payment on the {formatCurrency(outputs.termEndBalance, 0, true)} remaining balance would be:
       </p>
