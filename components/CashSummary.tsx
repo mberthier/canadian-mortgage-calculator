@@ -69,7 +69,7 @@ export default function CashSummary({ inputs, outputs }: Props) {
 
         {!inputs.closingCosts && (
           <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
-            Closing costs are estimated at $1,500. Add your actual figure in Advanced options.
+            Closing costs are estimated at $1,500. Add your actual figure in Refine your estimate.
           </p>
         )}
 

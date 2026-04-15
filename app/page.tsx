@@ -340,30 +340,11 @@ function BreakdownSection({ outputs, inputs, isPurchase, isRefinance }: {
             />
           </div>
 
-          {/* Stress test */}
-          <div data-section="stress-test">
-            <StressTest outputs={outputs} inputs={inputs} />
-          </div>
-
           {/* Scenario comparison */}
           <div data-section="scenario-comparison">
             <MortgageComparison inputs={inputs} loanAmount={outputs.loanAmount} />
           </div>
 
-          {/* Affordability — purchase only */}
-          {isPurchase && (
-            <div data-section="affordability">
-              <AffordabilityCalculator
-                currentHomePrice={inputs.homePrice}
-                currentRate={inputs.interestRate}
-                currentAmortization={inputs.amortizationYears}
-                currentPropertyTax={inputs.propertyTax}
-                currentHeating={inputs.heatingCost}
-                currentCondoFees={inputs.condoFees}
-                currentDownPayment={inputs.downPayment}
-              />
-            </div>
-          )}
         </div>
       )}
 
@@ -541,13 +522,31 @@ export default function Home() {
               {/* Plain English summary */}
               <ResultsNarrative outputs={outputs} inputs={inputs} />
 
-              {/* Cash at closing — purchase only, above insights */}
+              {/* Cash at closing — purchase only */}
               <CashSummary inputs={inputs} outputs={outputs} />
 
-              {/* Insights, dynamic, contextual */}
+              {/* Can you afford this? — purchase only, before insights */}
+              {isPurchase && (
+                <AffordabilityCalculator
+                  currentHomePrice={inputs.homePrice}
+                  currentRate={inputs.interestRate}
+                  currentAmortization={inputs.amortizationYears}
+                  currentPropertyTax={inputs.propertyTax}
+                  currentHeating={inputs.heatingCost}
+                  currentCondoFees={inputs.condoFees}
+                  currentDownPayment={inputs.downPayment}
+                />
+              )}
+
+              {/* Insights */}
               <InsightsPanel inputs={inputs} outputs={outputs} />
 
-              {/* Charts, tools, explore — collapsed breakdown section */}
+              {/* Stress test — what if rates go up? */}
+              {outputs.amortizationSchedule.length > 0 && (
+                <StressTest outputs={outputs} inputs={inputs} />
+              )}
+
+              {/* Charts + tools — collapsed breakdown */}
               {outputs.amortizationSchedule.length > 0 && (
                 <BreakdownSection
                   outputs={outputs}

@@ -35,7 +35,7 @@ export default function AffordabilityCalculator({
     return () => el.removeEventListener("open-section", handler);
   }, []);
 
-  const [annualIncome, setIncome] = useState(CANADIAN_MEDIAN_INCOME);
+  const [annualIncome, setIncome] = useState(0);
   const [coIncome, setCoIncome]   = useState(0);
   const [monthlyDebts, setDebts]  = useState(0);
   const [downPayment, setDown]    = useState(currentDownPayment ?? 0);
@@ -103,60 +103,88 @@ export default function AffordabilityCalculator({
 
       {open && (
         <div className="border-t border-neutral-100">
-          {/* Inline summary, always visible at top */}
-          <div className="px-5 py-4 grid grid-cols-2 gap-3">
-            {[
-              { key: "GDS", pct: gds, limit: GDS_LIMIT, color: gdsColor,
-                tip: "GDS measures housing costs as % of income. Includes mortgage P&I, property tax, heating, 50% condo fees. Limit: 39%." },
-              { key: "TDS", pct: tds, limit: TDS_LIMIT, color: tdsColor,
-                tip: "TDS adds all other debts to GDS, car loans, student loans, credit card minimums. Limit: 44%." },
-            ].map(({ key, pct, limit, color, tip }) => (
-              <div key={key} className="rounded-xl bg-white border border-neutral-100 p-3">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs font-semibold text-neutral-600 flex items-center">
-                    {key}<Tooltip content={tip} />
-                  </span>
-                  <span className="text-xs text-neutral-400">limit {limit}%</span>
-                </div>
-                <p className="text-2xl font-semibold font-display leading-none mb-2" style={{ color }}>
-                  {pct.toFixed(1)}%
-                </p>
-                <GaugeBar pct={pct} limit={limit} />
-              </div>
-            ))}
-          </div>
+          {/* Prompt when no income yet */}
+          {annualIncome === 0 && (
+            <div className="px-5 py-5 text-center border-b border-neutral-100">
+              <p className="text-sm font-medium text-neutral-700 mb-1">Enter your income below to see your ratios</p>
+              <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
+                GDS and TDS tell you whether you qualify at this mortgage size.
+              </p>
+            </div>
+          )}
 
-          {/* Verdict */}
-          <div className="px-5 py-3 border-t border-neutral-100"
-            style={qualifies
-              ? { background: "var(--green-light)" }
-              : { background: "#fef2f2" }}>
-            <p className="text-sm font-semibold" style={{ color: qualifies ? "var(--green)" : "#ef4444" }}>
-              {qualifies
-                ? `✓ At ${formatCurrency(annualIncome + coIncome, 0)}/yr income, you likely qualify`
-                : `✗ At ${formatCurrency(annualIncome + coIncome, 0)}/yr income, this may exceed qualification limits`}
-            </p>
-            <p className="text-xs mt-0.5" style={{ color: qualifies ? "var(--green-mid)" : "#991b1b" }}>
-              Qualifying at stress test rate {stressRate.toFixed(2)}%
-            </p>
-          </div>
+          {/* GDS/TDS gauges + verdict — only when income entered */}
+          {annualIncome > 0 && (
+            <>
+              <div className="px-5 py-4 grid grid-cols-2 gap-3">
+                {[
+                  { key: "GDS", pct: gds, limit: GDS_LIMIT, color: gdsColor,
+                    tip: "Gross Debt Service ratio. Measures your housing costs as a percentage of gross income. Includes: mortgage principal and interest, property tax, heating costs, and 50% of condo fees. Lender limit: 39%." },
+                  { key: "TDS", pct: tds, limit: TDS_LIMIT, color: tdsColor,
+                    tip: "Total Debt Service ratio. Takes GDS and adds all your other monthly debt payments. Includes: car loans, student loans, credit card minimum payments, lines of credit. Lender limit: 44%." },
+                ].map(({ key, pct, limit, color, tip }) => (
+                  <div key={key} className="rounded-xl bg-white border border-neutral-100 p-3">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs font-semibold text-neutral-600 flex items-center">
+                        {key}<Tooltip content={tip} />
+                      </span>
+                      <span className="text-xs text-neutral-400">limit {limit}%</span>
+                    </div>
+                    <p className="text-2xl font-semibold font-display leading-none mb-2" style={{ color }}>
+                      {pct.toFixed(1)}%
+                    </p>
+                    <GaugeBar pct={pct} limit={limit} />
+                  </div>
+                ))}
+              </div>
+              <div className="px-5 py-3 border-t border-neutral-100"
+                style={qualifies ? { background: "var(--green-light)" } : { background: "#fef2f2" }}>
+                <p className="text-sm font-semibold" style={{ color: qualifies ? "var(--green)" : "#ef4444" }}>
+                  {qualifies
+                    ? `✓ At ${formatCurrency(annualIncome + coIncome, 0)}/yr gross income, you likely qualify`
+                    : `✗ At ${formatCurrency(annualIncome + coIncome, 0)}/yr gross income, this may exceed qualification limits`}
+                </p>
+                <p className="text-xs mt-0.5" style={{ color: qualifies ? "var(--green-mid)" : "#991b1b" }}>
+                  Qualifying at stress test rate {stressRate.toFixed(2)}%
+                </p>
+              </div>
+            </>
+          )}
 
           {/* Inputs */}
           <div className="px-5 py-4 space-y-4 border-t border-neutral-100">
             <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
-              Enter your gross (pre-tax) income, this is what lenders use. Pre-filled with $100K as a round starting point.
+              Enter your gross (pre-tax) annual income — lenders use this to calculate how much you qualify for.
             </p>
             <div className="grid grid-cols-2 gap-3">
-              {[
-                { label: "Gross annual income",  value: annualIncome, set: setIncome },
-                { label: "Co-applicant income",  value: coIncome,     set: setCoIncome },
-                { label: "Monthly debts",         value: monthlyDebts, set: setDebts },
-              ].map(({ label, value, set }) => (
+              {([
+                {
+                  label: "Gross annual income",
+                  value: annualIncome, set: setIncome,
+                  tip: "Your total pre-tax income from all sources — employment, self-employment, rental income. This is what lenders use, not your take-home pay.",
+                  placeholder: "e.g. 95,000",
+                },
+                {
+                  label: "Co-applicant income",
+                  value: coIncome, set: setCoIncome,
+                  tip: "If applying with a partner or co-signer, add their gross annual income here. Leave at $0 if applying alone.",
+                  placeholder: "e.g. 75,000",
+                },
+                {
+                  label: "Monthly debts",
+                  value: monthlyDebts, set: setDebts,
+                  tip: "Monthly minimum payments on all existing debts: car loans, student loans, credit card minimums, lines of credit, child support. Do not include the mortgage you are calculating — that is already included in TDS.",
+                  placeholder: "e.g. 500",
+                },
+              ] as const).map(({ label, value, set, tip, placeholder }) => (
                 <div key={label}>
-                  <label className="block text-xs font-medium text-neutral-500 mb-1.5 uppercase tracking-wide">{label}</label>
+                  <label className="flex items-center text-xs font-medium text-neutral-500 mb-1.5 uppercase tracking-wide gap-0.5">
+                    {label}<Tooltip content={tip} />
+                  </label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 text-sm">$</span>
                     <input type="text" inputMode="numeric"
+                      placeholder={placeholder}
                       value={value > 0 ? value.toLocaleString("en-CA") : ""}
                       onChange={(e) => set(parseInt(e.target.value.replace(/[^0-9]/g, "")) || 0)}
                       className="w-full pl-7 pr-3 py-2 rounded-lg border border-neutral-200 bg-white text-sm text-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors" />
