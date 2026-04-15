@@ -32,14 +32,16 @@ const sel = "w-full px-3 py-2.5 rounded-lg border border-neutral-200 bg-white te
 const lbl = "block text-xs font-medium text-neutral-500 uppercase tracking-wide mb-1.5";
 
 // ── Sub-components ─────────────────────────────────────────────────────────────
-function SectionToggle({ open, onToggle, label, hint, variant = "blue" }: {
+function SectionToggle({ open, onToggle, label, hint, variant = "neutral" }: {
   open: boolean; onToggle: () => void; label: string; hint?: string;
-  variant?: "blue" | "teal";
+  variant?: "neutral" | "action";
 }) {
-  const closedStyle = variant === "teal"
-    ? { background: "#f0fdfa", color: "#0f766e", border: "1px solid #99f6e4" }
-    : { background: "var(--green-light)", color: "var(--green)", border: "1px solid var(--green-border)" };
-  const hintColor = variant === "teal" ? "#0d9488" : "var(--green-mid)";
+  // neutral = Refine your estimate (quiet, optional detail)
+  // action  = Repay faster (Crystal Blue, outcome-oriented)
+  const closedStyle = variant === "action"
+    ? { background: "var(--green-light)", color: "var(--green)", border: "1px solid var(--green-border)" }
+    : { background: "#f9f8f7", color: "var(--ink-mid)", border: "1px solid #e8e8e8" };
+  const hintColor = variant === "action" ? "var(--green-mid)" : "var(--ink-faint)";
   return (
     <button type="button" onClick={onToggle}
       className="w-full flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-colors"
@@ -384,7 +386,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
             onToggle={() => setShowRepay(o => !o)}
             label="Repay faster"
             hint="See how extra payments reduce your total interest"
-            variant="teal" />
+            variant="action" />
 
           {showRepay && (
             <div className="space-y-4 pt-1 pl-3 border-l-2" style={{ borderColor: "#e5e5e5" }}>
@@ -541,7 +543,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
             onToggle={() => setShowRepay(o => !o)}
             label="Repay faster"
             hint="See how lump sums reduce your total interest at renewal"
-            variant="teal" />
+            variant="action" />
 
           {showRepay && (
             <div className="space-y-3 pt-1 pl-3 border-l-2" style={{ borderColor: "#e5e5e5" }}>
@@ -681,7 +683,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
             onToggle={() => setShowRepay(o => !o)}
             label="Repay faster"
             hint="Model extra payments against your refinanced mortgage"
-            variant="teal" />
+            variant="action" />
 
           {showRepay && (
             <div className="space-y-3 pt-1 pl-3 border-l-2" style={{ borderColor: "#e5e5e5" }}>

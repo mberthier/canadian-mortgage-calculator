@@ -434,7 +434,7 @@ function RateGateCTA({ inputs, outputs }: { inputs: MortgageInputs; outputs: Mor
   if (step === "done") {
     return (
       <div className="px-5 py-4 flex items-start gap-3"
-        style={{ background: "linear-gradient(135deg, #f0fdf4 0%, #eff6ff 100%)", borderTop: "1px solid #e5e7eb" }}>
+        style={{ background: "linear-gradient(135deg, #f0fdf4 0%, #eff6ff 100%)", borderBottom: "1px solid #e5e7eb" }}>
         <span className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
           style={{ background: "var(--green)" }}>
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
@@ -452,7 +452,7 @@ function RateGateCTA({ inputs, outputs }: { inputs: MortgageInputs; outputs: Mor
   }
 
   return (
-    <div style={{ borderTop: "2px solid var(--brand-teal)", background: "linear-gradient(135deg, #f0fdfa 0%, #eff6ff 100%)" }}>
+    <div style={{ borderBottom: "1px solid #e5e7eb", background: "linear-gradient(135deg, #f0fdf4 0%, #eff6ff 100%)" }}>
       {step === "teaser" && (
         <div className="px-5 py-4">
           <div className="flex items-start gap-3">
@@ -498,7 +498,7 @@ function RateGateCTA({ inputs, outputs }: { inputs: MortgageInputs; outputs: Mor
           <div className="grid grid-cols-2 gap-2 mb-2">
             <input
               type="text"
-              placeholder="First name"
+              placeholder="Full name"
               value={name}
               onChange={e => setName(e.target.value)}
               className="px-3 py-2 rounded-lg border border-neutral-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-400/20 focus:border-teal-400 transition-colors"
@@ -547,7 +547,7 @@ const BADGES: Record<InsightType, { bg: string; border: string; text: string; la
     ),
   },
   opportunity: {
-    bg: "#eff6ff", border: "#bfdbfe", text: "#1d4ed8", label: "Opportunity",
+    bg: "#eff6ff", border: "#bfdbfe", text: "#1d4ed8", label: "Do this",
     icon: (
       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <path d="M9 18h6M10 22h4M12 2a7 7 0 017 7c0 2.4-1.2 4.5-3 5.7V17H8v-2.3C6.2 13.5 5 11.4 5 9a7 7 0 017-7z" stroke="#1d4ed8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -555,7 +555,7 @@ const BADGES: Record<InsightType, { bg: string; border: string; text: string; la
     ),
   },
   warning: {
-    bg: "#fef2f2", border: "#fecaca", text: "#b91c1c", label: "Watch out",
+    bg: "#fef2f2", border: "#fecaca", text: "#b91c1c", label: "Alert",
     icon: (
       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <path d="M10.3 3.6L2 20h20L13.7 3.6a2 2 0 00-3.4 0z" stroke="#b91c1c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -608,21 +608,22 @@ export default function InsightsPanel({ inputs, outputs }: Props) {
         </p>
       </div>
 
+      {/* Rate gap CTA — first position when applicable */}
+      <RateGateCTA inputs={inputs} outputs={outputs} />
+
       {/* Insight rows */}
       <div className="divide-y divide-neutral-50">
         {visible.map((ins, i) => {
           const b = BADGES[ins.type];
-          const isPrimary = i === 0;
           return (
-            <div key={i} className="px-5 py-4 flex items-start gap-3"
-              style={isPrimary ? { background: "#fafeff" } : {}}>
+            <div key={i} className="px-5 py-4 flex items-start gap-3">
               <span className="inline-flex items-center justify-center gap-1 shrink-0 mt-0.5 px-2 py-0.5 rounded-full text-xs font-semibold border"
-                style={{ background: b.bg, borderColor: b.border, color: b.text, minWidth: "84px" }}>
+                style={{ background: b.bg, borderColor: b.border, color: b.text, minWidth: "76px" }}>
                 {b.icon}
                 {b.label}
               </span>
               <div>
-                <p className={`leading-snug text-neutral-900 ${isPrimary ? "text-sm font-bold" : "text-sm font-semibold"}`}>
+                <p className="text-sm font-semibold leading-snug text-neutral-900">
                   {ins.headline}
                 </p>
                 <p className="text-xs mt-1 leading-relaxed" style={{ color: "var(--ink-muted)" }}>{ins.detail}</p>
@@ -673,8 +674,6 @@ export default function InsightsPanel({ inputs, outputs }: Props) {
         </button>
       )}
 
-      {/* Rate gap CTA — always at bottom when visible */}
-      <RateGateCTA inputs={inputs} outputs={outputs} />
     </div>
   );
 }
