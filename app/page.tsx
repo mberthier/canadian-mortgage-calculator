@@ -415,14 +415,14 @@ function EmptyState({ mode, hasPrice, hasRate, hasProvince }: {
 
 export default function Home() {
   const {
-    inputs, outputs, errors, shareURL,
+    inputs, outputs, errors, shareURL, mode,
     setMode, setHomePrice, setDownPayment, setDownPaymentPercent,
     setLumpSumForYear, setField,
   } = useMortgageCalculator();
 
-  const isPurchase  = inputs.mortgageMode === "purchase";
-  const isRenewal   = inputs.mortgageMode === "renewal";
-  const isRefinance = inputs.mortgageMode === "refinance";
+  const isPurchase  = mode === "purchase";
+  const isRenewal   = mode === "renewal";
+  const isRefinance = mode === "refinance";
 
   const hasResults = (() => {
     if (isPurchase)  return inputs.homePrice > 0 && inputs.downPaymentPercent > 0 && inputs.interestRate > 0;
@@ -450,7 +450,7 @@ export default function Home() {
           </div>
 
           {/* ── Mode selector, above everything ── */}
-          <ModeSelector mode={inputs.mortgageMode} onChange={setMode} />
+          <ModeSelector mode={mode} onChange={setMode} />
 
           {/* ── Two-column layout ── */}
           <div className="grid grid-cols-1 lg:grid-cols-[360px,1fr] gap-8 items-start">

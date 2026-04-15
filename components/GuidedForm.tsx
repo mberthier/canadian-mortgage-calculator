@@ -283,7 +283,10 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
 
           {showRefine && (
             <div className="space-y-4 pt-1">
-              {/* Term + amortization */}
+              {/* Term + amortization — defaults are 5yr/25yr (most common in Canada) */}
+              <p className="text-xs -mb-1" style={{ color: "var(--ink-faint)" }}>
+                Defaults to 5-year term and 25-year amortization. Change if your situation differs.
+              </p>
               <div className="grid grid-cols-2 gap-3">
                 <SelectField id="term" label="Term"
                   tip="Length of your mortgage contract before renewal. Most Canadians choose 5-year fixed."
@@ -501,6 +504,9 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
                 {AMORTIZATION_OPTIONS.map((y) => <option key={y} value={y}>{y} years</option>)}
               </SelectField>
 
+              <p className="text-xs -mb-1" style={{ color: "var(--ink-faint)" }}>
+                Defaults to 5-year term and 25-year amortization. Change if renewing on different terms.
+              </p>
               <div className="grid grid-cols-2 gap-3">
                 <SelectField id="new-term" label="New term"
                   tip="The length of the new contract you are renewing into."
@@ -646,6 +652,9 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
                 </div>
               )}
 
+              <p className="text-xs -mb-1" style={{ color: "var(--ink-faint)" }}>
+                Defaults to 5-year term and 25-year amortization. Adjust if refinancing on different terms.
+              </p>
               <div className="grid grid-cols-2 gap-3">
                 <SelectField id="new-term-refi" label="New term"
                   value={inputs.termYears} onChange={(v) => setField("termYears", Number(v))}>
