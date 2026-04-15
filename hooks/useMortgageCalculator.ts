@@ -100,7 +100,7 @@ function initInputs(): MortgageInputs {
     lumpSumsByYear:      DEFAULTS.lumpSumsByYear,
     includeCMHC:         downPaymentPercent < 20,
     closingCosts:        DEFAULTS.closingCosts,
-    province:            overrides.province            ?? DEFAULTS.province,
+    province:            overrides.province            ?? DEFAULTS.province, // empty = not selected
     city:                DEFAULTS.city,
     isFirstTimeBuyer:    DEFAULTS.isFirstTimeBuyer,
     isNewBuild:          DEFAULTS.isNewBuild,

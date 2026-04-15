@@ -110,6 +110,81 @@ function ResultsNarrative({
   return null;
 }
 
+// ── Empty state — shown before user enters essential fields ──────────────────
+function EmptyState({ mode, hasPrice, hasRate }: {
+  mode: string; hasPrice: boolean; hasRate: boolean;
+}) {
+  const steps = mode === "purchase"
+    ? [
+        { label: "Home price",    done: hasPrice },
+        { label: "Down payment",  done: hasPrice },
+        { label: "Interest rate", done: hasRate  },
+      ]
+    : mode === "renewal"
+      ? [
+          { label: "Remaining balance", done: hasPrice },
+          { label: "New rate",          done: hasRate  },
+        ]
+      : [
+          { label: "Home value",     done: hasPrice },
+          { label: "Balance owing",  done: hasPrice },
+          { label: "New rate",       done: hasRate  },
+        ];
+
+  const doneCount = steps.filter(s => s.done).length;
+
+  return (
+    <div className="rounded-2xl bg-white border border-neutral-100 flex flex-col items-center justify-center text-center px-8 py-14"
+      style={{ minHeight: "320px" }}>
+      {/* Icon */}
+      <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5"
+        style={{ background: "var(--green-light)" }}>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+          stroke="var(--green)" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"
+          aria-hidden="true">
+          <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </div>
+
+      <p className="text-base font-semibold text-neutral-900 mb-1">
+        Your results will appear here
+      </p>
+      <p className="text-sm mb-6" style={{ color: "var(--ink-muted)" }}>
+        Fill in a few numbers on the left to get started.
+      </p>
+
+      {/* Progress steps */}
+      <div className="flex flex-col gap-2 w-full max-w-[240px] text-left">
+        {steps.map((step, i) => (
+          <div key={i} className="flex items-center gap-3">
+            <span className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-xs font-semibold"
+              style={step.done
+                ? { background: "var(--green)", color: "#fff" }
+                : { background: "#f0f0f0", color: "var(--ink-faint)" }}>
+              {step.done
+                ? <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                    <path d="M2 5l2 2 4-4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                : i + 1}
+            </span>
+            <span className="text-sm"
+              style={{ color: step.done ? "var(--ink)" : "var(--ink-faint)" }}>
+              {step.label}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {doneCount > 0 && doneCount < steps.length && (
+        <p className="text-xs mt-5" style={{ color: "var(--green)" }}>
+          Almost there — {steps.length - doneCount} more field{steps.length - doneCount > 1 ? "s" : ""} to go
+        </p>
+      )}
+    </div>
+  );
+}
+
 export default function Home() {
   const {
     inputs, outputs, errors, shareURL,
@@ -117,7 +192,16 @@ export default function Home() {
     setLumpSumForYear, setField,
   } = useMortgageCalculator();
 
-  const isPurchase = inputs.mortgageMode === "purchase";
+  const isPurchase  = inputs.mortgageMode === "purchase";
+  const isRenewal   = inputs.mortgageMode === "renewal";
+  const isRefinance = inputs.mortgageMode === "refinance";
+
+  const hasResults = (() => {
+    if (isPurchase)  return inputs.homePrice > 0 && inputs.downPaymentPercent > 0 && inputs.interestRate > 0;
+    if (isRenewal)   return inputs.currentBalance > 0 && inputs.interestRate > 0;
+    if (isRefinance) return inputs.homeValue > 0 && inputs.currentBalance > 0 && inputs.interestRate > 0;
+    return false;
+  })();
   const homePrice  = isPurchase ? inputs.homePrice : inputs.homeValue;
 
   return (
@@ -170,9 +254,16 @@ export default function Home() {
               </p>
             </aside>
 
-            {/* Right, results, insights, charts */}
+            {/* Right — results */}
             <main className="space-y-5 pb-24 lg:pb-0">
-              {/* Payment hero */}
+              {!hasResults ? (
+                <EmptyState
+                  mode={inputs.mortgageMode}
+                  hasPrice={isPurchase ? inputs.homePrice > 0 : inputs.homeValue > 0 || inputs.currentBalance > 0}
+                  hasRate={inputs.interestRate > 0}
+                />
+              ) : (
+              <>
               <SummaryCards outputs={outputs} inputs={inputs} shareURL={shareURL} />
 
               {/* Plain English summary */}
@@ -315,6 +406,8 @@ export default function Home() {
                   {/* Explore more, very bottom */}
                   <FeatureDiscovery />
                 </>
+              )}
+              </>
               )}
             </main>
           </div>

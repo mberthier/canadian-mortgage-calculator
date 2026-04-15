@@ -5,57 +5,53 @@ import { MortgageInputs, ValidationErrors, PaymentFrequency } from "@/lib/types"
 import { AMORTIZATION_OPTIONS, TERM_OPTIONS, FREQUENCY_LABELS, PROVINCES } from "@/lib/constants";
 import { parseCurrency, formatCurrency } from "@/lib/formatters";
 import Link from "next/link";
-import { calculateMortgagePayment, calculateLandTransferTax } from "@/lib/mortgageMath";
 import Tooltip from "./Tooltip";
 
 interface Props {
-  inputs: MortgageInputs;
-  errors: ValidationErrors;
+  inputs:  MortgageInputs;
+  errors:  ValidationErrors;
   outputs: {
-    cmhcPremium: number;
-    ltv: number;
+    cmhcPremium:            number;
+    ltv:                    number;
     interestSavedByLumpSums: number;
     paymentsSavedByLumpSums: number;
-    currentPayment: number;
+    currentPayment:         number;
     ltt: { net: number; provincial: number; municipal: number; firstTimeBuyerRebate: number };
     gstHst: { net: number };
   };
-  setHomePrice: (v: number) => void;
-  setDownPayment: (v: number) => void;
-  setDownPaymentPercent: (v: number) => void;
-  setLumpSumForYear: (year: number, amount: number) => void;
+  setHomePrice:         (v: number) => void;
+  setDownPayment:       (v: number) => void;
+  setDownPaymentPercent:(v: number) => void;
+  setLumpSumForYear:    (year: number, amount: number) => void;
   setField: <K extends keyof MortgageInputs>(key: K, value: MortgageInputs[K]) => void;
 }
 
+// ── Style constants ────────────────────────────────────────────────────────────
 const inp = "w-full px-3 py-2.5 rounded-lg border border-neutral-200 bg-white text-sm text-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors";
 const sel = "w-full px-3 py-2.5 rounded-lg border border-neutral-200 bg-white text-sm text-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors appearance-none cursor-pointer";
 const lbl = "block text-xs font-medium text-neutral-500 uppercase tracking-wide mb-1.5";
 
-function Divider({ label }: { label: string }) {
-  return (
-    <div className="flex items-center gap-2 pt-3 pb-0.5">
-      <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--ink-muted)" }}>{label}</span>
-      <div className="flex-1 h-px bg-neutral-200" />
-    </div>
-  );
-}
-
-function TogglePair({ label, value, onChange, tip }: {
-  label: string; value: boolean; onChange: (v: boolean) => void; tip?: string;
+// ── Sub-components ─────────────────────────────────────────────────────────────
+function SectionToggle({ open, onToggle, label, hint }: {
+  open: boolean; onToggle: () => void; label: string; hint?: string;
 }) {
   return (
-    <div>
-      <label className={`${lbl} flex items-center`}>{label}{tip && <Tooltip content={tip} />}</label>
-      <div className="flex rounded-lg overflow-hidden border border-neutral-200 w-fit">
-        {([true, false] as const).map((opt) => (
-          <button key={String(opt)} type="button" onClick={() => onChange(opt)}
-            className="px-4 py-2 text-sm font-medium transition-colors"
-            style={value === opt ? { background: "var(--green)", color: "#fff" } : { background: "#fff", color: "var(--ink-mid)" }}>
-            {opt ? "Yes" : "No"}
-          </button>
-        ))}
+    <button type="button" onClick={onToggle}
+      className="w-full flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-colors"
+      style={open
+        ? { background: "#f5f5f5", color: "var(--ink-mid)", border: "1px solid #e0e0e0" }
+        : { background: "var(--green-light)", color: "var(--green)", border: "1px solid var(--green-border)" }}>
+      <div className="text-left">
+        <span className="font-semibold">{open ? label : `+ ${label}`}</span>
+        {!open && hint && (
+          <p className="text-xs font-normal mt-0.5" style={{ color: "var(--green-mid)" }}>{hint}</p>
+        )}
       </div>
-    </div>
+      <svg width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true"
+        style={{ transform: open ? "rotate(180deg)" : "none", transition: "transform 0.15s", flexShrink: 0 }}>
+        <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    </button>
   );
 }
 
@@ -88,7 +84,7 @@ function CurrencyInput({ id, label, tip, value, onChange, placeholder, suffix, r
         <label className={`${lbl} flex items-center`}>{label}{tip && <Tooltip content={tip} />}</label>
         <div className="relative">
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 text-sm">$</span>
-          <div className={`${inp} pl-7 bg-neutral-50 text-neutral-500`}>{value > 0 ? value.toLocaleString("en-CA") : " - "}</div>
+          <div className={`${inp} pl-7 bg-neutral-50 text-neutral-500`}>{value > 0 ? value.toLocaleString("en-CA") : "—"}</div>
         </div>
       </div>
     );
@@ -129,12 +125,12 @@ function RateInput({ id, label, tip, value, onChange, showSlider, sliderNote }: 
           onChange={(e) => setRaw(e.target.value)}
           onFocus={() => { setFoc(true); setRaw(value > 0 ? String(value) : ""); }}
           onBlur={() => { setFoc(false); const v = parseFloat(raw); if (!isNaN(v) && v > 0) onChange(v); }}
-          placeholder="0.00" className={`${inp} pr-8`} />
+          placeholder="e.g. 4.25" className={`${inp} pr-8`} />
         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 text-sm">%</span>
       </div>
-      {showSlider && (
+      {showSlider && value > 0 && (
         <>
-          <input type="range" min="0.5" max="10" step="0.05" value={Math.min(value || 0.5, 10)}
+          <input type="range" min="0.5" max="10" step="0.05" value={Math.min(value, 10)}
             onChange={(e) => onChange(parseFloat(e.target.value))} className="w-full mt-2" />
           {sliderNote && <p className="text-xs mt-0.5 text-center" style={{ color: "var(--ink-faint)" }}>{sliderNote}</p>}
         </>
@@ -143,54 +139,49 @@ function RateInput({ id, label, tip, value, onChange, showSlider, sliderNote }: 
   );
 }
 
-function MoreToggle({ open, onToggle, label = "More options" }: { open: boolean; onToggle: () => void; label?: string }) {
+function TogglePair({ label, value, onChange, tip }: {
+  label: string; value: boolean; onChange: (v: boolean) => void; tip?: string;
+}) {
   return (
-    <button type="button" onClick={onToggle}
-      className="w-full flex items-center justify-between rounded-lg px-3 py-2.5 text-xs font-medium transition-colors"
-      style={open
-        ? { background: "#fafafa", color: "var(--ink-mid)", border: "1px solid #e0e0e0" }
-        : { background: "#eff6ff", color: "var(--green)", border: "1px solid #dbeafe" }}>
-      <span>{open ? `Hide ${label.toLowerCase()}` : label}</span>
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"
-        style={{ transform: open ? "rotate(180deg)" : "none", transition: "transform 0.15s" }}>
-        <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    </button>
+    <div>
+      <label className={`${lbl} flex items-center`}>{label}{tip && <Tooltip content={tip} />}</label>
+      <div className="flex rounded-lg overflow-hidden border border-neutral-200 w-fit">
+        {([true, false] as const).map((opt) => (
+          <button key={String(opt)} type="button" onClick={() => onChange(opt)}
+            className="px-4 py-2 text-sm font-medium transition-colors"
+            style={value === opt ? { background: "var(--green)", color: "#fff" } : { background: "#fff", color: "var(--ink-mid)" }}>
+            {opt ? "Yes" : "No"}
+          </button>
+        ))}
+      </div>
+    </div>
   );
 }
 
+// ── Main component ─────────────────────────────────────────────────────────────
 export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setDownPayment, setDownPaymentPercent, setLumpSumForYear, setField }: Props) {
-  const [dpMode, setDpMode]             = useState<"%" | "$">("%");
-  const [showCosts, setShowCosts]       = useState(false);
-  const [showRepay, setShowRepay]       = useState(false);
-  const [showLumpSum, setShowLumpSum]   = useState(false);
-  const mode = inputs.mortgageMode;
-  const stressRate = Math.max(inputs.interestRate + 2, 5.25);
-
-  // currentPayment comes from outputs.currentPayment (computed in mortgageMath)
-
-  const lumpSumTotal = Object.values(inputs.lumpSumsByYear).reduce((s, v) => s + (v || 0), 0);
-  const yearsSaved = Math.floor(outputs.paymentsSavedByLumpSums / 12);
+  const [dpMode, setDpMode]         = useState<"%" | "$">("%");
+  const [showRefine, setShowRefine] = useState(false);
+  const [showRepay, setShowRepay]   = useState(false);
+  const [showCosts, setShowCosts]   = useState(false);
+  const [showLumpSum, setShowLumpSum] = useState(false);
+  const mode       = inputs.mortgageMode;
+  const stressRate = inputs.interestRate > 0 ? Math.max(inputs.interestRate + 2, 5.25) : 5.25;
+  const yearsSaved  = Math.floor(outputs.paymentsSavedByLumpSums / 12);
   const monthsSaved = outputs.paymentsSavedByLumpSums % 12;
 
   return (
     <div className="space-y-4">
 
-      {/* Province */}
-      <SelectField id="province" label="Province" value={inputs.province} onChange={(v) => setField("province", v)}>
-        {PROVINCES.map((p) => <option key={p.code} value={p.code}>{p.name}</option>)}
-      </SelectField>
-
-      {/* ══════════════ PURCHASE ══════════════ */}
+      {/* ══════════════════════════════════════════════════════════════
+          PURCHASE
+      ══════════════════════════════════════════════════════════════ */}
       {mode === "purchase" && (
         <>
-          <Divider label="Property" />
-
-          <CurrencyInput id="home-price" label="Home price" value={inputs.homePrice}
-            onChange={setHomePrice} placeholder="750,000" />
+          {/* ── ESSENTIAL ──────────────────────────────────── */}
+          <CurrencyInput id="home-price" label="Home price"
+            value={inputs.homePrice} onChange={setHomePrice} placeholder="e.g. 750,000" />
           {errors.homePrice && <p className="text-xs text-red-600 -mt-2">{errors.homePrice}</p>}
-
-
 
           {/* Down payment */}
           <div>
@@ -213,7 +204,8 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
                 <input type="text" inputMode="decimal"
                   value={inputs.downPaymentPercent > 0 ? inputs.downPaymentPercent : ""}
                   onChange={(e) => { const v = parseFloat(e.target.value.replace(/[^0-9.]/g, "")); if (!isNaN(v)) setDownPaymentPercent(v); else if (!e.target.value) setDownPaymentPercent(0); }}
-                  placeholder="20" className={`${errors.downPayment ? inp + " border-red-300" : inp} pr-8`} />
+                  placeholder="e.g. 20"
+                  className={`${errors.downPayment ? inp + " border-red-300" : inp} pr-8`} />
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 text-sm">%</span>
               </div>
             ) : (
@@ -222,136 +214,160 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
                 <input type="text" inputMode="numeric"
                   value={inputs.downPayment > 0 ? inputs.downPayment.toLocaleString("en-CA") : ""}
                   onChange={(e) => setDownPayment(parseCurrency(e.target.value))}
+                  placeholder="e.g. 150,000"
                   className={`${errors.downPayment ? inp + " border-red-300" : inp} pl-7`} />
               </div>
             )}
             <div className="flex gap-1.5 mt-2">
               {[5, 10, 20, 35].map((pct) => {
-                const active = Math.abs(inputs.downPaymentPercent - pct) < 0.3;
+                const active = inputs.downPaymentPercent > 0 && Math.abs(inputs.downPaymentPercent - pct) < 0.3;
                 return (
                   <button key={pct} type="button" onClick={() => setDownPaymentPercent(pct)}
                     className="px-3 py-1 rounded-full text-xs font-medium transition-colors border"
-                    style={active ? { background: "var(--green)", color: "#fff", borderColor: "var(--green)" } : { background: "#fff", color: "var(--ink-mid)", borderColor: "#e8e8e8" }}>
+                    style={active
+                      ? { background: "var(--green)", color: "#fff", borderColor: "var(--green)" }
+                      : { background: "#fff", color: "var(--ink-mid)", borderColor: "#e8e8e8" }}>
                     {pct}%
                   </button>
                 );
               })}
             </div>
             {errors.downPayment && <p className="text-xs text-red-600 mt-1">{errors.downPayment}</p>}
-            {inputs.homePrice > 0 && (
+            {inputs.homePrice > 0 && inputs.downPaymentPercent > 0 && (
               <p className="text-xs mt-1.5">
                 {outputs.cmhcPremium > 0
-                  ? <span style={{ color: "var(--amber)" }}>CMHC applies, {formatCurrency(outputs.cmhcPremium, 0)} added to mortgage</span>
+                  ? <span style={{ color: "var(--amber)" }}>CMHC applies — {formatCurrency(outputs.cmhcPremium, 0)} added to mortgage</span>
                   : <span style={{ color: "var(--green-mid)" }}>20%+ down, no CMHC required ✓</span>}
               </p>
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <TogglePair label="First-time buyer?" value={inputs.isFirstTimeBuyer}
-              onChange={(v) => setField("isFirstTimeBuyer", v)}
-              tip="Enables LTT rebates (Ontario up to $8,475 with Toronto, BC full exemption under $500K, Manitoba up to $3,500) and RRSP Home Buyers' Plan ($60K/person)." />
-            <TogglePair label="New build?" value={inputs.isNewBuild}
-              onChange={(v) => setField("isNewBuild", v)}
-              tip="New builds may be subject to GST/HST. A federal new housing rebate applies for homes under $450,000." />
-          </div>
-
-          <Divider label="Mortgage" />
-
           <RateInput id="rate" label="Interest rate"
-            tip="Canadian mortgage rates compound semi-annually by law, our calculator applies this correctly."
+            tip="Canadian mortgage rates compound semi-annually by law. Our calculator applies this correctly."
             value={inputs.interestRate} onChange={(v) => setField("interestRate", v)}
-            showSlider sliderNote={`Qualifying (stress test): ${stressRate.toFixed(2)}%`} />
+            showSlider sliderNote={inputs.interestRate > 0 ? `Stress test qualifying rate: ${stressRate.toFixed(2)}%` : undefined} />
           {errors.interestRate && <p className="text-xs text-red-600 -mt-2">{errors.interestRate}</p>}
 
-          <div className="grid grid-cols-2 gap-3">
-            <SelectField id="term" label="Term"
-              tip="Length of your mortgage contract before renewal. Most Canadians choose 5-year fixed."
-              value={inputs.termYears} onChange={(v) => setField("termYears", Number(v))}>
-              {TERM_OPTIONS.map((y) => <option key={y} value={y}>{y} yr{y !== 1 ? "s" : ""}</option>)}
-            </SelectField>
-            <SelectField id="amort" label="Amortization"
-              tip="Total years to pay off the mortgage. 25 years is standard; 30 years for uninsured."
-              value={inputs.amortizationYears} onChange={(v) => setField("amortizationYears", Number(v))}>
-              {AMORTIZATION_OPTIONS.map((y) => <option key={y} value={y}>{y} yrs</option>)}
-            </SelectField>
-          </div>
+          {/* Province — essential for LTT and CMHC provincial tax */}
+          <SelectField id="province" label="Province"
+            tip="Used to calculate land transfer tax, CMHC provincial tax, and first-time buyer rebates."
+            value={inputs.province} onChange={(v) => setField("province", v)}>
+            <option value="">Select province</option>
+            {PROVINCES.map((p) => <option key={p.code} value={p.code}>{p.name}</option>)}
+          </SelectField>
 
-          {/* Other costs */}
-          <Divider label="Other costs" />
+          {/* ── REFINE YOUR ESTIMATE ───────────────────────── */}
+          <SectionToggle
+            open={showRefine}
+            onToggle={() => setShowRefine(o => !o)}
+            label="Refine your estimate"
+            hint="Add property costs, tax, and more for a complete picture" />
 
-          <CurrencyInput id="tax" label="Annual property tax"
-            tip="Typically 0.5%–1.5% of assessed value. Included in your GDS ratio by lenders."
-            value={inputs.propertyTax} onChange={(v) => setField("propertyTax", v)}
-            suffix={inputs.propertyTax > 0 ? `${formatCurrency(inputs.propertyTax / 12, 0)}/mo` : "/yr"} />
+          {showRefine && (
+            <div className="space-y-4 pt-1">
+              {/* Term + amortization */}
+              <div className="grid grid-cols-2 gap-3">
+                <SelectField id="term" label="Term"
+                  tip="Length of your mortgage contract before renewal. Most Canadians choose 5-year fixed."
+                  value={inputs.termYears} onChange={(v) => setField("termYears", Number(v))}>
+                  {TERM_OPTIONS.map((y) => <option key={y} value={y}>{y} yr{y !== 1 ? "s" : ""}</option>)}
+                </SelectField>
+                <SelectField id="amort" label="Amortization"
+                  tip="Total years to pay off the mortgage. 25 years is standard for insured; up to 30 for uninsured."
+                  value={inputs.amortizationYears} onChange={(v) => setField("amortizationYears", Number(v))}>
+                  {AMORTIZATION_OPTIONS.map((y) => <option key={y} value={y}>{y} yrs</option>)}
+                </SelectField>
+              </div>
 
-          <CurrencyInput id="condo" label="Condo / strata fees"
-            tip="Lenders include 50% of condo fees in your GDS ratio. Leave at $0 for houses."
-            value={inputs.condoFees} onChange={(v) => setField("condoFees", v)} suffix="/mo" />
+              {/* Property type toggles */}
+              <div className="grid grid-cols-2 gap-3">
+                <TogglePair label="First-time buyer?" value={inputs.isFirstTimeBuyer}
+                  onChange={(v) => setField("isFirstTimeBuyer", v)}
+                  tip="Enables LTT rebates in Ontario, BC, and Manitoba. Also qualifies you for the RRSP Home Buyers' Plan ($60K/person)." />
+                <TogglePair label="New build?" value={inputs.isNewBuild}
+                  onChange={(v) => setField("isNewBuild", v)}
+                  tip="New builds may be subject to GST/HST. A federal new housing rebate applies for homes under $450,000." />
+              </div>
 
-          <button type="button" onClick={() => setShowCosts(o => !o)}
-            className="text-xs font-medium flex items-center gap-1"
-            style={{ color: showCosts ? "var(--ink-mid)" : "var(--green)" }}>
-            {showCosts ? "− Hide" : "+ Add"} monthly heating &amp; insurance
-          </button>
-          {showCosts && (
-            <div className="space-y-3 pl-3 border-l-2" style={{ borderColor: "#e5e5e5" }}>
-              <CurrencyInput id="heat" label="Monthly heating costs"
-                tip="Lenders include your monthly heating cost in the GDS ratio. This covers gas, oil, and electric heating specifically, not general electricity, internet, or water. If unknown, lenders use $150/mo as a default."
-                value={inputs.heatingCost} onChange={(v) => setField("heatingCost", v)} suffix="/mo" />
-              <CurrencyInput id="insurance" label="Home insurance"
-                tip="Required by your lender. Typically $1,000–$3,000/year."
-                value={inputs.homeInsurance} onChange={(v) => setField("homeInsurance", v)} suffix="/yr" />
+              {/* Monthly costs */}
+              <CurrencyInput id="tax" label="Annual property tax"
+                tip="Typically 0.5% to 1.5% of assessed value. Included in your GDS ratio by lenders."
+                value={inputs.propertyTax} onChange={(v) => setField("propertyTax", v)}
+                suffix={inputs.propertyTax > 0 ? `${formatCurrency(inputs.propertyTax / 12, 0)}/mo` : "/yr"} />
+
+              <CurrencyInput id="condo" label="Condo / strata fees"
+                tip="Lenders include 50% of condo fees in your GDS ratio. Leave at $0 for houses."
+                value={inputs.condoFees} onChange={(v) => setField("condoFees", v)} suffix="/mo" />
+
+              <button type="button" onClick={() => setShowCosts(o => !o)}
+                className="text-xs font-medium flex items-center gap-1"
+                style={{ color: showCosts ? "var(--ink-mid)" : "var(--green)" }}>
+                {showCosts ? "− Hide" : "+ Add"} heating &amp; insurance
+              </button>
+              {showCosts && (
+                <div className="space-y-3 pl-3 border-l-2" style={{ borderColor: "#e5e5e5" }}>
+                  <CurrencyInput id="heat" label="Monthly heating"
+                    tip="Lenders include your monthly heating cost in the GDS ratio. If unknown, lenders use $150/mo as a default."
+                    value={inputs.heatingCost} onChange={(v) => setField("heatingCost", v)} suffix="/mo" />
+                  <CurrencyInput id="insurance" label="Home insurance"
+                    tip="Required by your lender. Typically $1,000 to $3,000/year."
+                    value={inputs.homeInsurance} onChange={(v) => setField("homeInsurance", v)} suffix="/yr" />
+                </div>
+              )}
+
+              {/* Closing costs */}
+              <div className="pt-1">
+                <p className={lbl}>Closing costs</p>
+                {inputs.homePrice > 0 && (
+                  <div className="rounded-lg px-3 py-2.5 text-xs space-y-1.5 border mb-3"
+                    style={{ background: "#fafafa", borderColor: "#e8e8e8" }}>
+                    {(outputs.ltt.provincial > 0 || outputs.ltt.municipal > 0) && (
+                      <div className="flex justify-between">
+                        <span className="flex items-center gap-1" style={{ color: "var(--ink-mid)" }}>
+                          Land transfer tax
+                          <Tooltip content="A provincial tax paid on closing day. Most provinces charge 0.5% to 2.5% of the purchase price. Toronto adds a municipal LTT on top." />
+                          <Link href="/land-transfer-tax" className="underline" style={{ color: "var(--green)" }}>details</Link>
+                        </span>
+                        <span className="font-medium text-neutral-700">
+                          {formatCurrency(outputs.ltt.provincial + outputs.ltt.municipal, 0)}
+                        </span>
+                      </div>
+                    )}
+                    {outputs.ltt.firstTimeBuyerRebate > 0 && (
+                      <div className="flex justify-between" style={{ color: "var(--green-mid)" }}>
+                        <span>First-time buyer rebate</span>
+                        <span className="font-medium">− {formatCurrency(outputs.ltt.firstTimeBuyerRebate, 0)}</span>
+                      </div>
+                    )}
+                    {outputs.gstHst.net > 0 && (
+                      <div className="flex justify-between">
+                        <span style={{ color: "var(--ink-mid)" }}>GST/HST (new build, net)</span>
+                        <span className="font-medium text-neutral-700">{formatCurrency(outputs.gstHst.net, 0)}</span>
+                      </div>
+                    )}
+                    {outputs.ltt.provincial === 0 && outputs.ltt.municipal === 0 && outputs.gstHst.net === 0 && (
+                      <span style={{ color: "var(--ink-faint)" }}>No LTT or GST in this province</span>
+                    )}
+                  </div>
+                )}
+                <CurrencyInput id="closing" label="Other closing costs"
+                  tip="Legal fees, title insurance, home inspection, adjustments. Typically $3,000 to $5,000."
+                  value={inputs.closingCosts} onChange={(v) => setField("closingCosts", v)} />
+              </div>
             </div>
           )}
 
-          {/* Closing costs section */}
-          <Divider label="Closing costs" />
+          {/* ── REPAY FASTER ───────────────────────────────── */}
+          <SectionToggle
+            open={showRepay}
+            onToggle={() => setShowRepay(o => !o)}
+            label="Repay faster"
+            hint="See how extra payments reduce your total interest" />
 
-          {/* LTT, read-only calculated */}
-          {inputs.homePrice > 0 && (
-            <div className="rounded-lg px-3 py-2.5 text-xs space-y-1.5 border"
-              style={{ background: "#fafafa", borderColor: "#e8e8e8" }}>
-              {(outputs.ltt.provincial > 0 || outputs.ltt.municipal > 0) && (
-                <div className="flex justify-between">
-                  <span className="flex items-center gap-1" style={{ color: "var(--ink-mid)" }}>
-                    Land transfer tax
-                    <Tooltip content="A provincial tax paid on closing day when purchasing real estate. Most provinces charge 0.5%–2.5% of the purchase price. Toronto adds a municipal LTT on top. First-time buyers may be eligible for a rebate." />
-                    <Link href="/land-transfer-tax" className="underline text-xs" style={{ color: "var(--green)" }}>details →</Link>
-                  </span>
-                  <span className="font-medium text-neutral-700">
-                    {formatCurrency(outputs.ltt.provincial + outputs.ltt.municipal, 0)}
-                  </span>
-                </div>
-              )}
-              {outputs.ltt.firstTimeBuyerRebate > 0 && (
-                <div className="flex justify-between" style={{ color: "var(--green-mid)" }}>
-                  <span>First-time buyer rebate</span>
-                  <span className="font-medium">− {formatCurrency(outputs.ltt.firstTimeBuyerRebate, 0)}</span>
-                </div>
-              )}
-              {outputs.gstHst.net > 0 && (
-                <div className="flex justify-between">
-                  <span style={{ color: "var(--ink-mid)" }}>GST/HST (new build, net)</span>
-                  <span className="font-medium text-neutral-700">{formatCurrency(outputs.gstHst.net, 0)}</span>
-                </div>
-              )}
-              {outputs.ltt.provincial === 0 && outputs.ltt.municipal === 0 && outputs.gstHst.net === 0 && (
-                <span style={{ color: "var(--ink-faint)" }}>No LTT or GST in this province</span>
-              )}
-            </div>
-          )}
-
-          <CurrencyInput id="closing" label="Other closing costs"
-            tip="Legal fees, title insurance, home inspection, adjustments. Typically $3,000–$5,000."
-            value={inputs.closingCosts} onChange={(v) => setField("closingCosts", v)} />
-
-          {/* Repay faster */}
-          <MoreToggle open={showRepay} onToggle={() => setShowRepay(o => !o)} label="Repay faster" />
           {showRepay && (
-            <div className="space-y-4 pl-3 border-l-2" style={{ borderColor: "#e5e5e5" }}>
+            <div className="space-y-4 pt-1 pl-3 border-l-2" style={{ borderColor: "#e5e5e5" }}>
               <SelectField id="freq" label="Payment frequency"
-                tip="Accelerated bi-weekly = 26 half-monthly payments/year, equivalent to one extra monthly payment per year."
+                tip="Accelerated bi-weekly = 26 half-monthly payments per year, equivalent to one extra monthly payment. Free interest savings."
                 value={inputs.paymentFrequency}
                 onChange={(v) => setField("paymentFrequency", v as PaymentFrequency)}>
                 {(Object.entries(FREQUENCY_LABELS) as [PaymentFrequency, string][]).map(([k, v]) => (
@@ -360,34 +376,31 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
               </SelectField>
               {(inputs.paymentFrequency === "accelerated-biweekly" || inputs.paymentFrequency === "accelerated-weekly") && (
                 <p className="text-xs" style={{ color: "var(--green-mid)" }}>
-                  ✓ Accelerated payments add one extra monthly payment per year, reducing your amortization without feeling the difference.
-                </p>
-              )}
-              {inputs.paymentFrequency !== "monthly" && inputs.paymentFrequency !== "accelerated-biweekly" && inputs.paymentFrequency !== "accelerated-weekly" && (
-                <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
-                  More frequent payments reduce your outstanding balance faster, saving a small amount of interest each period.
+                  Accelerated payments add one extra monthly payment per year, reducing your amortization without changing your per-payment amount.
                 </p>
               )}
 
               <CurrencyInput id="extra" label="Extra payment per period"
-                tip="Added to every payment. Even $200 extra/month can shave years off your amortization."
+                tip="Added to every scheduled payment. Even $200 extra per month can shave years off your amortization."
                 value={inputs.extraPayment} onChange={(v) => setField("extraPayment", v)} />
               {inputs.extraPayment > 0 && (
                 <p className="text-xs" style={{ color: "var(--green-mid)" }}>
-                  ✓ Adding {formatCurrency(inputs.extraPayment, 0)}/payment, see projected savings in the Insights panel.
+                  Extra payments go directly to principal — see the impact in Insights above.
                 </p>
               )}
 
-              {/* Lump sum */}
               <div>
                 <button type="button" onClick={() => setShowLumpSum(o => !o)}
                   className="text-xs font-medium flex items-center gap-1 mb-2"
                   style={{ color: showLumpSum ? "var(--ink-mid)" : "var(--green)" }}>
                   {showLumpSum ? "− Hide" : "+ Add"} annual lump sum payments
-                  <Tooltip content="Applied on your mortgage anniversary date each year. Most mortgages allow 10–20% of original principal/year penalty-free." />
+                  <Tooltip content="Applied on your mortgage anniversary date. Most mortgages allow 10 to 20% of original principal per year penalty-free." />
                 </button>
                 {showLumpSum && (
                   <div className="space-y-2">
+                    <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
+                      Applied on your anniversary date. Most mortgages allow 10 to 20% of original principal per year penalty-free.
+                    </p>
                     {outputs.interestSavedByLumpSums > 0 && (
                       <div className="rounded-lg px-3 py-2 text-xs border"
                         style={{ background: "var(--green-light)", borderColor: "var(--green-border)" }}>
@@ -401,10 +414,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
                         )}
                       </div>
                     )}
-                    <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
-                      Applied on your anniversary date. Most mortgages allow 10–20% of original principal/year penalty-free.
-                    </p>
-                    {Array.from({ length: inputs.amortizationYears }, (_, i) => i + 1).map((year) => {
+                    {Array.from({ length: Math.min(inputs.amortizationYears, 10) }, (_, i) => i + 1).map((year) => {
                       const val = inputs.lumpSumsByYear[year] ?? 0;
                       return (
                         <div key={year} className="flex items-center gap-2">
@@ -415,7 +425,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
                               value={val > 0 ? val.toLocaleString("en-CA") : ""}
                               onChange={(e) => setLumpSumForYear(year, parseCurrency(e.target.value))}
                               placeholder="0"
-                              className="w-full pl-6 pr-2 py-1.5 rounded-lg border border-neutral-200 bg-white text-xs text-neutral-900 focus:outline-none focus:ring-1 focus:ring-blue-500/20 focus:border-blue-500" />
+                              className="w-full pl-6 pr-2 py-1.5 rounded-lg border border-neutral-200 bg-white text-xs text-neutral-900 focus:outline-none focus:ring-1 focus:ring-blue-500/20" />
                           </div>
                         </div>
                       );
@@ -428,66 +438,82 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
         </>
       )}
 
-      {/* ══════════════ RENEWAL ══════════════ */}
+      {/* ══════════════════════════════════════════════════════════════
+          RENEWAL
+      ══════════════════════════════════════════════════════════════ */}
       {mode === "renewal" && (
         <>
-          <Divider label="Current mortgage" />
-
+          {/* ── ESSENTIAL ──────────────────────────────────── */}
           <CurrencyInput id="balance" label="Remaining balance"
-            tip="Your outstanding balance at renewal."
-            value={inputs.currentBalance} onChange={(v) => setField("currentBalance", v)} placeholder="480,000" />
+            tip="Your outstanding mortgage balance at renewal."
+            value={inputs.currentBalance} onChange={(v) => setField("currentBalance", v)} placeholder="e.g. 480,000" />
           {errors.currentBalance && <p className="text-xs text-red-600 -mt-2">{errors.currentBalance}</p>}
 
-          <RateInput id="current-rate" label="Current rate"
-            tip="Your expiring contracted rate, used to calculate what you pay now for comparison."
-            value={inputs.currentRate} onChange={(v) => setField("currentRate", v)} />
+          <RateInput id="new-rate" label="New interest rate"
+            tip="The rate you expect at renewal. Check broker rates for best available — you can switch lenders without re-qualifying."
+            value={inputs.interestRate} onChange={(v) => setField("interestRate", v)}
+            showSlider sliderNote={inputs.interestRate > 0 ? `Stress test qualifying rate: ${stressRate.toFixed(2)}%` : undefined} />
+          {errors.interestRate && <p className="text-xs text-red-600 -mt-2">{errors.interestRate}</p>}
 
-          <SelectField id="amort-renewal" label="Remaining amortization"
-            tip="Years left on your original amortization schedule."
-            value={inputs.amortizationYears} onChange={(v) => setField("amortizationYears", Number(v))}>
-            {AMORTIZATION_OPTIONS.map((y) => <option key={y} value={y}>{y} years</option>)}
-          </SelectField>
+          {/* ── REFINE ─────────────────────────────────────── */}
+          <SectionToggle
+            open={showRefine}
+            onToggle={() => setShowRefine(o => !o)}
+            label="Refine your estimate"
+            hint="Add your current rate to compare payment changes" />
 
-          <SelectField id="freq-renewal" label="Payment frequency"
-            value={inputs.paymentFrequency}
-            onChange={(v) => setField("paymentFrequency", v as PaymentFrequency)}>
-            {(Object.entries(FREQUENCY_LABELS) as [PaymentFrequency, string][]).map(([k, v]) => (
-              <option key={k} value={k}>{v}</option>
-            ))}
-          </SelectField>
+          {showRefine && (
+            <div className="space-y-4 pt-1">
+              <RateInput id="current-rate" label="Current (expiring) rate"
+                tip="Your existing contracted rate, used to show how your payment changes at renewal."
+                value={inputs.currentRate} onChange={(v) => setField("currentRate", v)} />
 
-          {outputs.currentPayment > 0 && (
-            <div className="rounded-lg px-3 py-2.5 text-sm flex justify-between border"
-              style={{ background: "#fafafa", borderColor: "#e8e8e8" }}>
-              <span style={{ color: "var(--ink-mid)" }}>Current payment at {inputs.currentRate > 0 ? inputs.currentRate.toFixed(2) : " - "}%</span>
-              <span className="font-semibold text-neutral-800">{outputs.currentPayment > 0 ? formatCurrency(outputs.currentPayment, 2) : " - "}</span>
+              <SelectField id="amort-renewal" label="Remaining amortization"
+                tip="Years left on your original amortization schedule."
+                value={inputs.amortizationYears} onChange={(v) => setField("amortizationYears", Number(v))}>
+                {AMORTIZATION_OPTIONS.map((y) => <option key={y} value={y}>{y} years</option>)}
+              </SelectField>
+
+              <div className="grid grid-cols-2 gap-3">
+                <SelectField id="new-term" label="New term"
+                  tip="The length of the new contract you are renewing into."
+                  value={inputs.termYears} onChange={(v) => setField("termYears", Number(v))}>
+                  {TERM_OPTIONS.map((y) => <option key={y} value={y}>{y} yr{y !== 1 ? "s" : ""}</option>)}
+                </SelectField>
+                <SelectField id="new-amort" label="New amortization"
+                  tip="You can extend or shorten at renewal. Shorter saves more in interest; longer lowers the payment."
+                  value={inputs.renewalAmortization} onChange={(v) => setField("renewalAmortization", Number(v))}>
+                  {AMORTIZATION_OPTIONS.map((y) => <option key={y} value={y}>{y} yrs</option>)}
+                </SelectField>
+              </div>
+
+              <SelectField id="freq-renewal" label="Payment frequency"
+                value={inputs.paymentFrequency}
+                onChange={(v) => setField("paymentFrequency", v as PaymentFrequency)}>
+                {(Object.entries(FREQUENCY_LABELS) as [PaymentFrequency, string][]).map(([k, v]) => (
+                  <option key={k} value={k}>{v}</option>
+                ))}
+              </SelectField>
+
+              {outputs.currentPayment > 0 && (
+                <div className="rounded-lg px-3 py-2.5 text-sm flex justify-between border"
+                  style={{ background: "#fafafa", borderColor: "#e8e8e8" }}>
+                  <span style={{ color: "var(--ink-mid)" }}>Current payment at {inputs.currentRate.toFixed(2)}%</span>
+                  <span className="font-semibold text-neutral-800">{formatCurrency(outputs.currentPayment, 2)}</span>
+                </div>
+              )}
             </div>
           )}
 
-          <Divider label="New terms" />
+          {/* ── REPAY FASTER ───────────────────────────────── */}
+          <SectionToggle
+            open={showRepay}
+            onToggle={() => setShowRepay(o => !o)}
+            label="Repay faster"
+            hint="See how lump sums reduce your total interest at renewal" />
 
-          <RateInput id="new-rate" label="New interest rate"
-            tip="The rate you expect at renewal. Check broker rates for best available."
-            value={inputs.interestRate} onChange={(v) => setField("interestRate", v)}
-            showSlider sliderNote={`Qualifying (stress test): ${stressRate.toFixed(2)}%`} />
-          {errors.interestRate && <p className="text-xs text-red-600 -mt-2">{errors.interestRate}</p>}
-
-          <div className="grid grid-cols-2 gap-3">
-            <SelectField id="new-term" label="New term"
-              tip="The length of the new contract you're renewing into."
-              value={inputs.termYears} onChange={(v) => setField("termYears", Number(v))}>
-              {TERM_OPTIONS.map((y) => <option key={y} value={y}>{y} yr{y !== 1 ? "s" : ""}</option>)}
-            </SelectField>
-            <SelectField id="new-amort" label="New amortization"
-              tip="You can extend or shorten the amortization at renewal. Shorter = more interest savings; longer = lower payment."
-              value={inputs.renewalAmortization} onChange={(v) => setField("renewalAmortization", Number(v))}>
-              {AMORTIZATION_OPTIONS.map((y) => <option key={y} value={y}>{y} yrs</option>)}
-            </SelectField>
-          </div>
-
-          <MoreToggle open={showRepay} onToggle={() => setShowRepay(o => !o)} label="Repay faster" />
           {showRepay && (
-            <div className="space-y-3 pl-3 border-l-2" style={{ borderColor: "#e5e5e5" }}>
+            <div className="space-y-3 pt-1 pl-3 border-l-2" style={{ borderColor: "#e5e5e5" }}>
               <CurrencyInput id="extra-renewal" label="Extra payment per period"
                 value={inputs.extraPayment} onChange={(v) => setField("extraPayment", v)} />
               <div>
@@ -498,7 +524,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
                 </button>
                 {showLumpSum && (
                   <div className="space-y-2">
-                    {Array.from({ length: inputs.amortizationYears }, (_, i) => i + 1).map((year) => {
+                    {Array.from({ length: Math.min(inputs.amortizationYears, 10) }, (_, i) => i + 1).map((year) => {
                       const val = inputs.lumpSumsByYear[year] ?? 0;
                       return (
                         <div key={year} className="flex items-center gap-2">
@@ -530,18 +556,19 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
         </>
       )}
 
-      {/* ══════════════ REFINANCE ══════════════ */}
+      {/* ══════════════════════════════════════════════════════════════
+          REFINANCE
+      ══════════════════════════════════════════════════════════════ */}
       {mode === "refinance" && (
         <>
-          <Divider label="Current situation" />
-
+          {/* ── ESSENTIAL ──────────────────────────────────── */}
           <CurrencyInput id="home-value" label="Home value"
-            tip="Current market value. Refinances are capped at 80% LTV."
-            value={inputs.homeValue} onChange={(v) => setField("homeValue", v)} placeholder="800,000" />
+            tip="Current market value. Refinances are capped at 80% loan-to-value."
+            value={inputs.homeValue} onChange={(v) => setField("homeValue", v)} placeholder="e.g. 800,000" />
 
           <CurrencyInput id="balance-refi" label="Remaining mortgage"
             tip="Your current outstanding balance."
-            value={inputs.currentBalance} onChange={(v) => setField("currentBalance", v)} placeholder="450,000" />
+            value={inputs.currentBalance} onChange={(v) => setField("currentBalance", v)} placeholder="e.g. 450,000" />
 
           {inputs.homeValue > 0 && inputs.currentBalance > 0 && (
             <div className="rounded-lg px-3 py-2.5 text-xs flex justify-between border"
@@ -550,51 +577,55 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
               <span className="font-semibold" style={{ color: outputs.ltv > 0.8 ? "#ef4444" : "var(--green)" }}>
                 {formatCurrency(Math.max(0, inputs.homeValue - inputs.currentBalance), 0)}
                 {" "}({(Math.max(0, 1 - outputs.ltv) * 100).toFixed(0)}%)
-                {outputs.ltv > 0.8 && ", above 80% LTV cap"}
+                {outputs.ltv > 0.8 && " — above 80% LTV cap"}
               </span>
             </div>
           )}
           {errors.ltv && <p className="text-xs text-red-600">{errors.ltv}</p>}
 
-          <RateInput id="current-rate-refi" label="Current rate"
-            tip="Your existing contracted rate, used to compare current vs new payment."
-            value={inputs.currentRate} onChange={(v) => setField("currentRate", v)} />
-
-          {outputs.currentPayment > 0 && (
-            <div className="rounded-lg px-3 py-2.5 text-sm flex justify-between border"
-              style={{ background: "#fafafa", borderColor: "#e8e8e8" }}>
-              <span style={{ color: "var(--ink-mid)" }}>Current payment at {inputs.currentRate > 0 ? inputs.currentRate.toFixed(2) : " - "}%</span>
-              <span className="font-semibold text-neutral-800">{outputs.currentPayment > 0 ? formatCurrency(outputs.currentPayment, 2) : " - "}</span>
-            </div>
-          )}
-
-          <Divider label="New mortgage" />
-
           <RateInput id="new-rate-refi" label="New interest rate"
             tip="The rate on the refinanced mortgage."
             value={inputs.interestRate} onChange={(v) => setField("interestRate", v)}
-            showSlider sliderNote={`Qualifying (stress test): ${stressRate.toFixed(2)}%`} />
+            showSlider sliderNote={inputs.interestRate > 0 ? `Stress test qualifying rate: ${stressRate.toFixed(2)}%` : undefined} />
           {errors.interestRate && <p className="text-xs text-red-600 -mt-2">{errors.interestRate}</p>}
 
-          <div className="grid grid-cols-2 gap-3">
-            <SelectField id="new-term-refi" label="New term"
-              value={inputs.termYears} onChange={(v) => setField("termYears", Number(v))}>
-              {TERM_OPTIONS.map((y) => <option key={y} value={y}>{y} yr{y !== 1 ? "s" : ""}</option>)}
-            </SelectField>
-            <SelectField id="new-amort-refi" label="Amortization"
-              tip="Resetting to a longer amortization lowers payments but increases total interest."
-              value={inputs.amortizationYears} onChange={(v) => setField("amortizationYears", Number(v))}>
-              {AMORTIZATION_OPTIONS.map((y) => <option key={y} value={y}>{y} yrs</option>)}
-            </SelectField>
-          </div>
+          {/* ── REFINE ─────────────────────────────────────── */}
+          <SectionToggle
+            open={showRefine}
+            onToggle={() => setShowRefine(o => !o)}
+            label="Refine your estimate"
+            hint="Add your current rate, term, and cash-out details" />
 
-          <CurrencyInput id="cash-out" label="Cash-out amount"
-            tip="Additional equity to access. Total loan cannot exceed 80% of home value."
-            value={inputs.cashOutAmount} onChange={(v) => setField("cashOutAmount", v)} />
+          {showRefine && (
+            <div className="space-y-4 pt-1">
+              <RateInput id="current-rate-refi" label="Current (expiring) rate"
+                tip="Your existing contracted rate, used to compare current vs new payment."
+                value={inputs.currentRate} onChange={(v) => setField("currentRate", v)} />
 
-          <MoreToggle open={showRepay} onToggle={() => setShowRepay(o => !o)} label="Repay faster" />
-          {showRepay && (
-            <div className="space-y-3 pl-3 border-l-2" style={{ borderColor: "#e5e5e5" }}>
+              {outputs.currentPayment > 0 && (
+                <div className="rounded-lg px-3 py-2.5 text-sm flex justify-between border"
+                  style={{ background: "#fafafa", borderColor: "#e8e8e8" }}>
+                  <span style={{ color: "var(--ink-mid)" }}>Current payment at {inputs.currentRate.toFixed(2)}%</span>
+                  <span className="font-semibold text-neutral-800">{formatCurrency(outputs.currentPayment, 2)}</span>
+                </div>
+              )}
+
+              <div className="grid grid-cols-2 gap-3">
+                <SelectField id="new-term-refi" label="New term"
+                  value={inputs.termYears} onChange={(v) => setField("termYears", Number(v))}>
+                  {TERM_OPTIONS.map((y) => <option key={y} value={y}>{y} yr{y !== 1 ? "s" : ""}</option>)}
+                </SelectField>
+                <SelectField id="new-amort-refi" label="Amortization"
+                  tip="Resetting to a longer amortization lowers payments but increases total interest charges."
+                  value={inputs.amortizationYears} onChange={(v) => setField("amortizationYears", Number(v))}>
+                  {AMORTIZATION_OPTIONS.map((y) => <option key={y} value={y}>{y} yrs</option>)}
+                </SelectField>
+              </div>
+
+              <CurrencyInput id="cash-out" label="Cash-out amount"
+                tip="Additional equity to access. Total loan cannot exceed 80% of home value."
+                value={inputs.cashOutAmount} onChange={(v) => setField("cashOutAmount", v)} />
+
               <SelectField id="freq-refi" label="Payment frequency"
                 value={inputs.paymentFrequency}
                 onChange={(v) => setField("paymentFrequency", v as PaymentFrequency)}>
@@ -602,6 +633,18 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
                   <option key={k} value={k}>{v}</option>
                 ))}
               </SelectField>
+            </div>
+          )}
+
+          {/* ── REPAY FASTER ───────────────────────────────── */}
+          <SectionToggle
+            open={showRepay}
+            onToggle={() => setShowRepay(o => !o)}
+            label="Repay faster"
+            hint="Model extra payments against your refinanced mortgage" />
+
+          {showRepay && (
+            <div className="space-y-3 pt-1 pl-3 border-l-2" style={{ borderColor: "#e5e5e5" }}>
               <CurrencyInput id="extra-refi" label="Extra payment per period"
                 value={inputs.extraPayment} onChange={(v) => setField("extraPayment", v)} />
             </div>
