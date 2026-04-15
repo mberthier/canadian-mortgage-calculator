@@ -25,11 +25,11 @@ function Metric({ label, value, sub, tip, accent }: MetricProps) {
   return (
     <div className="p-4">
       {/* Fixed-height label row so all values align regardless of wrapping */}
-      <p className="text-xs font-medium uppercase tracking-wide flex items-start gap-0.5 mb-2"
-        style={{ color: "var(--ink-faint)", minHeight: "2.5rem" }}>
-        <span>{label}</span>
+      <div className="flex items-start gap-0.5 mb-2" style={{ minHeight: "2.75rem" }}>
+        <p className="text-xs font-medium uppercase tracking-wide leading-tight"
+          style={{ color: "var(--ink-faint)" }}>{label}</p>
         {tip && <Tooltip content={tip} />}
-      </p>
+      </div>
       <p className="text-xl font-semibold"
         style={{ color: accent ? "var(--brand-teal)" : "#1a1a1a" }}>{value}</p>
       {sub && <p className="text-xs mt-0.5" style={{ color: "var(--ink-faint)" }}>{sub}</p>}
