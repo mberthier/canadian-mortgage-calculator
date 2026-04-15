@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import Link from "next/link";
 import { MortgageInputs, MortgageOutputs } from "@/lib/types";
 import { formatCurrency } from "@/lib/formatters";
-import Link from "next/link";
 import { calculateMortgagePayment } from "@/lib/mortgageMath";
 
 interface Props {
@@ -15,51 +15,81 @@ type InsightType = "win" | "opportunity" | "warning" | "caution" | "info";
 
 interface Insight {
   type:     InsightType;
-  priority: number;
+  priority: number;   // 1=must see · 2=high value · 3=good to know · 4=context
   headline: string;
   detail:   string;
   link?:    { href: string; label: string };
 }
 
-// ── Broker-grade insight logic ────────────────────────────────────────────────
+// ── Priority framework ────────────────────────────────────────────────────────
+// P1 — changes the decision or could cost money if missed
+// P2 — high-value and actionable, worth acting on
+// P3 — confirms good position or moderate opportunity
+// P4 — informational context, no immediate action needed
 
 function getInsights(inputs: MortgageInputs, outputs: MortgageOutputs): Insight[] {
   const ins: Insight[] = [];
   const mode = inputs.mortgageMode;
 
-  // ── PURCHASE ─────────────────────────────────────────────────────────────
+  // ── PURCHASE ──────────────────────────────────────────────────────────────
   if (mode === "purchase") {
     const down  = inputs.downPaymentPercent;
     const price = inputs.homePrice;
     if (!price) return [];
 
-    // 1. CMHC, the real cost is interest on the premium, not just the premium
-    if (down < 20 && outputs.cmhcPremium > 0) {
-      const r   = inputs.interestRate / 100;
-      // rough total cost of carrying the CMHC premium over full amortization
-      const pmt = calculateMortgagePayment(outputs.cmhcPremium, inputs.interestRate, inputs.amortizationYears, "monthly");
-      const totalCmhcCost = Math.round(pmt * 12 * inputs.amortizationYears);
+    // P1 — High leverage warning (under 10%)
+    if (down < 10 && price > 0) {
       ins.push({
-        type: "caution", priority: 1,
-        headline: `CMHC will cost you ${formatCurrency(totalCmhcCost, 0, true)} over ${inputs.amortizationYears} years`,
-        detail: `The ${formatCurrency(outputs.cmhcPremium, 0)} premium gets added to your mortgage and you pay interest on it for the full amortization. The premium itself is ${formatCurrency(outputs.cmhcPremium, 0)}, but with interest, the real cost is closer to ${formatCurrency(totalCmhcCost, 0, true)}.`,
+        type: "warning", priority: 1,
+        headline: `Under 10% down — a 5% price drop would put you underwater`,
+        detail: `With ${down.toFixed(1)}% down, a 5% decline in home value wipes out your entire equity position. You would owe more than the home is worth. This is not a reason not to buy, but it matters if your circumstances change and you need to sell within the first few years.`,
       });
     }
 
-    // 2. Very close to 20%, specific, actionable
+    // P1 — CMHC real cost (interest on premium, not just the premium)
+    if (down < 20 && outputs.cmhcPremium > 0) {
+      const pmt          = calculateMortgagePayment(outputs.cmhcPremium, inputs.interestRate, inputs.amortizationYears, "monthly");
+      const totalCmhcCost = Math.round(pmt * 12 * inputs.amortizationYears);
+      ins.push({
+        type: "caution", priority: 1,
+        headline: `CMHC adds ${formatCurrency(outputs.cmhcPremium, 0)} to your mortgage — the true cost with interest is ${formatCurrency(totalCmhcCost, 0, true)}`,
+        detail: `The ${formatCurrency(outputs.cmhcPremium, 0)} premium is rolled into your mortgage balance, so you pay interest on it for the full ${inputs.amortizationYears}-year amortization. The premium itself is one number — the total cost you actually pay is ${formatCurrency(totalCmhcCost, 0, true)}.`,
+      });
+    }
+
+    // P1 — Close to 20%, specific dollar to eliminate CMHC
     if (down >= 15 && down < 20 && price > 0) {
       const needed = Math.ceil(price * 0.20) - inputs.downPayment;
       const saving = outputs.periodicPayment - outputs.paymentWithoutCMHC;
       ins.push({
         type: "opportunity", priority: 1,
-        headline: `${formatCurrency(needed, 0)} more gets you to 20%, eliminates CMHC entirely`,
-        detail: `At 20% down, you avoid the ${formatCurrency(outputs.cmhcPremium, 0)} CMHC premium entirely. Your payment drops ${formatCurrency(saving, 2)}/period and you save the full cost of carrying that insurance. Worth considering before you finalize the purchase.`,
+        headline: `${formatCurrency(needed, 0)} more reaches 20% down and eliminates CMHC entirely`,
+        detail: `At 20% down you avoid the ${formatCurrency(outputs.cmhcPremium, 0)} CMHC premium completely. Your payment drops ${formatCurrency(saving, 2)}/period and you save the full interest cost of carrying that insurance over ${inputs.amortizationYears} years. Worth considering before you finalize the purchase.`,
       });
     }
 
-    // 3. Stress test purchasing power gap
+    // P2 — Accelerated bi-weekly (only if monthly selected — free savings)
+    if (inputs.paymentFrequency === "monthly" && outputs.loanAmount > 0) {
+      const bwPmt   = outputs.periodicPayment / 2;
+      const mr      = Math.pow(1 + inputs.interestRate / 100 / 2, 2 / 12) - 1;
+      const n       = mr > 0 ? Math.log(bwPmt / (bwPmt - outputs.loanAmount * mr / 2)) / Math.log(1 + mr / 2) : 0;
+      const bwYears = n > 0 ? n / 26 : 0;
+      const yrsSaved = inputs.amortizationYears - bwYears;
+      if (yrsSaved > 0.5) {
+        const saved = Math.max(0, Math.round(
+          outputs.periodicPayment * 12 * inputs.amortizationYears - bwPmt * 26 * bwYears
+        ));
+        ins.push({
+          type: "opportunity", priority: 2,
+          headline: `Switching to accelerated bi-weekly saves ${formatCurrency(saved, 0, true)} in interest — at no extra cost`,
+          detail: `You pay half your monthly amount every two weeks instead of once a month. Because there are 26 bi-weekly periods in a year (not 24), you make one extra full payment per year. That alone saves ${formatCurrency(saved, 0, true)} in interest charges and pays off your mortgage ${yrsSaved.toFixed(1)} years early.`,
+        });
+      }
+    }
+
+    // P2 — Stress test gap
     if (price > 0 && inputs.interestRate > 0) {
-      const stressRate   = outputs.stressTestRate;
+      const stressRate    = outputs.stressTestRate;
       const qualifyingPmt = calculateMortgagePayment(outputs.loanAmount, stressRate, inputs.amortizationYears, "monthly");
       const actualPmt     = calculateMortgagePayment(outputs.loanAmount, inputs.interestRate, inputs.amortizationYears, "monthly");
       const gap = Math.round(qualifyingPmt - actualPmt);
@@ -67,89 +97,24 @@ function getInsights(inputs: MortgageInputs, outputs: MortgageOutputs): Insight[
         ins.push({
           type: "info", priority: 2,
           headline: `Your lender qualifies you at ${stressRate.toFixed(2)}%, not ${inputs.interestRate.toFixed(2)}%`,
-          detail: `The mortgage stress test adds ${formatCurrency(gap, 0)}/month to your qualifying payment. Lenders use this rate to make sure you can handle rate increases at renewal. It also sets your maximum purchase price, roughly ${Math.round((inputs.interestRate / stressRate) * 100 - 100)}% less than if you qualified at your contract rate.`,
+          detail: `The mortgage stress test adds ${formatCurrency(gap, 0)}/month to your qualifying payment. Lenders use this to confirm you can handle rate increases at renewal. It also caps your maximum purchase price — roughly ${Math.round((1 - inputs.interestRate / stressRate) * 100)}% lower than if you qualified at your contract rate.`,
         });
       }
     }
 
-    // 4. Amortization length, total interest cost framed clearly
-    if (price > 0 && outputs.totalInterest > 0) {
-      const interestPct = ((outputs.totalInterest / price) * 100).toFixed(0);
+    // P2 — Lump sum wins (if entered)
+    if (outputs.interestSavedByLumpSums > 0) {
+      const mo  = outputs.paymentsSavedByLumpSums;
+      const yrs = Math.floor(mo / 12), rem = mo % 12;
+      const t   = yrs > 0 && rem > 0 ? `${yrs}yr ${rem}mo` : yrs > 0 ? `${yrs} years` : `${rem} months`;
       ins.push({
-        type: "info", priority: 4,
-        headline: `You'll pay ${interestPct}% of the home's value in interest`,
-        detail: `Over ${inputs.amortizationYears} years at ${inputs.interestRate}%, total interest is ${formatCurrency(outputs.totalInterest, 0, true)}. Accelerated payments or a shorter amortization makes the biggest dent early, every dollar of extra principal in year one is worth roughly ${(inputs.amortizationYears / 2).toFixed(0)}× what it's worth in year ${inputs.amortizationYears}.`,
+        type: "win", priority: 2,
+        headline: `Annual lump sums save ${formatCurrency(outputs.interestSavedByLumpSums, 0)} in interest and cut ${t} off your amortization`,
+        detail: `Lump sums applied on your anniversary date reduce the principal that all future interest is calculated on. Most mortgages allow 10 to 20% of the original balance per year without any prepayment penalty.`,
       });
     }
 
-    // 5. High leverage warning
-    if (down < 10 && price > 0) {
-      ins.push({
-        type: "warning", priority: 1,
-        headline: `Under 10% down, a small price drop puts you underwater`,
-        detail: `With ${down.toFixed(1)}% down, a 5% decline in home value exceeds your equity entirely. You'd owe more than the home is worth. This isn't a reason not to buy, but it matters if your circumstances change and you need to sell within the first few years.`,
-      });
-    }
-
-    // 6. No CMHC win
-    if (down >= 20) {
-      ins.push({
-        type: "win", priority: 3,
-        headline: "20%+ down, no CMHC required",
-        detail: `Your full down payment builds equity from day one with no insurance premium. You'll also have access to a wider range of lenders and potentially better rates. At ${down.toFixed(0)}% down, your LTV is ${(100 - down).toFixed(0)}%, well inside the uninsured threshold.`,
-      });
-    }
-
-    // 6b. Insurable insight
-    if (down >= 20 && price <= 1_500_000 && inputs.amortizationYears <= 25) {
-      ins.push({
-        type: "info", priority: 4,
-        headline: "Your mortgage qualifies as insurable",
-        detail: `With ${down.toFixed(0)}% down, a purchase price under $1.5M, and a 25-year amortization, lenders can still pool-insure this mortgage even without a CMHC premium. Ask your broker specifically for insurable pricing. You may get rates close to what insured buyers see, despite paying no insurance premium.`,
-      });
-    }
-
-    // 6c. Uninsurable insight
-    if (price > 1_500_000 || inputs.amortizationYears > 25) {
-      const reason = price > 1_500_000
-        ? "purchases over $1.5M"
-        : "a 30-year amortization";
-      ins.push({
-        type: "info", priority: 4,
-        headline: "Your mortgage is uninsurable. Shopping around matters more here.",
-        detail: `Mortgages on ${reason} cannot be insured. This is conventional pricing, typically 0.10 to 0.25% higher than insurable mortgages. At this tier, the spread between lenders is wider. Working with a broker who can access multiple lenders will save you more than on a standard insured purchase.`,
-      });
-    }
-
-    // 7. First-time buyer rebate
-    if (inputs.isFirstTimeBuyer && outputs.ltt.firstTimeBuyerRebate > 0) {
-      ins.push({
-        type: "win", priority: 3,
-        headline: `First-time buyer LTT rebate saves ${formatCurrency(outputs.ltt.firstTimeBuyerRebate, 0)} at closing`,
-        detail: "Applied automatically at closing, no separate application required in most provinces. Make sure your lawyer knows you're a first-time buyer so it's captured correctly.",
-      });
-    }
-
-    // 8. Accelerated payments opportunity (only if monthly)
-    if (inputs.paymentFrequency === "monthly" && outputs.loanAmount > 0) {
-      const bwPmt    = outputs.periodicPayment / 2;
-      const mr       = Math.pow(1 + inputs.interestRate / 100 / 2, 2 / 12) - 1;
-      const n        = mr > 0 ? Math.log(bwPmt / (bwPmt - outputs.loanAmount * mr / 2)) / Math.log(1 + mr / 2) : 0;
-      const bwYears  = n > 0 ? n / 26 : 0;
-      const yrsSaved = inputs.amortizationYears - bwYears;
-      if (yrsSaved > 0.5) {
-        const saved = Math.max(0, Math.round(
-          outputs.periodicPayment * 12 * inputs.amortizationYears - bwPmt * 26 * bwYears
-        ));
-        ins.push({
-          type: "opportunity", priority: 3,
-          headline: `Accelerated bi-weekly saves ${formatCurrency(saved, 0, true)}, for free`,
-          detail: `Switching from monthly to accelerated bi-weekly costs nothing extra per payment, you pay half your monthly amount every two weeks. But because there are 26 bi-weekly periods in a year (not 24), you make one extra monthly payment per year. That alone saves ${formatCurrency(saved, 0, true)} in interest and pays off the mortgage ${yrsSaved.toFixed(1)} years early.`,
-        });
-      }
-    }
-
-    // 9. Extra payment win
+    // P3 — Extra payment win (if entered)
     if (inputs.extraPayment > 0 && outputs.paymentsSavedByLumpSums === 0) {
       const baseLen   = inputs.amortizationYears * 12;
       const actualLen = outputs.amortizationSchedule.length;
@@ -160,214 +125,254 @@ function getInsights(inputs: MortgageInputs, outputs: MortgageOutputs): Insight[
         ins.push({
           type: "win", priority: 3,
           headline: `Extra ${formatCurrency(inputs.extraPayment, 0)}/payment cuts ${t} off your amortization`,
-          detail: "Extra payments reduce your principal directly, which eliminates future interest on that amount. The earlier in your amortization you make them, the more interest they eliminate because every dollar of principal you remove today carries interest for the entire remaining term.",
+          detail: `Extra payments reduce your principal directly, eliminating future interest on that amount. Every dollar of extra principal in year one saves more than a dollar in year ${inputs.amortizationYears} because it compounds over the remaining term.`,
         });
       }
     }
 
-    // 10. Lump sums win
-    if (outputs.interestSavedByLumpSums > 0) {
-      const mo  = outputs.paymentsSavedByLumpSums;
-      const yrs = Math.floor(mo / 12), rem = mo % 12;
-      const t   = yrs > 0 && rem > 0 ? `${yrs}yr ${rem}mo` : yrs > 0 ? `${yrs} years` : `${rem} months`;
+    // P3 — No CMHC win
+    if (down >= 20) {
       ins.push({
-        type: "win", priority: 2,
-        headline: `Annual lump sums save ${formatCurrency(outputs.interestSavedByLumpSums, 0)} in interest and cut ${t} off your amortization`,
-        detail: "Lump sums applied on your anniversary date reduce the principal that all future interest is calculated on, the leverage is significant. Most mortgages allow 10–20% of the original balance per year without any prepayment penalty.",
+        type: "win", priority: 3,
+        headline: "20% or more down — no CMHC required",
+        detail: `Your full down payment builds equity from day one with no insurance premium. You'll also have access to a wider range of lenders and potentially better rates. At ${down.toFixed(0)}% down, your LTV is ${(100 - down).toFixed(0)}%, well inside the uninsured threshold.`,
       });
     }
 
-    // 11. New build GST
+    // P3 — First-time buyer LTT rebate
+    if (inputs.isFirstTimeBuyer && outputs.ltt.firstTimeBuyerRebate > 0) {
+      ins.push({
+        type: "win", priority: 3,
+        headline: `First-time buyer LTT rebate saves ${formatCurrency(outputs.ltt.firstTimeBuyerRebate, 0)} at closing`,
+        detail: `Applied automatically at closing in most provinces — no separate application required. Make sure your lawyer knows you're a first-time buyer so it's captured correctly on your statement of adjustments.`,
+      });
+    }
+
+    // P4 — Total interest as % of price
+    if (price > 0 && outputs.totalInterest > 0) {
+      const pct = ((outputs.totalInterest / price) * 100).toFixed(0);
+      ins.push({
+        type: "info", priority: 4,
+        headline: `You'll pay ${pct}% of the home's purchase price in interest charges`,
+        detail: `Over ${inputs.amortizationYears} years at ${inputs.interestRate}%, total interest is ${formatCurrency(outputs.totalInterest, 0, true)}. The earlier you make extra payments or switch to accelerated bi-weekly, the more you reduce this number.`,
+      });
+    }
+
+    // P4 — Insurable
+    if (down >= 20 && price <= 1_500_000 && inputs.amortizationYears <= 25) {
+      ins.push({
+        type: "info", priority: 4,
+        headline: "Your mortgage qualifies as insurable — ask your broker about insurable pricing",
+        detail: `With ${down.toFixed(0)}% down, a purchase price under $1.5M, and a 25-year amortization, lenders can pool-insure this mortgage even without a CMHC premium. You may get rates close to what insured buyers see, despite paying no insurance premium.`,
+      });
+    }
+
+    // P4 — Uninsurable
+    if (price > 1_500_000 || inputs.amortizationYears > 25) {
+      const reason = price > 1_500_000 ? "purchases over $1.5M" : "a 30-year amortization";
+      ins.push({
+        type: "info", priority: 4,
+        headline: "Your mortgage is uninsurable — broker shopping matters more at this tier",
+        detail: `Mortgages on ${reason} cannot be insured. Conventional pricing is typically 0.10 to 0.25% higher than insurable mortgages, and the spread between lenders is wider. Working with a broker who accesses multiple lenders will have a bigger impact here than on a standard insured purchase.`,
+      });
+    }
+
+    // P4 — New build GST
     if (inputs.isNewBuild && outputs.gstHst.net > 0) {
       ins.push({
         type: "info", priority: 4,
-        headline: `New build: budget ${formatCurrency(outputs.gstHst.net, 0)} for GST/HST at closing`,
-        detail: "After the federal new housing rebate (available for homes under $450K), the remaining GST/HST is due on closing day, not financed into your mortgage. Make sure your lawyer has accounted for this in your closing costs.",
+        headline: `New build: ${formatCurrency(outputs.gstHst.net, 0)} in GST/HST is due on closing day`,
+        detail: `After the federal new housing rebate (for homes under $450K), the remaining GST/HST is payable at closing — it cannot be financed into your mortgage. Make sure your lawyer has accounted for this in your closing costs.`,
       });
     }
   }
 
-  // ── RENEWAL ──────────────────────────────────────────────────────────────
+  // ── RENEWAL ───────────────────────────────────────────────────────────────
   if (mode === "renewal") {
     const hasCurrent = outputs.currentPayment > 0;
     const diff       = hasCurrent ? outputs.periodicPayment - outputs.currentPayment : 0;
-    const pct        = hasCurrent && outputs.currentPayment > 0
-      ? ((diff / outputs.currentPayment) * 100) : 0;
+    const pct        = hasCurrent && outputs.currentPayment > 0 ? (diff / outputs.currentPayment) * 100 : 0;
 
-    // 1. Switch lender insight, always the most important renewal insight
-    ins.push({
-      type: "opportunity", priority: 1,
-      headline: "You don't have to stay with your lender, and now you can switch without re-qualifying",
-      detail: "Since November 2024, you can switch lenders at renewal without passing the mortgage stress test again. Your existing lender knows this, which is why their first offer is rarely their best. Get at least one competing quote from a broker before you sign anything.",
-    });
-
-    // 2. Payment change (only when current rate entered)
-    if (hasCurrent) {
-      if (diff > 300) {
-        ins.push({
-          type: "warning", priority: 1,
-          headline: `Your payment increases ${formatCurrency(diff, 0)}/period (+${pct.toFixed(0)}%) at renewal`,
-          detail: `This is a meaningful payment shock, plan for it now, not the week your term ends. If the increase strains your budget, a longer term locks in predictability. A broker can also show you whether a variable rate or a blend-and-extend option softens the landing.`,
-        });
-      } else if (diff > 100) {
-        ins.push({
-          type: "caution", priority: 2,
-          headline: `Payment increases ${formatCurrency(diff, 0)}/period at renewal (+${pct.toFixed(0)}%)`,
-          detail: "Manageable, but worth stress-testing your budget at this new level before renewal day. Consider whether keeping any extra cash flow in a FHSA, RRSP, or TFSA outperforms making lump sum prepayments at your new rate.",
-        });
-      } else if (diff < -100) {
-        ins.push({
-          type: "win", priority: 1,
-          headline: `Payment drops ${formatCurrency(Math.abs(diff), 0)}/period at renewal`,
-          detail: `Rates have moved in your favour. One of the smartest things you can do: keep your payment the same as before. That extra amount goes entirely to principal, you'll pay off your mortgage years faster and save thousands in interest with zero change to your monthly outflow.`,
-        });
-      } else {
-        ins.push({
-          type: "win", priority: 2,
-          headline: "Payment barely changes at renewal, stable ground",
-          detail: (() => {
-          const extra100 = inputs.currentBalance > 0 && inputs.interestRate > 0
-            ? Math.round(100 * 12 * (inputs.renewalAmortization || inputs.amortizationYears) * 0.35)
-            : 2000;
-          return `Your new rate is close to your expiring rate. This is a good moment to increase your payment slightly to accelerate paydown. Adding just $100/period saves approximately ${formatCurrency(extra100, 0, true)} in interest over the remaining amortization.`;
-        })(),
-        });
-      }
-    } else {
+    // P1 — Payment shock (large increase)
+    if (hasCurrent && diff > 300) {
       ins.push({
-        type: "info", priority: 2,
-        headline: "Enter your current rate to see your payment change",
-        detail: "Add your expiring contracted rate above, we'll show you exactly how much your payment goes up or down at renewal and what that means for your budget.",
+        type: "warning", priority: 1,
+        headline: `Payment increases ${formatCurrency(diff, 0)}/period (+${pct.toFixed(0)}%) at renewal`,
+        detail: `Plan for this now, not the week your term ends. If this strains your budget, a longer term locks in predictability. A broker can also show you whether a variable rate or a blend-and-extend option softens the increase.`,
       });
     }
 
-    // 3. Amortization shortening opportunity
+    // P1 — Switch lender without re-qualifying (always relevant)
+    ins.push({
+      type: "opportunity", priority: 1,
+      headline: "You can switch lenders at renewal without re-qualifying — your lender's first offer is rarely their best",
+      detail: "Since November 2024, switching lenders at renewal no longer requires passing the stress test. Your existing lender knows this, which is why they often send a low-effort renewal offer first. Get at least one competing quote from a broker before you sign anything.",
+    });
+
+    // P2 — Moderate payment increase
+    if (hasCurrent && diff > 100 && diff <= 300) {
+      ins.push({
+        type: "caution", priority: 2,
+        headline: `Payment increases ${formatCurrency(diff, 0)}/period at renewal (+${pct.toFixed(0)}%)`,
+        detail: `Manageable, but worth stress-testing your budget at this new level before renewal day. Also worth asking whether keeping extra cash flow in an FHSA, RRSP, or TFSA outperforms making lump sum prepayments at your new rate.`,
+      });
+    }
+
+    // P2 — Rate dropped at renewal
+    if (hasCurrent && diff < -100) {
+      ins.push({
+        type: "win", priority: 2,
+        headline: `Payment drops ${formatCurrency(Math.abs(diff), 0)}/period at renewal`,
+        detail: `Rates have moved in your favour. The smartest move: keep your payment at the old level. That extra amount goes entirely to principal with no change to your monthly outflow, cutting years off your amortization.`,
+      });
+    }
+
+    // P2 — Amortization shortening opportunity
     const remainingAmort = inputs.renewalAmortization || inputs.amortizationYears;
     if (remainingAmort > 20 && inputs.currentBalance > 0) {
-      const shorterPmt = calculateMortgagePayment(
-        inputs.currentBalance, inputs.interestRate, 20, inputs.paymentFrequency
-      );
+      const shorterPmt     = calculateMortgagePayment(inputs.currentBalance, inputs.interestRate, 20, inputs.paymentFrequency);
       const extraPerPeriod = Math.round(shorterPmt - outputs.periodicPayment);
-      if (extraPerPeriod > 0 && extraPerPeriod < 500) {
-        // Calculate interest saved
-        const longSched  = outputs.totalInterest;
+      if (extraPerPeriod > 0 && extraPerPeriod < 600) {
         const shortPmt20 = calculateMortgagePayment(inputs.currentBalance, inputs.interestRate, 20, "monthly");
-        // rough total interest at 20yr
-        const mr = Math.pow(1 + inputs.interestRate / 100 / 2, 2 / 12) - 1;
-        const n20 = 20 * 12;
-        const totalShort = shortPmt20 * n20;
-        const totalLoan  = inputs.currentBalance;
-        const intShort   = Math.round(totalShort - totalLoan);
-        const intSaved   = Math.max(0, Math.round(longSched - intShort));
+        const intShort   = Math.round(shortPmt20 * 12 * 20 - inputs.currentBalance);
+        const intSaved   = Math.max(0, Math.round(outputs.totalInterest - intShort));
         if (intSaved > 5000) {
           ins.push({
             type: "opportunity", priority: 2,
-            headline: `Shortening to 20 years costs only ${formatCurrency(extraPerPeriod, 0)}/period more`,
-            detail: `Renewal is the ideal moment to shorten your amortization, you avoid breaking any existing contract. Paying ${formatCurrency(extraPerPeriod, 0)} more per period saves approximately ${formatCurrency(intSaved, 0, true)} in total interest charges. You're essentially buying years of financial freedom.`,
+            headline: `Shortening to 20 years costs ${formatCurrency(extraPerPeriod, 0)}/period more and saves ${formatCurrency(intSaved, 0, true)} in interest`,
+            detail: `Renewal is the best moment to shorten your amortization — you are not breaking any existing contract. Paying ${formatCurrency(extraPerPeriod, 0)} more per period saves ${formatCurrency(intSaved, 0, true)} in total interest charges over the remaining amortization.`,
           });
         }
       }
     }
 
-    // 4. Lump sum at renewal, best timing
-    if (inputs.currentBalance > 0) {
-      ins.push({
-        type: "opportunity", priority: 3,
-        headline: "Right before renewal is the best time for a lump sum payment",
-        detail: "Most mortgages allow a 10–20% lump sum on each anniversary. Your renewal date is your final opportunity to apply a prepayment under the old term, it reduces the balance your entire new rate gets applied to. Even $5,000–$10,000 can meaningfully reduce the interest you pay over the new term.",
-      });
-    }
-
-    // 5. Extra/lump sum wins if already entered
+    // P2 — Lump sum win (if entered)
     if (outputs.interestSavedByLumpSums > 0) {
       const mo  = outputs.paymentsSavedByLumpSums;
       const yrs = Math.floor(mo / 12), rem = mo % 12;
       const t   = yrs > 0 ? `${yrs}yr${rem > 0 ? ` ${rem}mo` : ""}` : `${rem}mo`;
       ins.push({
         type: "win", priority: 2,
-        headline: `Your lump sums save ${formatCurrency(outputs.interestSavedByLumpSums, 0)}, ${t} off your amortization`,
-        detail: "Every dollar of lump sum applied at renewal works harder than a dollar applied mid-term, because it reduces the principal that your new rate is charged on from day one of the new contract.",
+        headline: `Your lump sums save ${formatCurrency(outputs.interestSavedByLumpSums, 0)} in interest and cut ${t} off your amortization`,
+        detail: `Every dollar of lump sum applied at renewal works harder than a dollar mid-term, because it reduces the principal your new rate is charged on from day one of the new contract.`,
+      });
+    }
+
+    // P3 — Stable payment
+    if (hasCurrent && Math.abs(diff) <= 100) {
+      ins.push({
+        type: "win", priority: 3,
+        headline: "Payment barely changes at renewal — stable ground",
+        detail: (() => {
+          const extra = inputs.currentBalance > 0 && inputs.interestRate > 0
+            ? Math.round(100 * 12 * (inputs.renewalAmortization || inputs.amortizationYears) * 0.35)
+            : 2000;
+          return `Your new rate is close to your expiring rate. Consider bumping your payment by $100/period — that saves approximately ${formatCurrency(extra, 0, true)} in interest charges over the remaining amortization.`;
+        })(),
+      });
+    }
+
+    // P3 — Lump sum timing tip (only if none entered yet)
+    const hasLumpSums = Object.values(inputs.lumpSumsByYear).some(v => v > 0);
+    if (inputs.currentBalance > 0 && !hasLumpSums && outputs.interestSavedByLumpSums === 0) {
+      const example = Math.round(inputs.currentBalance * 0.10 / 1000) * 1000;
+      const saving  = Math.round(example * (inputs.interestRate / 100) * (remainingAmort) * 0.4);
+      ins.push({
+        type: "opportunity", priority: 3,
+        headline: "Your renewal date is the best moment to make a lump sum payment",
+        detail: `A ${formatCurrency(example, 0)} lump sum (10% of your balance) right before renewal could save approximately ${formatCurrency(saving, 0, true)} in interest charges — because it reduces the principal your entire new rate is applied to from day one.`,
+      });
+    }
+
+    // P4 — No current rate entered
+    if (!hasCurrent) {
+      ins.push({
+        type: "info", priority: 4,
+        headline: "Enter your current rate to see your payment change at renewal",
+        detail: "Add your expiring contracted rate above and we will show you exactly how much your payment goes up or down, so you can plan before renewal day.",
       });
     }
   }
 
-  // ── REFINANCE ────────────────────────────────────────────────────────────
+  // ── REFINANCE ─────────────────────────────────────────────────────────────
   if (mode === "refinance") {
     const equity    = Math.max(0, inputs.homeValue - inputs.currentBalance);
     const equityPct = inputs.homeValue > 0 ? (equity / inputs.homeValue) * 100 : 0;
     const ltv       = inputs.homeValue > 0 ? inputs.currentBalance / inputs.homeValue : 0;
 
-    // 1. Break penalty, must compute before deciding if refinance makes sense
-    if (inputs.currentBalance > 0 && inputs.currentRate > 0) {
-      const remainingMo = Math.round(inputs.termYears * 12 * 0.6); // rough estimate
-      const threeMonthInt = Math.round(inputs.currentBalance * (inputs.currentRate / 100) / 12 * 3);
-      ins.push({
-        type: "caution", priority: 1,
-        headline: `Factor in your break penalty before deciding`,
-        detail: `Breaking a fixed mortgage typically costs the greater of 3-months' interest (≈${formatCurrency(threeMonthInt, 0)}) or the IRD, which can be much larger if your rate is significantly above current rates. Use our break penalty calculator to get a precise number before committing to a refinance.`,
-      });
-    }
-
-    // 2. LTV warnings
+    // P1 — LTV hard stop
     if (ltv > 0.80) {
       ins.push({
         type: "warning", priority: 1,
-        headline: `LTV of ${(ltv * 100).toFixed(1)}% is above the 80% refinance cap`,
-        detail: "Canadian refinances are capped at 80% loan-to-value. You'd need to reduce the loan amount, wait for your home value to rise, or pay down more principal before refinancing is available to you.",
-      });
-    } else if (ltv > 0.75) {
-      ins.push({
-        type: "caution", priority: 2,
-        headline: `LTV at ${(ltv * 100).toFixed(1)}%, close to the 80% cap`,
-        detail: "You're near the refinance ceiling. Adding significant cash-out could push you over the limit. Model your cash-out amount carefully, or consider whether a HELOC (up to 65% LTV) gives you the flexibility you need without a full refinance.",
+        headline: `LTV of ${(ltv * 100).toFixed(1)}% exceeds the 80% refinance cap`,
+        detail: `Canadian refinances are capped at 80% loan-to-value. You would need to reduce the loan amount, wait for your home value to rise, or pay down more principal before refinancing is available to you.`,
       });
     }
 
-    // 3. Amortization extension cost, critical for informed decision
+    // P1 — Break penalty (always show if rates are entered)
+    if (inputs.currentBalance > 0 && inputs.currentRate > 0) {
+      const threeMonthInt = Math.round(inputs.currentBalance * (inputs.currentRate / 100) / 12 * 3);
+      ins.push({
+        type: "caution", priority: 1,
+        headline: "Factor in your break penalty before deciding — it can exceed the interest savings",
+        detail: `Breaking a fixed mortgage costs the greater of 3-months interest (approx. ${formatCurrency(threeMonthInt, 0)}) or the IRD. The IRD can be much larger if your contracted rate is significantly above current rates. Get a precise number before committing.`,
+        link: { href: "/mortgage-break-penalty", label: "Calculate your break penalty" },
+      });
+    }
+
+    // P2 — LTV caution (near cap)
+    if (ltv > 0.75 && ltv <= 0.80) {
+      ins.push({
+        type: "caution", priority: 2,
+        headline: `LTV at ${(ltv * 100).toFixed(1)}% — close to the 80% refinance cap`,
+        detail: `Adding significant cash-out could push you over the 80% limit. Model your cash-out amount carefully, or consider whether a HELOC (up to 65% LTV) gives you flexibility without a full refinance.`,
+      });
+    }
+
+    // P2 — Amortization extension cost
     if (inputs.amortizationYears > 20 && inputs.currentBalance > 0) {
       const shortPmt = calculateMortgagePayment(inputs.currentBalance, inputs.interestRate, 20, inputs.paymentFrequency);
-      const saving   = Math.round(outputs.periodicPayment - shortPmt); // negative = longer is cheaper
+      const saving   = Math.round(outputs.periodicPayment - shortPmt);
       if (saving < -50) {
-        // user chose longer amortization
         const extraInterest = Math.abs(saving) * 12 * (inputs.amortizationYears - 20);
         ins.push({
           type: "caution", priority: 2,
-          headline: `Extending to ${inputs.amortizationYears} years saves ${formatCurrency(Math.abs(saving), 0)}/period but costs ~${formatCurrency(extraInterest, 0, true)} more in interest`,
-          detail: `Resetting to a longer amortization reduces your immediate cash pressure, but every extra year adds significant total interest cost. It's often worth keeping the amortization as short as your cash flow allows. You can always adjust it again at renewal.`,
+          headline: `Extending to ${inputs.amortizationYears} years saves ${formatCurrency(Math.abs(saving), 0)}/period but adds ${formatCurrency(extraInterest, 0, true)} in interest`,
+          detail: `Resetting to a longer amortization reduces your monthly cash pressure, but every extra year adds significant interest charges. Keep the amortization as short as your cash flow allows — you can always adjust at your next renewal.`,
         });
       }
     }
 
-    // 4. Strong equity position
+    // P2 — Strong equity
     if (equityPct >= 35) {
       ins.push({
         type: "win", priority: 2,
-        headline: `Strong equity at ${equityPct.toFixed(0)}%, you have negotiating power`,
-        detail: `With ${formatCurrency(equity, 0, true)} in equity, you're a low-risk borrower. Lenders compete for this profile. Get at least 2-3 quotes before settling on terms, a broker can often get you meaningfully better rate or terms than going direct to your current lender.`,
+        headline: `Strong equity position at ${equityPct.toFixed(0)}% — you have real negotiating power`,
+        detail: `With ${formatCurrency(equity, 0, true)} in equity, you are a low-risk borrower and lenders compete for your business. Get at least two or three quotes before settling on terms — a broker can often get you meaningfully better rate or conditions than going direct to your current lender.`,
       });
     }
 
-    // 5. Cash-out framing
+    // P3 — Cash-out cost
     if (inputs.cashOutAmount > 0) {
       const cashCostPerYear = Math.round(inputs.cashOutAmount * (inputs.interestRate / 100));
       ins.push({
         type: "info", priority: 3,
-        headline: `Your ${formatCurrency(inputs.cashOutAmount, 0)} cash-out costs ~${formatCurrency(cashCostPerYear, 0)}/year in interest`,
-        detail: `Cash-out at mortgage rates is among the cheapest money available, typically 3–5%, vs credit cards at 20%+. The key question is whether the use of the funds (renovation ROI, investment return, debt elimination) justifies the ongoing interest cost. If consolidating debt, the math works only if the behaviour changes too.`,
+        headline: `Your ${formatCurrency(inputs.cashOutAmount, 0)} cash-out costs ${formatCurrency(cashCostPerYear, 0)}/year in interest charges`,
+        detail: `Mortgage rates are among the cheapest borrowing available — typically well below credit cards or personal loans. The key question is whether the use of funds (renovation ROI, investment return, debt payoff) justifies the ongoing interest. If consolidating debt, the math only works if the behaviour changes too.`,
       });
     }
 
-    // 6. No CMHC win
+    // P4 — No CMHC
     if (ltv <= 0.80 && inputs.homeValue > 0) {
       ins.push({
         type: "win", priority: 4,
         headline: "No CMHC required on this refinance",
-        detail: "Refinancing at 80% LTV or below is uninsured, no CMHC premium added to your balance.",
+        detail: `Refinancing at 80% LTV or below is uninsured — no insurance premium added to your balance.`,
       });
     }
   }
 
-  // Sort: priority ascending, then type weight within same priority
+  // Sort: P1 first, within same priority by type weight
   const w: Record<InsightType, number> = { warning: 0, caution: 1, opportunity: 2, win: 3, info: 4 };
   ins.sort((a, b) => a.priority !== b.priority
     ? a.priority - b.priority
@@ -377,7 +382,7 @@ function getInsights(inputs: MortgageInputs, outputs: MortgageOutputs): Insight[
   return ins;
 }
 
-// ── Badge config ──────────────────────────────────────────────────────────────
+// ── Badge config ───────────────────────────────────────────────────────────────
 const BADGES: Record<InsightType, { bg: string; border: string; text: string; label: string; icon: React.ReactNode }> = {
   win: {
     bg: "#f0fdf4", border: "#bbf7d0", text: "#15803d", label: "Win",
@@ -425,11 +430,16 @@ const BADGES: Record<InsightType, { bg: string; border: string; text: string; la
   },
 };
 
+const SHOW_BY_DEFAULT = 3;
 
-// ── Component ─────────────────────────────────────────────────────────────────
+// ── Component ──────────────────────────────────────────────────────────────────
 export default function InsightsPanel({ inputs, outputs }: Props) {
+  const [expanded, setExpanded] = useState(false);
   const all = getInsights(inputs, outputs);
   if (all.length === 0) return null;
+
+  const visible = expanded ? all : all.slice(0, SHOW_BY_DEFAULT);
+  const hidden  = all.length - SHOW_BY_DEFAULT;
 
   return (
     <div className="rounded-2xl border border-neutral-100 bg-white overflow-hidden">
@@ -444,9 +454,9 @@ export default function InsightsPanel({ inputs, outputs }: Props) {
         </p>
       </div>
 
-      {/* Unified flat list — hierarchy expressed through badge type and sort order only */}
+      {/* Insight rows */}
       <div className="divide-y divide-neutral-50">
-        {all.map((ins, i) => {
+        {visible.map((ins, i) => {
           const b = BADGES[ins.type];
           return (
             <div key={i} className="px-5 py-4 flex items-start gap-3">
@@ -473,6 +483,29 @@ export default function InsightsPanel({ inputs, outputs }: Props) {
           );
         })}
       </div>
+
+      {/* Show more / less */}
+      {all.length > SHOW_BY_DEFAULT && (
+        <button
+          onClick={() => setExpanded(e => !e)}
+          className="w-full flex items-center justify-center gap-1.5 px-5 py-3 text-xs font-medium border-t border-neutral-100 transition-colors hover:bg-neutral-50"
+          style={{ color: "var(--green)" }}>
+          {expanded ? (
+            <>Show less
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"
+                style={{ transform: "rotate(180deg)" }}>
+                <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </>
+          ) : (
+            <>{hidden} more insight{hidden !== 1 ? "s" : ""}
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </>
+          )}
+        </button>
+      )}
     </div>
   );
 }
