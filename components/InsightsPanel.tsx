@@ -431,10 +431,6 @@ export default function InsightsPanel({ inputs, outputs }: Props) {
   const all = getInsights(inputs, outputs);
   if (all.length === 0) return null;
 
-  const primary      = all[0];
-  const secondaries  = all.slice(1);
-  const primaryBadge = BADGES[primary.type];
-
   return (
     <div className="rounded-2xl border border-neutral-100 bg-white overflow-hidden">
       {/* Header */}
@@ -448,70 +444,35 @@ export default function InsightsPanel({ inputs, outputs }: Props) {
         </p>
       </div>
 
-      {/* Primary insight */}
-      <div className="px-5 pt-4 pb-3">
-        <div className="flex items-start gap-3">
-          <span className="inline-flex items-center gap-1 shrink-0 mt-0.5 px-2 py-0.5 rounded-full text-xs font-semibold border"
-            style={{ background: primaryBadge.bg, borderColor: primaryBadge.border, color: primaryBadge.text, minWidth: "90px", justifyContent: "center" }}>
-            {primaryBadge.icon}
-            {primaryBadge.label}
-          </span>
-          <div>
-            <p className="text-sm font-semibold leading-snug text-neutral-900">{primary.headline}</p>
-            <p className="text-xs mt-1.5 leading-relaxed" style={{ color: "var(--ink-muted)" }}>{primary.detail}</p>
-            {primary.link && (
-              <Link href={primary.link.href}
-                className="inline-flex items-center gap-1 mt-1.5 text-xs font-medium"
-                style={{ color: "var(--green)" }}>
-                {primary.link.label}
-                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
-                  <path d="M2 5h6M5 2l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </Link>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Secondary insights — all shown */}
-      {secondaries.length > 0 && (
-        <>
-          <div className="border-t border-neutral-50 mx-5" />
-          <div className="px-5 py-3">
-            <p className="text-xs font-medium mb-2.5" style={{ color: "var(--ink-faint)" }}>
-              Also worth knowing
-            </p>
-            <div className="space-y-3">
-              {secondaries.map((ins, i) => {
-                const b = BADGES[ins.type];
-                return (
-                  <div key={i} className="flex items-start gap-2.5">
-                    <span className="inline-flex items-center gap-1 shrink-0 mt-0.5 px-1.5 py-0.5 rounded-full text-xs font-semibold border"
-                      style={{ background: b.bg, borderColor: b.border, color: b.text, fontSize: "10px", minWidth: "84px", justifyContent: "center" }}>
-                      {b.icon}
-                      {b.label}
-                    </span>
-                    <div>
-                      <p className="text-xs font-semibold text-neutral-800 leading-snug">{ins.headline}</p>
-                      <p className="text-xs mt-0.5 leading-relaxed" style={{ color: "var(--ink-muted)" }}>{ins.detail}</p>
-                      {ins.link && (
-                        <Link href={ins.link.href}
-                          className="inline-flex items-center gap-1 mt-1 text-xs font-medium"
-                          style={{ color: "var(--green)" }}>
-                          {ins.link.label}
-                          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
-                            <path d="M2 5h6M5 2l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                          </svg>
-                        </Link>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
+      {/* Unified flat list — hierarchy expressed through badge type and sort order only */}
+      <div className="divide-y divide-neutral-50">
+        {all.map((ins, i) => {
+          const b = BADGES[ins.type];
+          return (
+            <div key={i} className="px-5 py-4 flex items-start gap-3">
+              <span className="inline-flex items-center justify-center gap-1 shrink-0 mt-0.5 px-2 py-0.5 rounded-full text-xs font-semibold border"
+                style={{ background: b.bg, borderColor: b.border, color: b.text, minWidth: "84px" }}>
+                {b.icon}
+                {b.label}
+              </span>
+              <div>
+                <p className="text-sm font-semibold leading-snug text-neutral-900">{ins.headline}</p>
+                <p className="text-xs mt-1 leading-relaxed" style={{ color: "var(--ink-muted)" }}>{ins.detail}</p>
+                {ins.link && (
+                  <Link href={ins.link.href}
+                    className="inline-flex items-center gap-1 mt-1.5 text-xs font-medium"
+                    style={{ color: "var(--green)" }}>
+                    {ins.link.label}
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                      <path d="M2 5h6M5 2l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </Link>
+                )}
+              </div>
             </div>
-          </div>
-        </>
-      )}
+          );
+        })}
+      </div>
     </div>
   );
 }
