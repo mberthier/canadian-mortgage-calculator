@@ -22,9 +22,7 @@ interface MetricProps {
 
 function Metric({ label, value, sub, tip, highlight }: MetricProps) {
   return (
-    <div className="px-5 py-5" style={highlight ? {
-      borderLeft: "2px solid var(--brand-teal)",
-    } : {}}>
+    <div className="px-5 py-5">
       <div className="flex items-start gap-0.5 mb-3">
         <p className="text-xs font-medium uppercase tracking-wide leading-tight"
           style={{ color: highlight ? "var(--ink-mid)" : "var(--ink-faint)" }}>

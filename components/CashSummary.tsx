@@ -41,62 +41,63 @@ export default function CashSummary({ inputs, outputs }: Props) {
 
   return (
     <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(0,0,0,0.06)", background: "#fff" }}>
-      {/* Header */}
-      <div className="px-6 pt-5 pb-4 border-b border-neutral-100">
-        <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--ink-faint)" }}>
+
+      {/* ── Hero total — the number that matters ── */}
+      <div className="px-6 pt-6 pb-5 border-b border-neutral-100">
+        <p className="text-xs font-semibold uppercase tracking-widest mb-3"
+          style={{ color: "var(--ink-faint)" }}>
           Cash needed at closing
+        </p>
+        <p className="font-display leading-none mb-2"
+          style={{ fontSize: 48, color: "#0B1927", letterSpacing: "-0.02em" }}>
+          {formatCurrency(outputs.totalUpfrontCash, 0)}
+        </p>
+        <p className="text-sm" style={{ color: "var(--ink-muted)" }}>
+          Have this ready on closing day.
+          {!inputs.closingCosts && (
+            <span style={{ color: "var(--ink-faint)" }}> Closing costs estimated at $1,500 — add your actual figure in Refine your estimate.</span>
+          )}
         </p>
       </div>
 
-      {/* Line items */}
-      <div className="px-6 py-5 space-y-3">
-        {lines.map(({ label, value, negative, muted }) => (
-          <div key={label} className="flex justify-between items-baseline">
-            <span className="text-sm" style={{ color: muted ? "var(--ink-faint)" : "var(--ink-mid)" }}>
-              {label}
-            </span>
-            <span className="text-sm font-medium tabular-nums ml-4"
-              style={{ color: negative ? "var(--green-mid)" : muted ? "var(--ink-faint)" : "var(--ink)" }}>
-              {negative ? "−" : ""}{formatCurrency(value, 0)}
-            </span>
-          </div>
-        ))}
-
-        {/* Divider + total */}
-        <div className="pt-3 border-t border-neutral-100">
-          <div className="flex justify-between items-baseline">
-            <span className="text-sm font-semibold text-neutral-800">Total cash needed</span>
-            <span className="text-xl font-bold tabular-nums" style={{ color: "var(--brand-teal)" }}>
-              {formatCurrency(outputs.totalUpfrontCash, 0)}
-            </span>
-          </div>
-          {!inputs.closingCosts && (
-            <p className="text-xs mt-2" style={{ color: "var(--ink-faint)" }}>
-              Closing costs estimated at $1,500. Add your actual figure in Refine your estimate.
-            </p>
-          )}
-        </div>
-
-        {/* Monthly carrying cost — only when costs entered */}
-        {(inputs.propertyTax > 0 || inputs.heatingCost > 0 || inputs.condoFees > 0 || inputs.homeInsurance > 0) && (
-          <div className="pt-3 border-t border-neutral-100">
-            <div className="flex justify-between items-baseline">
-              <div>
-                <p className="text-sm font-semibold text-neutral-800">All-in monthly cost</p>
-                <p className="text-xs mt-0.5" style={{ color: "var(--ink-faint)" }}>
-                  Mortgage{inputs.propertyTax > 0 ? " + tax" : ""}
-                  {inputs.heatingCost > 0 ? " + heat" : ""}
-                  {inputs.condoFees > 0 ? " + condo" : ""}
-                  {inputs.homeInsurance > 0 ? " + insurance" : ""}
-                </p>
-              </div>
-              <span className="text-xl font-bold tabular-nums" style={{ color: "var(--brand-teal)" }}>
-                {formatCurrency(outputs.totalMonthlyOwnership, 0)}/mo
+      {/* ── Breakdown — supporting detail ── */}
+      <div className="px-6 py-4">
+        <div className="space-y-2">
+          {lines.map(({ label, value, negative, muted }) => (
+            <div key={label} className="flex justify-between items-baseline">
+              <span className="text-xs" style={{ color: muted ? "var(--ink-faint)" : "var(--ink-muted)" }}>
+                {label}
+              </span>
+              <span className="text-xs font-medium tabular-nums ml-4"
+                style={{ color: negative ? "var(--green-mid)" : muted ? "var(--ink-faint)" : "var(--ink-mid)" }}>
+                {negative ? "−" : ""}{formatCurrency(value, 0)}
               </span>
             </div>
-          </div>
-        )}
+          ))}
+        </div>
       </div>
+
+      {/* ── All-in monthly cost — only when ownership costs entered ── */}
+      {(inputs.propertyTax > 0 || inputs.heatingCost > 0 || inputs.condoFees > 0 || inputs.homeInsurance > 0) && (
+        <div className="px-6 py-4 border-t border-neutral-100"
+          style={{ background: "#fafafa" }}>
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="text-sm font-medium text-neutral-700">All-in monthly cost</p>
+              <p className="text-xs mt-0.5" style={{ color: "var(--ink-faint)" }}>
+                Mortgage
+                {inputs.propertyTax > 0 ? " + tax" : ""}
+                {inputs.heatingCost > 0 ? " + heat" : ""}
+                {inputs.condoFees > 0 ? " + condo" : ""}
+                {inputs.homeInsurance > 0 ? " + insurance" : ""}
+              </p>
+            </div>
+            <span className="text-xl font-bold tabular-nums" style={{ color: "var(--brand-teal)" }}>
+              {formatCurrency(outputs.totalMonthlyOwnership, 0)}/mo
+            </span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
