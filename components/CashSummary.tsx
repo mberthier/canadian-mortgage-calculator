@@ -5,7 +5,7 @@ import { MortgageInputs, MortgageOutputs } from "@/lib/types";
 import { formatCurrency } from "@/lib/formatters";
 
 interface Props {
-  inputs: MortgageInputs;
+  inputs:  MortgageInputs;
   outputs: MortgageOutputs;
 }
 
@@ -40,50 +40,57 @@ export default function CashSummary({ inputs, outputs }: Props) {
   }
 
   return (
-    <div className="rounded-2xl border border-neutral-100 bg-white overflow-hidden">
-      <div className="px-5 py-3.5 border-b border-neutral-100 flex items-center justify-between">
+    <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(0,0,0,0.06)", background: "#fff" }}>
+      {/* Header */}
+      <div className="px-6 pt-5 pb-4 border-b border-neutral-100">
         <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--ink-faint)" }}>
           Cash needed at closing
         </p>
       </div>
-      <div className="px-5 py-4 space-y-2.5">
+
+      {/* Line items */}
+      <div className="px-6 py-5 space-y-3">
         {lines.map(({ label, value, negative, muted }) => (
-          <div key={label} className="flex justify-between text-sm">
-            <span style={{ color: muted ? "var(--ink-faint)" : "var(--ink-mid)" }}>
+          <div key={label} className="flex justify-between items-baseline">
+            <span className="text-sm" style={{ color: muted ? "var(--ink-faint)" : "var(--ink-mid)" }}>
               {label}
-              {muted && <span className="text-xs ml-1">(add in Advanced)</span>}
             </span>
-            <span className="font-medium tabular-nums"
+            <span className="text-sm font-medium tabular-nums ml-4"
               style={{ color: negative ? "var(--green-mid)" : muted ? "var(--ink-faint)" : "var(--ink)" }}>
               {negative ? "−" : ""}{formatCurrency(value, 0)}
             </span>
           </div>
         ))}
 
-        <div className="flex justify-between text-sm font-semibold border-t border-neutral-100 pt-2.5 mt-1">
-          <span className="text-neutral-800">Total cash needed</span>
-          <span style={{ color: "var(--brand-teal)" }}>
-            {formatCurrency(outputs.totalUpfrontCash, 0)}
-          </span>
+        {/* Divider + total */}
+        <div className="pt-3 border-t border-neutral-100">
+          <div className="flex justify-between items-baseline">
+            <span className="text-sm font-semibold text-neutral-800">Total cash needed</span>
+            <span className="text-xl font-bold tabular-nums" style={{ color: "var(--brand-teal)" }}>
+              {formatCurrency(outputs.totalUpfrontCash, 0)}
+            </span>
+          </div>
+          {!inputs.closingCosts && (
+            <p className="text-xs mt-2" style={{ color: "var(--ink-faint)" }}>
+              Closing costs estimated at $1,500. Add your actual figure in Refine your estimate.
+            </p>
+          )}
         </div>
 
-        {!inputs.closingCosts && (
-          <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
-            Closing costs are estimated at $1,500. Add your actual figure in Refine your estimate.
-          </p>
-        )}
-
-        {/* Monthly carrying cost, only show when costs are actually entered */}
+        {/* Monthly carrying cost — only when costs entered */}
         {(inputs.propertyTax > 0 || inputs.heatingCost > 0 || inputs.condoFees > 0 || inputs.homeInsurance > 0) && (
-          <div className="pt-3 mt-1 border-t border-neutral-100">
+          <div className="pt-3 border-t border-neutral-100">
             <div className="flex justify-between items-baseline">
               <div>
                 <p className="text-sm font-semibold text-neutral-800">All-in monthly cost</p>
                 <p className="text-xs mt-0.5" style={{ color: "var(--ink-faint)" }}>
-                  Mortgage{inputs.propertyTax > 0 ? " + tax" : ""}{inputs.heatingCost > 0 ? " + heat" : ""}{inputs.condoFees > 0 ? " + condo" : ""}{inputs.homeInsurance > 0 ? " + insurance" : ""}
+                  Mortgage{inputs.propertyTax > 0 ? " + tax" : ""}
+                  {inputs.heatingCost > 0 ? " + heat" : ""}
+                  {inputs.condoFees > 0 ? " + condo" : ""}
+                  {inputs.homeInsurance > 0 ? " + insurance" : ""}
                 </p>
               </div>
-              <span className="text-lg font-bold tabular-nums" style={{ color: "var(--brand-teal)" }}>
+              <span className="text-xl font-bold tabular-nums" style={{ color: "var(--brand-teal)" }}>
                 {formatCurrency(outputs.totalMonthlyOwnership, 0)}/mo
               </span>
             </div>
