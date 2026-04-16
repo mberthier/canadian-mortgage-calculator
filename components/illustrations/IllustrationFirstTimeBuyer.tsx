@@ -3,94 +3,106 @@ export default function IllustrationFirstTimeBuyer() {
     <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <defs>
         <filter id="ftb-sh">
-          <feDropShadow dx="0" dy="5" stdDeviation="7" floodColor="#1068A8" floodOpacity="0.18"/>
+          <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#1068A8" floodOpacity="0.18"/>
         </filter>
         <filter id="ftb-sh-sm">
           <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#1068A8" floodOpacity="0.14"/>
         </filter>
-        <linearGradient id="door-g" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#1878c0"/>
-          <stop offset="100%" stopColor="#083560"/>
+        <linearGradient id="house-front" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#00B4A0"/>
+          <stop offset="100%" stopColor="#00cbb4"/>
         </linearGradient>
-        <linearGradient id="wall-g" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#eef5ff"/>
-          <stop offset="100%" stopColor="#dbeafe"/>
+        <linearGradient id="house-side" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#008878"/>
+          <stop offset="100%" stopColor="#009e8e"/>
         </linearGradient>
-        <linearGradient id="step-g" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#dbeafe"/>
-          <stop offset="100%" stopColor="#bfdbfe"/>
+        <linearGradient id="roof-l" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#0d5a96"/>
+          <stop offset="100%" stopColor="#0a4a80"/>
+        </linearGradient>
+        <linearGradient id="roof-r" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#1068A8"/>
+          <stop offset="100%" stopColor="#0d5a96"/>
+        </linearGradient>
+        <linearGradient id="mat-g" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#0d5a96"/>
+          <stop offset="100%" stopColor="#0a4a80"/>
         </linearGradient>
       </defs>
 
       {/* Ground shadow */}
-      <ellipse cx="80" cy="152" rx="50" ry="6" fill="#bfdbfe" opacity="0.4"/>
+      <ellipse cx="80" cy="154" rx="54" ry="6" fill="#dbeafe" opacity="0.5"/>
 
-      {/* Wall surround — wide, breathing room around door */}
-      <rect x="14" y="14" width="132" height="132" rx="8"
-        fill="url(#wall-g)" stroke="#dbeafe" strokeWidth="1.5"
-        filter="url(#ftb-sh)"/>
+      {/* ── Teal house — centred, isometric ── */}
+      <g filter="url(#ftb-sh)">
+        {/* Roof left face */}
+        <path d="M38 68 L80 46 L80 68 Z" fill="url(#roof-l)"/>
+        {/* Roof right face */}
+        <path d="M80 46 L122 68 L80 68 Z" fill="url(#roof-r)"/>
+        {/* Ridge */}
+        <path d="M38 68 L80 46 L122 68"
+          stroke="white" strokeWidth="1" opacity="0.2" fill="none"/>
 
-      {/* Transom window above door — narrow like the door */}
-      <rect x="54" y="22" width="52" height="20" rx="3"
-        fill="#bfdbfe" opacity="0.7"/>
-      <line x1="80" y1="22" x2="80" y2="42" stroke="white" strokeWidth="1.2" opacity="0.6"/>
-      <line x1="67" y1="22" x2="67" y2="42" stroke="white" strokeWidth="0.8" opacity="0.4"/>
-      <line x1="93" y1="22" x2="93" y2="42" stroke="white" strokeWidth="0.8" opacity="0.4"/>
-      <rect x="55" y="23" width="50" height="18" rx="2"
-        fill="#93c5fd" opacity="0.18"/>
+        {/* Front wall — teal */}
+        <path d="M38 68 L38 118 L80 118 L80 68 Z" fill="url(#house-front)"/>
+        {/* Side wall — darker teal */}
+        <path d="M80 68 L80 118 L122 118 L122 68 Z" fill="url(#house-side)"/>
 
-      {/* Door — narrow portrait proportion, centred */}
-      <rect x="54" y="44" width="52" height="98" rx="4"
-        fill="url(#door-g)" filter="url(#ftb-sh-sm)"/>
+        {/* Front window */}
+        <rect x="46" y="78" width="14" height="12" rx="2" fill="#bfdbfe" opacity="0.85"/>
+        <line x1="53" y1="78" x2="53" y2="90" stroke="white" strokeWidth="0.8" opacity="0.7"/>
+        <line x1="46" y1="84" x2="60" y2="84" stroke="white" strokeWidth="0.8" opacity="0.7"/>
 
-      {/* Door top panel */}
-      <rect x="61" y="52" width="38" height="30" rx="3"
-        fill="none" stroke="white" strokeWidth="1" opacity="0.15"/>
-      <rect x="62" y="53" width="36" height="28" rx="2"
-        fill="white" opacity="0.05"/>
+        {/* Side window */}
+        <rect x="88" y="78" width="18" height="12" rx="2" fill="#93c5fd" opacity="0.45"/>
+        <line x1="97" y1="78" x2="97" y2="90" stroke="white" strokeWidth="0.7" opacity="0.5"/>
 
-      {/* Door bottom panel */}
-      <rect x="61" y="88" width="38" height="40" rx="3"
-        fill="none" stroke="white" strokeWidth="1" opacity="0.15"/>
-      <rect x="62" y="89" width="36" height="38" rx="2"
-        fill="white" opacity="0.05"/>
+        {/* Front door */}
+        <rect x="60" y="96" width="14" height="22" rx="2" fill="#063d6e"/>
+        <circle cx="72" cy="108" r="1.5" fill="#bfdbfe" opacity="0.8"/>
 
-      {/* Door number — 1 */}
-      <text x="80" y="74" textAnchor="middle" fontSize="16"
-        fill="white" opacity="0.25" fontFamily="Georgia, serif" fontWeight="700">1</text>
+        {/* Ground line */}
+        <line x1="38" y1="118" x2="122" y2="118"
+          stroke="white" strokeWidth="0.5" opacity="0.15"/>
+      </g>
 
-      {/* Door knob */}
-      <circle cx="97" cy="100" r="4" fill="#bfdbfe" filter="url(#ftb-sh-sm)"/>
-      <circle cx="97" cy="100" r="2.8" fill="#93c5fd"/>
-      <circle cx="96" cy="99" r="1" fill="white" opacity="0.5"/>
+      {/* ── Welcome mat ── */}
+      <g filter="url(#ftb-sh-sm)">
+        {/* Mat body */}
+        <rect x="42" y="118" width="76" height="26" rx="4"
+          fill="url(#mat-g)"/>
 
-      {/* Letter slot */}
-      <rect x="64" y="108" width="22" height="4" rx="2"
-        fill="#063d6e" stroke="#0d5a96" strokeWidth="0.5" opacity="0.8"/>
+        {/* Mat border inset */}
+        <rect x="45" y="121" width="70" height="20" rx="2"
+          fill="none" stroke="white" strokeWidth="1" opacity="0.2"/>
 
-      {/* Steps */}
-      <rect x="44" y="140" width="72" height="6" rx="3"
-        fill="url(#step-g)" stroke="#bfdbfe" strokeWidth="1"/>
-      <rect x="36" y="145" width="88" height="5" rx="2.5"
-        fill="#dbeafe" stroke="#bfdbfe" strokeWidth="0.8"/>
+        {/* Texture lines horizontal */}
+        <line x1="46" y1="125" x2="114" y2="125" stroke="white" strokeWidth="0.5" opacity="0.08"/>
+        <line x1="46" y1="128" x2="114" y2="128" stroke="white" strokeWidth="0.5" opacity="0.08"/>
+        <line x1="46" y1="131" x2="114" y2="131" stroke="white" strokeWidth="0.5" opacity="0.08"/>
+        <line x1="46" y1="134" x2="114" y2="134" stroke="white" strokeWidth="0.5" opacity="0.08"/>
+        <line x1="46" y1="137" x2="114" y2="137" stroke="white" strokeWidth="0.5" opacity="0.08"/>
 
-      {/* Left plant */}
-      <rect x="22" y="124" width="14" height="14" rx="3" fill="#bfdbfe"/>
-      <rect x="23" y="125" width="12" height="12" rx="2" fill="#93c5fd" opacity="0.5"/>
-      <path d="M29 124 Q24 116 25 108" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" fill="none"/>
-      <path d="M29 124 Q34 116 33 108" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" fill="none"/>
-      <path d="M29 124 Q29 115 29 107" stroke="#86efac" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
-      <ellipse cx="26" cy="111" rx="5" ry="3" fill="#86efac" opacity="0.85" transform="rotate(-15 26 111)"/>
-      <ellipse cx="32" cy="113" rx="5" ry="3" fill="#4ade80" opacity="0.75" transform="rotate(10 32 113)"/>
+        {/* #1 text */}
+        <text x="80" y="135" textAnchor="middle" fontSize="12"
+          fill="white" fontFamily="Georgia, serif" fontWeight="700"
+          opacity="0.9">#1</text>
+      </g>
 
-      {/* Right plant */}
-      <rect x="124" y="124" width="14" height="14" rx="3" fill="#bfdbfe"/>
-      <rect x="125" y="125" width="12" height="12" rx="2" fill="#93c5fd" opacity="0.5"/>
-      <path d="M131 124 Q126 116 127 108" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" fill="none"/>
-      <path d="M131 124 Q136 116 135 108" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" fill="none"/>
-      <path d="M131 124 Q131 115 131 107" stroke="#86efac" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
-      <ellipse cx="128" cy="111" rx="5" ry="3" fill="#86efac" opacity="0.85" transform="rotate(-15 128 111)"/>
-      <ellipse cx="134" cy="113" rx="5" ry="3" fill="#4ade80" opacity="0.75" transform="rotate(10 134 113)"/>
+      {/* Chimney */}
+      <rect x="100" y="52" width="10" height="18" rx="2"
+        fill="#0a4a80" filter="url(#ftb-sh-sm)"/>
+      <rect x="98" y="50" width="14" height="5" rx="1.5" fill="#0d5a96"/>
+
+      {/* Smoke puffs */}
+      <circle cx="105" cy="44" r="4" fill="#e0eeff" opacity="0.6"/>
+      <circle cx="110" cy="38" r="3" fill="#e0eeff" opacity="0.4"/>
+      <circle cx="107" cy="32" r="2" fill="#e0eeff" opacity="0.25"/>
+
+      {/* Decorative dots */}
+      <circle cx="22" cy="72" r="3" fill="#bfdbfe" opacity="0.7"/>
+      <circle cx="16" cy="86" r="2" fill="#dbeafe" opacity="0.6"/>
+      <circle cx="142" cy="78" r="2.5" fill="#99f6e4" opacity="0.7"/>
     </svg>
   );
 }

@@ -3,14 +3,14 @@ export default function IllustrationCalculator() {
     <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <defs>
         <filter id="c-sh">
-          <feDropShadow dx="0" dy="8" stdDeviation="10" floodColor="#0B1927" floodOpacity="0.28"/>
+          <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#1068A8" floodOpacity="0.14"/>
         </filter>
         <filter id="c-sh-sm">
-          <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#000" floodOpacity="0.2"/>
+          <feDropShadow dx="0" dy="1" stdDeviation="2" floodColor="#1068A8" floodOpacity="0.18"/>
         </filter>
-        <linearGradient id="c-body" x1="0.2" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#16304f"/>
-          <stop offset="100%" stopColor="#0B1927"/>
+        <linearGradient id="c-body" x1="0" y1="0" x2="0.1" y2="1">
+          <stop offset="0%" stopColor="#f4f8ff"/>
+          <stop offset="100%" stopColor="#e8f0fb"/>
         </linearGradient>
         <linearGradient id="c-screen" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#0e3d72"/>
@@ -26,87 +26,63 @@ export default function IllustrationCalculator() {
         </linearGradient>
       </defs>
 
-      {/* Ground shadow */}
-      <ellipse cx="80" cy="152" rx="40" ry="6" fill="#0B1927" opacity="0.10"/>
-
-      {/* Calculator body — tall, narrow, phone-like */}
-      <rect x="44" y="10" width="72" height="138" rx="14"
-        fill="url(#c-body)" filter="url(#c-sh)"/>
-
-      {/* Body highlight */}
-      <rect x="44" y="10" width="72" height="138" rx="14"
-        fill="none" stroke="white" strokeWidth="0.75" opacity="0.07"/>
-
-      {/* Top notch dots */}
-      <circle cx="74" cy="22" r="1.8" fill="#1a3a5c"/>
-      <circle cx="80" cy="22" r="1.8" fill="#1a3a5c"/>
-      <circle cx="86" cy="22" r="1.8" fill="#1a3a5c"/>
+      {/* Calculator body — light, flat, blends into page */}
+      <rect x="42" y="8" width="76" height="144" rx="8"
+        fill="url(#c-body)" stroke="#dbeafe" strokeWidth="1.5"
+        filter="url(#c-sh)"/>
 
       {/* Screen */}
-      <rect x="52" y="30" width="56" height="46" rx="6"
-        fill="url(#c-screen)"/>
-      {/* Screen inner glow edge */}
-      <rect x="52" y="30" width="56" height="46" rx="6"
-        fill="none" stroke="#1068A8" strokeWidth="1" opacity="0.3"/>
-      {/* Screen glare */}
-      <path d="M55 33 Q66 31 72 35 L70 40 Q63 37 55 38 Z"
-        fill="white" opacity="0.05"/>
+      <rect x="50" y="16" width="60" height="48" rx="4"
+        fill="url(#c-screen)" filter="url(#c-sh-sm)"/>
+      {/* Screen border */}
+      <rect x="50" y="16" width="60" height="48" rx="4"
+        fill="none" stroke="#1068A8" strokeWidth="0.8" opacity="0.35"/>
 
-      {/* Screen label */}
-      <text x="80" y="50" textAnchor="middle" fontSize="6.5"
-        fill="rgba(255,255,255,0.38)" fontFamily="sans-serif"
-        fontWeight="600" letterSpacing="1.2">YOUR PAYMENT</text>
-
-      {/* Screen $ symbol — large, teal */}
-      <text x="80" y="68" textAnchor="middle" fontSize="26"
+      {/* $ on screen */}
+      <text x="80" y="50" textAnchor="middle" fontSize="30"
         fill="#00B4A0" fontFamily="Georgia, serif" fontWeight="700">$</text>
 
-      {/* Divider */}
-      <line x1="54" y1="84" x2="106" y2="84"
-        stroke="white" strokeWidth="0.5" opacity="0.08"/>
+      {/* Divider below screen */}
+      <line x1="50" y1="70" x2="118" y2="70"
+        stroke="#dbeafe" strokeWidth="1"/>
 
-      {/* Keys — 3 cols × 4 rows + operator column */}
-      {/* Row heights: y=90, 104, 118, 132. Col x: 51, 65, 79, 93 */}
-      {/* Numbers */}
+      {/* Keys — 3 num cols + 1 op col, 4 rows */}
+      {/* Col x centres: 62, 76, 90, 104. Row y centres: 84, 99, 114, 129 */}
       {[
-        [["7","8","9"], 90],
-        [["4","5","6"], 104],
-        [["1","2","3"], 118],
-        [["0",".",""], 132],
-      ].map(([keys, y]) =>
-        (keys as string[]).map((k, ci) => k ? (
-          <g key={`n-${y}-${ci}`}>
-            <rect x={51 + ci * 14} y={y as number} width="11" height="10" rx="3"
-              fill="#1a3356"/>
-            <text x={51 + ci * 14 + 5.5} y={(y as number) + 8} textAnchor="middle"
-              fontSize="6" fill="rgba(255,255,255,0.65)" fontFamily="sans-serif">
-              {k}
+        { label:"7", col:0, row:0, type:"num" },
+        { label:"8", col:1, row:0, type:"num" },
+        { label:"9", col:2, row:0, type:"num" },
+        { label:"÷", col:3, row:0, type:"op"  },
+        { label:"4", col:0, row:1, type:"num" },
+        { label:"5", col:1, row:1, type:"num" },
+        { label:"6", col:2, row:1, type:"num" },
+        { label:"×", col:3, row:1, type:"op"  },
+        { label:"1", col:0, row:2, type:"num" },
+        { label:"2", col:1, row:2, type:"num" },
+        { label:"3", col:2, row:2, type:"num" },
+        { label:"−", col:3, row:2, type:"op"  },
+        { label:"0", col:0, row:3, type:"num" },
+        { label:".", col:1, row:3, type:"num" },
+        { label:"=", col:3, row:3, type:"eq"  },
+      ].map(({ label, col, row, type }) => {
+        const cx = 62 + col * 14;
+        const cy = 84 + row * 15;
+        const bg = type === "op" ? "url(#c-op)"
+                 : type === "eq" ? "url(#c-eq)"
+                 : "#dbeafe";
+        const fg = type === "num" ? "#1068A8" : "white";
+        return (
+          <g key={label + col + row}>
+            <rect x={cx - 6} y={cy - 5} width="12" height="10" rx="3"
+              fill={bg} filter={type !== "num" ? "url(#c-sh-sm)" : undefined}/>
+            <text x={cx} y={cy + 4} textAnchor="middle"
+              fontSize="6.5" fill={fg}
+              fontFamily="sans-serif" fontWeight={type !== "num" ? "700" : "500"}>
+              {label}
             </text>
           </g>
-        ) : null)
-      )}
-
-      {/* Operator column */}
-      {[["÷",90],["×",104],["−",118]].map(([op, y]) => (
-        <g key={`op-${y}`}>
-          <rect x="93" y={y as number} width="11" height="10" rx="3"
-            fill="url(#c-op)" filter="url(#c-sh-sm)"/>
-          <text x="98.5" y={(y as number) + 8} textAnchor="middle"
-            fontSize="7" fill="white" fontFamily="sans-serif" fontWeight="700">
-            {op}
-          </text>
-        </g>
-      ))}
-
-      {/* = key — teal accent, wide */}
-      <rect x="93" y="132" width="11" height="10" rx="3"
-        fill="url(#c-eq)" filter="url(#c-sh-sm)"/>
-      <text x="98.5" y="140" textAnchor="middle"
-        fontSize="7" fill="white" fontFamily="sans-serif" fontWeight="700">=</text>
-
-      {/* Home bar */}
-      <rect x="68" y="144" width="24" height="2.5" rx="1.25"
-        fill="white" opacity="0.12"/>
+        );
+      })}
     </svg>
   );
 }
