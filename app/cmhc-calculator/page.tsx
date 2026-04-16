@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import IllustrationCMHC from "@/components/illustrations/IllustrationCMHC";
+import PageHeader from "@/components/PageHeader";
 import Link from "next/link";
 import SiteLayout from "@/components/SiteLayout";
 import Breadcrumb from "@/components/Breadcrumb";
@@ -29,16 +30,12 @@ export default function CMHCPage() {
   return (
     <SiteLayout >
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
-        <Breadcrumb crumbs={[{ label: "CrystalKey", href: "/" }, { label: "CMHC Calculator" }]} />
-        <div className="mt-8 mb-10">
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
-            <div>
-              <h1 className="text-4xl font-bold leading-tight mb-3 tracking-tight" style={{ color: "var(--ink)" }}>CMHC Mortgage Insurance Calculator</h1>
-              <p className="text-lg" style={{ color: "var(--ink-muted)" }}>Your lender requires this insurance when you put down less than 20%. Here's what it'll actually cost you.</p>
-            </div>
-            <div className="shrink-0 w-32 hidden sm:block"><IllustrationCMHC /></div>
-          </div>
-        </div>
+        <PageHeader
+          crumbs={[{ label: "CrystalKey", href: "/" }, { label: "CMHC Calculator" }]}
+          title="CMHC Mortgage Insurance Calculator"
+          subtitle="Your lender requires this insurance when you put down less than 20%. Here's what it'll actually cost you."
+          illustration={<IllustrationCMHC />}
+        />
         <CMHCCalculatorClient />
         <div className="mt-12 space-y-8">
           <section>

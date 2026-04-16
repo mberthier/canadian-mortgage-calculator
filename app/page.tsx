@@ -4,6 +4,8 @@ import React from "react";
 import Script from "next/script";
 import SiteLayout from "@/components/SiteLayout";
 import ModeSelector from "@/components/ModeSelector";
+import PageHeader from "@/components/PageHeader";
+import IllustrationCalculator from "@/components/illustrations/IllustrationCalculator";
 import GuidedForm from "@/components/GuidedForm";
 import SummaryCards from "@/components/SummaryCards";
 import InsightsPanel from "@/components/InsightsPanel";
@@ -462,50 +464,16 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <SiteLayout>
-        {/* ── Hero — true full bleed, outside max-w container ── */}
-        <div className="relative overflow-hidden w-full"
-          style={{ background: "linear-gradient(160deg, #0B1927 0%, #0d4a7a 60%, #1068A8 100%)" }}>
-          {/* Subtle background circles */}
-          <div className="absolute inset-0" aria-hidden="true">
-            <div className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full opacity-10"
-              style={{ background: "#00B4A0" }} />
-            <div className="absolute -bottom-40 -left-20 w-[400px] h-[400px] rounded-full opacity-10"
-              style={{ background: "#1068A8" }} />
-          </div>
-          <div className="relative max-w-6xl mx-auto px-4 sm:px-6 pt-12 pb-20 text-center">
-            <h1 className="font-display font-bold leading-tight tracking-tight mb-4"
-              style={{ color: "#fff", fontSize: "clamp(2.25rem, 5vw, 3.5rem)", letterSpacing: "-0.02em" }}>
-              Canadian Mortgage Calculator
-            </h1>
-            <p className="text-lg leading-relaxed mb-8 max-w-2xl mx-auto"
-              style={{ color: "rgba(255,255,255,0.65)" }}>
-              Accurate payments, closing costs, stress test, and broker-grade insights.
-              Built for every Canadian province.
-            </p>
-            {/* Trust signals */}
-            <div className="flex flex-wrap items-center justify-center gap-2.5">
-              {[
-                "Canadian mortgage rules",
-                "CMHC calculations",
-                "All 13 provinces",
-                "Stress test included",
-              ].map(label => (
-                <span key={label}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium"
-                  style={{ background: "rgba(255,255,255,0.10)", color: "rgba(255,255,255,0.75)", border: "1px solid rgba(255,255,255,0.15)" }}>
-                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
-                    <path d="M2 5l2 2 4-4" stroke="#00B4A0" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                  {label}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+          <PageHeader
+            crumbs={[{ label: "CrystalKey", href: "/" }]}
+            title="Canadian Mortgage Calculator"
+            subtitle="Accurate payments, closing costs, stress test, and broker-grade insights for every Canadian province."
+            illustration={<IllustrationCalculator />}
+          />
 
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 pb-10">
-          {/* ── Mode selector — overlaps hero bottom ── */}
-          <div className="-mt-10 relative z-10 mb-8">
+          {/* ── Mode selector ── */}
+          <div className="mb-8">
             <ModeSelector mode={mode} onChange={setMode} />
           </div>
 

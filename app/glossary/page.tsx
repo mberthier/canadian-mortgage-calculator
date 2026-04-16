@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import IllustrationGlossary from "@/components/illustrations/IllustrationGlossary";
+import PageHeader from "@/components/PageHeader";
 import Link from "next/link";
 import SiteLayout from "@/components/SiteLayout";
 import Breadcrumb from "@/components/Breadcrumb";
@@ -269,15 +270,12 @@ export default function GlossaryPage() {
           { label: "Glossary" },
         ]} />
 
-        <div className="mt-8 mb-10">
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
-            <div>
-              <h1 className="text-4xl font-bold leading-tight mb-3 tracking-tight" style={{ color: "var(--ink)" }}>Canadian Mortgage Glossary</h1>
-              <p className="text-lg" style={{ color: "var(--ink-muted)" }}>Every term you'll encounter when getting a mortgage in Canada, explained like a knowledgeable friend, not a legal document.</p>
-            </div>
-            <div className="shrink-0 w-32 hidden sm:block"><IllustrationGlossary /></div>
-          </div>
-        </div>
+                <PageHeader
+          crumbs={[{ label: "CrystalKey", href: "/" }, { label: "Glossary" }]}
+          title="Canadian Mortgage Glossary"
+          subtitle="Every term you'll encounter when getting a mortgage in Canada, explained like a knowledgeable friend, not a legal document."
+          illustration={<IllustrationGlossary />}
+        />
 
         {/* Letter jump nav */}
         <div className="flex flex-wrap gap-1.5 mb-10 p-4 rounded-2xl border border-neutral-100 bg-white">

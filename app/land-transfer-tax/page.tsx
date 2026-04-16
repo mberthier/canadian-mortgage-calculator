@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import IllustrationLTT from "@/components/illustrations/IllustrationLTT";
+import PageHeader from "@/components/PageHeader";
 import Link from "next/link";
 import SiteLayout from "@/components/SiteLayout";
 import Breadcrumb from "@/components/Breadcrumb";
@@ -30,16 +31,12 @@ export default function LTTPage() {
   return (
     <SiteLayout >
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
-        <Breadcrumb crumbs={[{ label: "CrystalKey", href: "/" }, { label: "Land Transfer Tax" }]} />
-        <div className="mt-8 mb-10">
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
-            <div>
-              <h1 className="text-4xl font-bold leading-tight mb-3 tracking-tight" style={{ color: "var(--ink)" }}>Land Transfer Tax Calculator</h1>
-              <p className="text-lg" style={{ color: "var(--ink-muted)" }}>The biggest closing cost most people forget to plan for. Every province calculated, rebates included.</p>
-            </div>
-            <div className="shrink-0 w-32 hidden sm:block"><IllustrationLTT /></div>
-          </div>
-        </div>
+        <PageHeader
+          crumbs={[{ label: "CrystalKey", href: "/" }, { label: "Land Transfer Tax" }]}
+          title="Land Transfer Tax"
+          subtitle="The biggest closing cost most people forget to plan for. Every province calculated, rebates included."
+          illustration={<IllustrationLTT />}
+        />
 
         <LTTCalculatorClient />
 

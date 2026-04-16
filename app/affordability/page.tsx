@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import IllustrationAffordability from "@/components/illustrations/IllustrationAffordability";
+import PageHeader from "@/components/PageHeader";
 import Link from "next/link";
 import SiteLayout from "@/components/SiteLayout";
 import Breadcrumb from "@/components/Breadcrumb";
@@ -31,20 +32,12 @@ export default function AffordabilityPage() {
   return (
     <SiteLayout>
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
-        <Breadcrumb crumbs={[{ label: "CrystalKey", href: "/" }, { label: "Affordability & Stress Test" }]} />
-        <div className="mt-8 mb-10">
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
-            <div>
-              <h1 className="text-4xl font-bold leading-tight mb-3 tracking-tight" style={{ color: "var(--ink)" }}>
-                Mortgage Affordability & Stress Test
-              </h1>
-              <p className="text-lg" style={{ color: "var(--ink-muted)" }}>
-                Your lender runs these exact numbers before saying yes. Find out where you stand, and what rate they'll actually test you at.
-              </p>
-            </div>
-            <div className="shrink-0 w-32 hidden sm:block"><IllustrationAffordability /></div>
-          </div>
-        </div>
+        <PageHeader
+          crumbs={[{ label: "CrystalKey", href: "/" }, { label: "Affordability & Stress Test" }]}
+          title="Mortgage Affordability & Stress Test"
+          subtitle="Your lender runs these exact numbers before saying yes. Find out where you stand, and what rate they'll actually test you at."
+          illustration={<IllustrationAffordability />}
+        />
 
         <AffordabilityClient />
 

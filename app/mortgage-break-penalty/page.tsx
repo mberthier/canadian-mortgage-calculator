@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import SiteLayout from "@/components/SiteLayout";
+import PageHeader from "@/components/PageHeader";
 import Breadcrumb from "@/components/Breadcrumb";
 import FAQAccordion from "@/components/FAQAccordion";
 import BreakPenaltyCalculatorClient from "./BreakPenaltyCalculatorClient";
@@ -47,23 +48,11 @@ export default function BreakPenaltyPage() {
   return (
     <SiteLayout>
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
-        <Breadcrumb crumbs={[
-          { label: "CrystalKey", href: "/" },
-          { label: "Mortgage Break Penalty" },
-        ]} />
-
-        <div className="mt-8 mb-10">
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
-            <div>
-              <h1 className="text-4xl font-bold leading-tight mb-3 tracking-tight" style={{ color: "var(--ink)" }}>
-                Mortgage Break Penalty Calculator
-              </h1>
-              <p className="text-lg" style={{ color: "var(--ink-muted)" }}>
-                Breaking your mortgage before the term ends costs money. Find out exactly how much, before you commit to anything.
-              </p>
-            </div>
-          </div>
-        </div>
+        <PageHeader
+          crumbs={[{ label: "CrystalKey", href: "/" }, { label: "Mortgage Break Penalty" }]}
+          title="Mortgage Break Penalty Calculator"
+          subtitle="Breaking your mortgage before the term ends costs money. Find out exactly how much, before you commit to anything."
+        />
 
         <BreakPenaltyCalculatorClient />
 
