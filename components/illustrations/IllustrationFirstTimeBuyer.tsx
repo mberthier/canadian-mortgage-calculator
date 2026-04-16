@@ -3,100 +3,94 @@ export default function IllustrationFirstTimeBuyer() {
     <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <defs>
         <filter id="ftb-sh">
-          <feDropShadow dx="0" dy="5" stdDeviation="7" floodColor="#1068A8" floodOpacity="0.2"/>
+          <feDropShadow dx="0" dy="5" stdDeviation="7" floodColor="#1068A8" floodOpacity="0.18"/>
         </filter>
         <filter id="ftb-sh-sm">
-          <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#1068A8" floodOpacity="0.15"/>
+          <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#1068A8" floodOpacity="0.14"/>
         </filter>
-        <linearGradient id="door-grad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#1068A8"/>
-          <stop offset="100%" stopColor="#0a3d6e"/>
+        <linearGradient id="door-g" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#1878c0"/>
+          <stop offset="100%" stopColor="#083560"/>
         </linearGradient>
-        <linearGradient id="frame-grad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#f0f6ff"/>
+        <linearGradient id="wall-g" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#eef5ff"/>
           <stop offset="100%" stopColor="#dbeafe"/>
         </linearGradient>
-        <linearGradient id="step-grad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#e2eeff"/>
+        <linearGradient id="step-g" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#dbeafe"/>
           <stop offset="100%" stopColor="#bfdbfe"/>
         </linearGradient>
       </defs>
 
       {/* Ground shadow */}
-      <ellipse cx="80" cy="148" rx="52" ry="7" fill="#dbeafe" opacity="0.5"/>
+      <ellipse cx="80" cy="152" rx="50" ry="6" fill="#bfdbfe" opacity="0.4"/>
 
-      {/* Door frame / wall surround */}
-      <rect x="28" y="22" width="104" height="122" rx="8"
-        fill="url(#frame-grad)" stroke="#dbeafe" strokeWidth="1.5"
+      {/* Wall surround — wide, breathing room around door */}
+      <rect x="14" y="14" width="132" height="132" rx="8"
+        fill="url(#wall-g)" stroke="#dbeafe" strokeWidth="1.5"
         filter="url(#ftb-sh)"/>
 
-      {/* Transom window above door */}
-      <rect x="42" y="28" width="76" height="22" rx="4" fill="#dbeafe" opacity="0.6"/>
-      {/* Transom panes */}
-      <line x1="80" y1="28" x2="80" y2="50" stroke="#bfdbfe" strokeWidth="1.5"/>
-      <line x1="61" y1="28" x2="61" y2="50" stroke="#bfdbfe" strokeWidth="1"/>
-      <line x1="99" y1="28" x2="99" y2="50" stroke="#bfdbfe" strokeWidth="1"/>
-      {/* Transom glow */}
-      <rect x="43" y="29" width="74" height="20" rx="3" fill="#93c5fd" opacity="0.2"/>
+      {/* Transom window above door — narrow like the door */}
+      <rect x="54" y="22" width="52" height="20" rx="3"
+        fill="#bfdbfe" opacity="0.7"/>
+      <line x1="80" y1="22" x2="80" y2="42" stroke="white" strokeWidth="1.2" opacity="0.6"/>
+      <line x1="67" y1="22" x2="67" y2="42" stroke="white" strokeWidth="0.8" opacity="0.4"/>
+      <line x1="93" y1="22" x2="93" y2="42" stroke="white" strokeWidth="0.8" opacity="0.4"/>
+      <rect x="55" y="23" width="50" height="18" rx="2"
+        fill="#93c5fd" opacity="0.18"/>
 
-      {/* Door */}
-      <rect x="42" y="52" width="76" height="88" rx="4"
-        fill="url(#door-grad)" filter="url(#ftb-sh-sm)"/>
+      {/* Door — narrow portrait proportion, centred */}
+      <rect x="54" y="44" width="52" height="98" rx="4"
+        fill="url(#door-g)" filter="url(#ftb-sh-sm)"/>
 
-      {/* Door panel — top */}
-      <rect x="50" y="60" width="60" height="30" rx="3"
-        fill="white" opacity="0.06"/>
-      <rect x="51" y="61" width="58" height="28" rx="2"
-        fill="none" stroke="white" strokeWidth="1" opacity="0.12"/>
+      {/* Door top panel */}
+      <rect x="61" y="52" width="38" height="30" rx="3"
+        fill="none" stroke="white" strokeWidth="1" opacity="0.15"/>
+      <rect x="62" y="53" width="36" height="28" rx="2"
+        fill="white" opacity="0.05"/>
 
-      {/* Door panel — bottom */}
-      <rect x="50" y="96" width="60" height="34" rx="3"
-        fill="white" opacity="0.06"/>
-      <rect x="51" y="97" width="58" height="32" rx="2"
-        fill="none" stroke="white" strokeWidth="1" opacity="0.12"/>
+      {/* Door bottom panel */}
+      <rect x="61" y="88" width="38" height="40" rx="3"
+        fill="none" stroke="white" strokeWidth="1" opacity="0.15"/>
+      <rect x="62" y="89" width="36" height="38" rx="2"
+        fill="white" opacity="0.05"/>
+
+      {/* Door number — 1 */}
+      <text x="80" y="74" textAnchor="middle" fontSize="16"
+        fill="white" opacity="0.25" fontFamily="Georgia, serif" fontWeight="700">1</text>
 
       {/* Door knob */}
-      <circle cx="108" cy="100" r="5" fill="#bfdbfe" filter="url(#ftb-sh-sm)"/>
-      <circle cx="108" cy="100" r="3.5" fill="#93c5fd"/>
-      <circle cx="107" cy="99" r="1.2" fill="white" opacity="0.6"/>
-
-      {/* Key in lock */}
-      <circle cx="108" cy="90" r="3" fill="#00B4A0"/>
-      <circle cx="108" cy="90" r="1.5" fill="#f0fdfa"/>
-      <rect x="109.5" y="88.5" width="7" height="2.5" rx="1" fill="#00B4A0"/>
-      <rect x="114" y="91" width="2.5" height="4" rx="1" fill="#00B4A0"/>
-      <rect x="110.5" y="91" width="2.5" height="3" rx="1" fill="#00B4A0"/>
+      <circle cx="97" cy="100" r="4" fill="#bfdbfe" filter="url(#ftb-sh-sm)"/>
+      <circle cx="97" cy="100" r="2.8" fill="#93c5fd"/>
+      <circle cx="96" cy="99" r="1" fill="white" opacity="0.5"/>
 
       {/* Letter slot */}
-      <rect x="66" y="86" width="28" height="5" rx="2.5"
-        fill="#063d6e" stroke="#0d5a96" strokeWidth="0.8"/>
-
-      {/* Door number */}
-      <text x="80" y="82" textAnchor="middle" fontSize="11"
-        fill="white" opacity="0.35" fontFamily="Georgia, serif" fontWeight="700">01</text>
+      <rect x="64" y="108" width="22" height="4" rx="2"
+        fill="#063d6e" stroke="#0d5a96" strokeWidth="0.5" opacity="0.8"/>
 
       {/* Steps */}
-      <rect x="36" y="138" width="88" height="7" rx="3"
-        fill="url(#step-grad)" stroke="#bfdbfe" strokeWidth="1"/>
-      <rect x="28" y="143" width="104" height="6" rx="3"
-        fill="#dbeafe" stroke="#bfdbfe" strokeWidth="1"/>
+      <rect x="44" y="140" width="72" height="6" rx="3"
+        fill="url(#step-g)" stroke="#bfdbfe" strokeWidth="1"/>
+      <rect x="36" y="145" width="88" height="5" rx="2.5"
+        fill="#dbeafe" stroke="#bfdbfe" strokeWidth="0.8"/>
 
-      {/* Potted plant left */}
-      <rect x="30" y="118" width="10" height="12" rx="2" fill="#bfdbfe"/>
-      <ellipse cx="35" cy="118" rx="7" ry="5" fill="#93c5fd" opacity="0.4"/>
-      <path d="M35 100 Q30 108 32 118" stroke="#86efac" strokeWidth="2" strokeLinecap="round" fill="none"/>
-      <path d="M35 100 Q40 108 38 118" stroke="#86efac" strokeWidth="2" strokeLinecap="round" fill="none"/>
-      <path d="M35 100 Q35 106 35 118" stroke="#4ade80" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
-      <ellipse cx="32" cy="106" rx="5" ry="3" fill="#86efac" opacity="0.8"/>
-      <ellipse cx="38" cy="109" rx="5" ry="3" fill="#4ade80" opacity="0.7"/>
+      {/* Left plant */}
+      <rect x="22" y="124" width="14" height="14" rx="3" fill="#bfdbfe"/>
+      <rect x="23" y="125" width="12" height="12" rx="2" fill="#93c5fd" opacity="0.5"/>
+      <path d="M29 124 Q24 116 25 108" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" fill="none"/>
+      <path d="M29 124 Q34 116 33 108" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" fill="none"/>
+      <path d="M29 124 Q29 115 29 107" stroke="#86efac" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+      <ellipse cx="26" cy="111" rx="5" ry="3" fill="#86efac" opacity="0.85" transform="rotate(-15 26 111)"/>
+      <ellipse cx="32" cy="113" rx="5" ry="3" fill="#4ade80" opacity="0.75" transform="rotate(10 32 113)"/>
 
-      {/* Potted plant right */}
-      <rect x="120" y="118" width="10" height="12" rx="2" fill="#bfdbfe"/>
-      <path d="M125 100 Q120 108 122 118" stroke="#86efac" strokeWidth="2" strokeLinecap="round" fill="none"/>
-      <path d="M125 100 Q130 108 128 118" stroke="#86efac" strokeWidth="2" strokeLinecap="round" fill="none"/>
-      <path d="M125 100 Q125 106 125 118" stroke="#4ade80" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
-      <ellipse cx="122" cy="106" rx="5" ry="3" fill="#86efac" opacity="0.8"/>
-      <ellipse cx="128" cy="109" rx="5" ry="3" fill="#4ade80" opacity="0.7"/>
+      {/* Right plant */}
+      <rect x="124" y="124" width="14" height="14" rx="3" fill="#bfdbfe"/>
+      <rect x="125" y="125" width="12" height="12" rx="2" fill="#93c5fd" opacity="0.5"/>
+      <path d="M131 124 Q126 116 127 108" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" fill="none"/>
+      <path d="M131 124 Q136 116 135 108" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" fill="none"/>
+      <path d="M131 124 Q131 115 131 107" stroke="#86efac" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+      <ellipse cx="128" cy="111" rx="5" ry="3" fill="#86efac" opacity="0.85" transform="rotate(-15 128 111)"/>
+      <ellipse cx="134" cy="113" rx="5" ry="3" fill="#4ade80" opacity="0.75" transform="rotate(10 134 113)"/>
     </svg>
   );
 }
