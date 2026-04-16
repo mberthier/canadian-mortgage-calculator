@@ -2,66 +2,92 @@ export default function IllustrationCalculator() {
   return (
     <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <defs>
-        <filter id="calc-shadow" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#1068A8" floodOpacity="0.18"/>
+        <filter id="calc-sh">
+          <feDropShadow dx="0" dy="6" stdDeviation="8" floodColor="#0B1927" floodOpacity="0.22"/>
         </filter>
-        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#e0f0ff"/>
-          <stop offset="100%" stopColor="#f0f6ff"/>
+        <filter id="calc-sh-sm">
+          <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#1068A8" floodOpacity="0.2"/>
+        </filter>
+        <linearGradient id="calc-body" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#0f2744"/>
+          <stop offset="100%" stopColor="#0B1927"/>
         </linearGradient>
-        <linearGradient id="wall" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#1068A8"/>
-          <stop offset="100%" stopColor="#1878c0"/>
+        <linearGradient id="calc-screen" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#0d3a6e"/>
+          <stop offset="100%" stopColor="#0a2d56"/>
         </linearGradient>
-        <linearGradient id="side-wall" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#0a4f85"/>
-          <stop offset="100%" stopColor="#0d5a96"/>
+        <linearGradient id="key-blue" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#1878c0"/>
+          <stop offset="100%" stopColor="#1068A8"/>
+        </linearGradient>
+        <linearGradient id="key-teal" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#00cbb4"/>
+          <stop offset="100%" stopColor="#00B4A0"/>
         </linearGradient>
       </defs>
 
-      {/* Ground */}
-      <ellipse cx="80" cy="138" rx="60" ry="10" fill="#dbeafe" opacity="0.5"/>
+      {/* Ground shadow */}
+      <ellipse cx="80" cy="148" rx="46" ry="7" fill="#0B1927" opacity="0.12"/>
 
-      {/* House isometric */}
-      <g filter="url(#calc-shadow)">
-        {/* Roof left face */}
-        <path d="M44 72 L80 52 L80 72 Z" fill="#0d5a96"/>
-        {/* Roof right face */}
-        <path d="M80 52 L116 72 L80 72 Z" fill="#1878c0"/>
-        {/* Roof ridge cap */}
-        <path d="M44 72 L80 52 L116 72" fill="none" stroke="#fff" strokeWidth="1.5" opacity="0.3"/>
+      {/* Calculator body */}
+      <rect x="32" y="14" width="96" height="130" rx="12"
+        fill="url(#calc-body)" filter="url(#calc-sh)"/>
 
-        {/* Front wall */}
-        <path d="M44 72 L44 118 L80 118 L80 72 Z" fill="url(#wall)"/>
-        {/* Side wall */}
-        <path d="M80 72 L80 118 L116 118 L116 72 Z" fill="url(#side-wall)"/>
+      {/* Body highlight edge */}
+      <rect x="32" y="14" width="96" height="130" rx="12"
+        fill="none" stroke="white" strokeWidth="0.8" opacity="0.08"/>
 
-        {/* Ground edge */}
-        <path d="M44 118 L80 118 L116 118" stroke="#fff" strokeWidth="0.5" opacity="0.2"/>
+      {/* Top camera / speaker dots */}
+      <circle cx="72" cy="24" r="2" fill="#1a3a5c"/>
+      <circle cx="80" cy="24" r="2" fill="#1a3a5c"/>
+      <circle cx="88" cy="24" r="2" fill="#1a3a5c"/>
 
-        {/* Front door */}
-        <rect x="56" y="96" width="16" height="22" rx="3" fill="#063d6e"/>
-        <rect x="57" y="97" width="14" height="10" rx="1" fill="#0d5a96" opacity="0.6"/>
-        <circle cx="70" cy="108" r="1.5" fill="#fff" opacity="0.7"/>
+      {/* Screen */}
+      <rect x="40" y="32" width="80" height="44" rx="6"
+        fill="url(#calc-screen)" filter="url(#calc-sh-sm)"/>
+      {/* Screen glare */}
+      <path d="M44 34 Q60 32 70 36 L68 42 Q58 38 44 40 Z"
+        fill="white" opacity="0.04"/>
 
-        {/* Front window */}
-        <rect x="50" y="81" width="12" height="10" rx="2" fill="#bfdbfe" opacity="0.8"/>
-        <line x1="56" y1="81" x2="56" y2="91" stroke="#1068A8" strokeWidth="0.8"/>
-        <line x1="50" y1="86" x2="62" y2="86" stroke="#1068A8" strokeWidth="0.8"/>
+      {/* Screen label */}
+      <text x="80" y="52" textAnchor="middle" fontSize="7.5"
+        fill="rgba(255,255,255,0.4)" fontFamily="sans-serif" fontWeight="500"
+        letterSpacing="1">MONTHLY PAYMENT</text>
 
-        {/* Side window */}
-        <rect x="88" y="81" width="16" height="10" rx="2" fill="#93c5fd" opacity="0.5"/>
-        <line x1="96" y1="81" x2="96" y2="91" stroke="#0d5a96" strokeWidth="0.8"/>
-      </g>
+      {/* Screen value */}
+      <text x="80" y="70" textAnchor="middle" fontSize="19"
+        fill="#00B4A0" fontFamily="Georgia, serif" fontWeight="700"
+        letterSpacing="-0.5">$3,120</text>
 
-      {/* Floating $ badge */}
-      <circle cx="122" cy="42" r="18" fill="#00B4A0" filter="url(#calc-shadow)"/>
-      <text x="122" y="48" textAnchor="middle" fontSize="18" fontWeight="800" fill="white" fontFamily="Georgia, serif">$</text>
+      {/* Key grid — 4 columns × 4 rows */}
+      {[
+        ["7","8","9","÷"],
+        ["4","5","6","×"],
+        ["1","2","3","−"],
+        ["0",".","=","+"],
+      ].map((row, ri) =>
+        row.map((key, ci) => {
+          const x = 42 + ci * 20;
+          const y = 88 + ri * 18;
+          const isEquals = key === "=";
+          const isOp = ["÷","×","−","+"].includes(key);
+          return (
+            <g key={`${ri}-${ci}`}>
+              <rect x={x} y={y} width="14" height="12" rx="3"
+                fill={isEquals ? "url(#key-teal)" : isOp ? "url(#key-blue)" : "#1a3356"}
+                filter={isEquals ? "url(#calc-sh-sm)" : undefined}/>
+              <text x={x + 7} y={y + 9} textAnchor="middle"
+                fontSize={isOp ? "8" : "7.5"} fill={isOp || isEquals ? "white" : "rgba(255,255,255,0.7)"}
+                fontFamily="sans-serif" fontWeight={isOp || isEquals ? "700" : "400"}>
+                {key}
+              </text>
+            </g>
+          );
+        })
+      )}
 
-      {/* Small sparkles */}
-      <circle cx="32" cy="58" r="3" fill="#bfdbfe"/>
-      <circle cx="24" cy="72" r="2" fill="#dbeafe"/>
-      <circle cx="142" cy="80" r="2.5" fill="#bfdbfe"/>
+      {/* Bottom home bar */}
+      <rect x="68" y="136" width="24" height="3" rx="1.5" fill="#1a3a5c"/>
     </svg>
   );
 }
