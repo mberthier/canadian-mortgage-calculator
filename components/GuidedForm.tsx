@@ -131,7 +131,7 @@ function RateInput({ id, label, tip, value, onChange, showSlider, sliderNote }: 
           value={focused ? raw : value > 0 ? value.toFixed(2) : ""}
           onChange={(e) => setRaw(e.target.value)}
           onFocus={() => { setFoc(true); setRaw(value > 0 ? String(value) : ""); }}
-          onBlur={() => { setFoc(false); const v = parseFloat(raw); if (!isNaN(v) && v > 0) onChange(v); }}
+          onBlur={() => { setFoc(false); const v = parseFloat(raw); if (!isNaN(v) && v > 0) onChange(v); else if (raw.trim() === "") onChange(0); }}
           placeholder="e.g. 4.25" className={`${inp} pr-8`} />
         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 text-sm">%</span>
       </div>

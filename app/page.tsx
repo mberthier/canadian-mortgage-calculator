@@ -361,14 +361,14 @@ function BreakdownSection({ outputs, inputs, isPurchase, isRefinance }: {
 }
 
 // ── Empty state, shown before user enters essential fields ──────────────────
-function EmptyState({ mode, hasPrice, hasRate, hasProvince }: {
-  mode: string; hasPrice: boolean; hasRate: boolean; hasProvince: boolean;
+function EmptyState({ mode, hasPrice, hasRate, hasProvince, hasDown }: {
+  mode: string; hasPrice: boolean; hasRate: boolean; hasProvince: boolean; hasDown?: boolean;
 }) {
   const steps = mode === "purchase"
     ? [
         { label: "Province",      done: hasProvince },
         { label: "Home price",    done: hasPrice },
-        { label: "Down payment",  done: hasPrice },
+        { label: "Down payment",  done: !!hasDown },
         { label: "Interest rate", done: hasRate  },
       ]
     : mode === "renewal"
@@ -526,6 +526,7 @@ export default function Home() {
                   mode={inputs.mortgageMode}
                   hasProvince={inputs.province !== ""}
                   hasPrice={isPurchase ? inputs.homePrice > 0 : inputs.homeValue > 0 || inputs.currentBalance > 0}
+                  hasDown={inputs.downPaymentPercent > 0}
                   hasRate={inputs.interestRate > 0}
                 />
               ) : (
