@@ -35,14 +35,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid email" }, { status: 400 });
     }
 
-    // Debug: log which env vars are present
-    console.log("Env check:", {
-      hasSheetId:    !!process.env.GOOGLE_SHEET_ID,
-      hasEmail:      !!process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-      hasKey:        !!process.env.GOOGLE_PRIVATE_KEY,
-      sheetIdPrefix: process.env.GOOGLE_SHEET_ID?.slice(0, 6),
-    });
-
     const timestamp          = new Date().toLocaleString("en-CA", { timeZone: "America/Toronto" });
     const savingsFormatted   = savings   ? `$${Number(savings).toLocaleString("en-CA")}`   : "";
     const homePriceFormatted = homePrice ? `$${Number(homePrice).toLocaleString("en-CA")}` : "";
