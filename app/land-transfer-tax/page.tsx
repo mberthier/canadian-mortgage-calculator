@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import IllustrationLTT from "@/components/illustrations/IllustrationLTT";
 import PageHeader from "@/components/PageHeader";
 import Link from "next/link";
 import SiteLayout from "@/components/SiteLayout";
@@ -34,6 +35,7 @@ export default function LTTPage() {
           crumbs={[{ label: "CrystalKey", href: "/" }, { label: "Land Transfer Tax" }]}
           title="Land Transfer Tax Calculator"
           subtitle="The biggest closing cost most people forget to plan for. Every province calculated, rebates included."
+                    illustration={<IllustrationLTT />}
           needs={[
             { label: "Home purchase price" },
             { label: "Province" },

@@ -6,11 +6,12 @@ interface GuideItem {
 }
 
 interface Props {
-  crumbs?:    { label: string; href?: string }[];
-  title:      string;
-  subtitle?:  string;
-  needs?:     GuideItem[];  // "You'll need"
-  gets?:      GuideItem[];  // "You'll know"
+  crumbs?:       { label: string; href?: string }[];
+  title:         string;
+  subtitle?:     string;
+  illustration?: React.ReactNode;
+  needs?:        GuideItem[];
+  gets?:         GuideItem[];
 }
 
 function CheckIcon({ color }: { color: string }) {
@@ -31,19 +32,27 @@ function DotIcon({ color }: { color: string }) {
   );
 }
 
-export default function PageHeader({ crumbs, title, subtitle, needs, gets }: Props) {
-  const hasGuide = (needs && needs.length > 0) || (gets && gets.length > 0);
+export default function PageHeader({ crumbs, title, subtitle, illustration, needs, gets }: Props) {
+  const hasNeeds = needs && needs.length > 0;
+  const hasGets  = gets  && gets.length  > 0;
+  const hasGuide = hasNeeds || hasGets;
 
   return (
     <div className="mb-10">
       {crumbs && <Breadcrumb crumbs={crumbs} />}
 
       <div className="mt-8">
-        {/* Title + subtitle */}
-        <h1 className="text-4xl font-bold leading-tight tracking-tight mb-3"
-          style={{ color: "var(--ink)", letterSpacing: "-0.02em" }}>
-          {title}
-        </h1>
+        {/* Title row — with optional illustration */}
+        <div className="flex items-start justify-between gap-6 mb-3">
+          <h1 className="text-4xl font-bold leading-tight tracking-tight flex-1"
+            style={{ color: "var(--ink)", letterSpacing: "-0.02em" }}>
+            {title}
+          </h1>
+          {illustration && (
+            <div className="shrink-0 w-32 hidden sm:block">{illustration}</div>
+          )}
+        </div>
+
         {subtitle && (
           <p className="text-lg leading-relaxed mb-6" style={{ color: "var(--ink-muted)" }}>
             {subtitle}
@@ -52,9 +61,9 @@ export default function PageHeader({ crumbs, title, subtitle, needs, gets }: Pro
 
         {/* Guided cards */}
         {hasGuide && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {/* You'll need */}
-            {needs && needs.length > 0 && (
+          <div className={`grid gap-3 ${hasNeeds && hasGets ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1 sm:grid-cols-2"}`}>
+            {/* You will need — only when there are real inputs */}
+            {hasNeeds && (
               <div className="rounded-xl px-4 py-3.5"
                 style={{ background: "#f9f8f7", border: "1px solid #e8e8e8" }}>
                 <p className="text-xs font-semibold uppercase tracking-widest mb-2.5"
@@ -62,7 +71,7 @@ export default function PageHeader({ crumbs, title, subtitle, needs, gets }: Pro
                   You will need
                 </p>
                 <ul className="space-y-1.5">
-                  {needs.map(item => (
+                  {needs!.map(item => (
                     <li key={item.label} className="flex items-start gap-2 text-sm"
                       style={{ color: "var(--ink-mid)" }}>
                       <DotIcon color="var(--ink-faint)" />
@@ -73,8 +82,8 @@ export default function PageHeader({ crumbs, title, subtitle, needs, gets }: Pro
               </div>
             )}
 
-            {/* You'll know */}
-            {gets && gets.length > 0 && (
+            {/* You will know */}
+            {hasGets && (
               <div className="rounded-xl px-4 py-3.5"
                 style={{ background: "var(--green-light)", border: "1px solid var(--green-border)" }}>
                 <p className="text-xs font-semibold uppercase tracking-widest mb-2.5"
@@ -82,7 +91,7 @@ export default function PageHeader({ crumbs, title, subtitle, needs, gets }: Pro
                   You will know
                 </p>
                 <ul className="space-y-1.5">
-                  {gets.map(item => (
+                  {gets!.map(item => (
                     <li key={item.label} className="flex items-start gap-2 text-sm"
                       style={{ color: "var(--ink-mid)" }}>
                       <CheckIcon color="var(--green)" />

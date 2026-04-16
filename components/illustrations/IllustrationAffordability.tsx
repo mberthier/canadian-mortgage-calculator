@@ -1,37 +1,65 @@
 export default function IllustrationAffordability() {
   return (
-    <svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      {/* Scale pole */}
-      <line x1="100" y1="30" x2="100" y2="110" stroke="#1068A8" strokeWidth="3" strokeLinecap="round"/>
+    <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <filter id="aff-shadow">
+          <feDropShadow dx="0" dy="3" stdDeviation="4" floodColor="#1068A8" floodOpacity="0.18"/>
+        </filter>
+        <linearGradient id="bar1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#60a5fa"/>
+          <stop offset="100%" stopColor="#1068A8"/>
+        </linearGradient>
+        <linearGradient id="bar2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#34d399"/>
+          <stop offset="100%" stopColor="#059669"/>
+        </linearGradient>
+        <linearGradient id="bar3" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#1068A8"/>
+          <stop offset="100%" stopColor="#0d5a96"/>
+        </linearGradient>
+      </defs>
 
-      {/* Scale base */}
-      <rect x="82" y="108" width="36" height="8" rx="4" fill="#1068A8"/>
-      <rect x="90" y="100" width="20" height="10" rx="2" fill="#0d5a96"/>
+      {/* Base plane */}
+      <rect x="24" y="115" width="112" height="4" rx="2" fill="#dbeafe"/>
 
-      {/* Scale beam, tilted slightly left (house is heavier, reality) */}
-      <line x1="34" y1="44" x2="166" y2="36" stroke="#1068A8" strokeWidth="3" strokeLinecap="round"/>
-      <circle cx="100" cy="40" r="5" fill="#1068A8"/>
+      {/* Grid lines subtle */}
+      <line x1="24" y1="100" x2="136" y2="100" stroke="#dbeafe" strokeWidth="1"/>
+      <line x1="24" y1="82" x2="136" y2="82" stroke="#dbeafe" strokeWidth="1"/>
+      <line x1="24" y1="64" x2="136" y2="64" stroke="#dbeafe" strokeWidth="1"/>
 
-      {/* Left pan, house (heavier, lower) */}
-      <line x1="34" y1="44" x2="34" y2="72" stroke="#0d5a96" strokeWidth="1.5"/>
-      <path d="M18 82 L18 72 L34 60 L50 72 L50 82 Z" fill="#1068A8" strokeLinejoin="round"/>
-      <rect x="26" y="74" width="16" height="8" rx="1" fill="#eff6ff"/>
-      <path d="M16 74 L34 61 L52 74" stroke="#1068A8" strokeWidth="2" fill="none" strokeLinecap="round"/>
-      {/* Pan */}
-      <path d="M14 84 Q34 90 54 84" stroke="#0d5a96" strokeWidth="2" fill="none" strokeLinecap="round"/>
+      {/* Bar 1 */}
+      <rect x="34" y="90" width="22" height="25" rx="4"
+        fill="url(#bar1)" filter="url(#aff-shadow)"/>
+      {/* Bar 1 top highlight */}
+      <rect x="34" y="90" width="22" height="5" rx="4" fill="#93c5fd" opacity="0.5"/>
 
-      {/* Right pan, income (lighter, higher) */}
-      <line x1="166" y1="36" x2="166" y2="60" stroke="#0d5a96" strokeWidth="1.5"/>
-      {/* Coin stack */}
-      <ellipse cx="166" cy="76" rx="18" ry="5" fill="#dbeafe"/>
-      <rect x="148" y="68" width="36" height="8" rx="4" fill="#dbeafe" stroke="#0d5a96" strokeWidth="1"/>
-      <rect x="148" y="62" width="36" height="8" rx="4" fill="#eff6ff" stroke="#0d5a96" strokeWidth="1"/>
-      <rect x="148" y="56" width="36" height="8" rx="4" fill="#eff6ff" stroke="#0d5a96" strokeWidth="1"/>
-      {/* Pan */}
-      <path d="M148 78 Q166 84 184 78" stroke="#0d5a96" strokeWidth="2" fill="none" strokeLinecap="round"/>
+      {/* Bar 2 — tallest, green = pass */}
+      <rect x="69" y="60" width="22" height="55" rx="4"
+        fill="url(#bar2)" filter="url(#aff-shadow)"/>
+      <rect x="69" y="60" width="22" height="5" rx="4" fill="#6ee7b7" opacity="0.5"/>
 
-      {/* % sign */}
-      <text x="90" y="26" fontSize="11" fill="#999999" fontFamily="sans-serif">39%</text>
+      {/* Bar 3 */}
+      <rect x="104" y="74" width="22" height="41" rx="4"
+        fill="url(#bar3)" filter="url(#aff-shadow)"/>
+      <rect x="104" y="74" width="22" height="5" rx="4" fill="#60a5fa" opacity="0.5"/>
+
+      {/* Check badge on bar 2 */}
+      <circle cx="80" cy="50" r="12" fill="#059669" filter="url(#aff-shadow)"/>
+      <path d="M74 50 L78 55 L87 44"
+        stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+
+      {/* GDS/TDS label chips */}
+      <rect x="30" y="120" width="30" height="14" rx="7" fill="#dbeafe"/>
+      <text x="45" y="131" textAnchor="middle" fontSize="7" fill="#1068A8"
+        fontFamily="sans-serif" fontWeight="700">GDS</text>
+
+      <rect x="65" y="120" width="30" height="14" rx="7" fill="#d1fae5"/>
+      <text x="80" y="131" textAnchor="middle" fontSize="7" fill="#059669"
+        fontFamily="sans-serif" fontWeight="700">TDS</text>
+
+      {/* Sparkles */}
+      <circle cx="28" cy="60" r="3" fill="#bfdbfe"/>
+      <circle cx="140" cy="56" r="2.5" fill="#a7f3d0"/>
     </svg>
   );
 }

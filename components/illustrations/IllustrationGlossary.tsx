@@ -1,39 +1,60 @@
 export default function IllustrationGlossary() {
   return (
-    <svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      {/* Book left page */}
-      <path d="M24 26 Q24 20 30 20 L98 20 L98 116 Q64 108 30 116 Q24 116 24 110 Z"
-        fill="#eff6ff" stroke="#1068A8" strokeWidth="2"/>
+    <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <filter id="glos-shadow">
+          <feDropShadow dx="0" dy="4" stdDeviation="5" floodColor="#1068A8" floodOpacity="0.15"/>
+        </filter>
+        <linearGradient id="book-front" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#1068A8"/>
+          <stop offset="100%" stopColor="#0d5a96"/>
+        </linearGradient>
+      </defs>
 
-      {/* Book right page */}
-      <path d="M102 20 L170 20 Q176 20 176 26 L176 110 Q176 116 170 116 Q136 108 102 116 Z"
-        fill="#f0f0f0" stroke="#1068A8" strokeWidth="2"/>
+      {/* Shadow */}
+      <ellipse cx="82" cy="136" rx="50" ry="8" fill="#dbeafe" opacity="0.4"/>
 
-      {/* Spine */}
-      <rect x="97" y="18" width="6" height="100" rx="3" fill="#1068A8"/>
+      {/* Book pages stack — right side */}
+      <rect x="82" y="28" width="52" height="96" rx="3"
+        fill="#f8faff" stroke="#dbeafe" strokeWidth="1" filter="url(#glos-shadow)"/>
 
-      {/* Left page lines, text */}
-      <line x1="36" y1="38" x2="90" y2="38" stroke="#dbeafe" strokeWidth="1.5" strokeLinecap="round"/>
-      <line x1="36" y1="48" x2="82" y2="48" stroke="#dbeafe" strokeWidth="1.5" strokeLinecap="round"/>
-      <line x1="36" y1="58" x2="88" y2="58" stroke="#dbeafe" strokeWidth="1.5" strokeLinecap="round"/>
-      <line x1="36" y1="68" x2="76" y2="68" stroke="#dbeafe" strokeWidth="1.5" strokeLinecap="round"/>
-      <line x1="36" y1="78" x2="86" y2="78" stroke="#dbeafe" strokeWidth="1.5" strokeLinecap="round"/>
-      <line x1="36" y1="88" x2="80" y2="88" stroke="#dbeafe" strokeWidth="1.5" strokeLinecap="round"/>
+      {/* Page lines */}
+      {[44, 54, 64, 74, 84, 94, 104].map((y, i) => (
+        <rect key={i} x="90" y={y} width={i % 2 === 0 ? 36 : 28} height="3" rx="1.5" fill="#dbeafe"/>
+      ))}
 
-      {/* Right page, highlighted term */}
-      <rect x="110" y="34" width="54" height="14" rx="3" fill="#dbeafe"/>
-      <line x1="110" y1="56" x2="160" y2="56" stroke="#999999" strokeWidth="1.5" strokeLinecap="round"/>
-      <line x1="110" y1="64" x2="155" y2="64" stroke="#999999" strokeWidth="1.5" strokeLinecap="round"/>
-      <line x1="110" y1="72" x2="162" y2="72" stroke="#999999" strokeWidth="1.5" strokeLinecap="round"/>
-      <line x1="110" y1="80" x2="150" y2="80" stroke="#999999" strokeWidth="1.5" strokeLinecap="round"/>
+      {/* Book spine */}
+      <rect x="68" y="24" width="16" height="104" rx="2"
+        fill="#063d6e" filter="url(#glos-shadow)"/>
 
-      {/* Magnifying glass */}
-      <circle cx="152" cy="104" r="18" fill="white" stroke="#1068A8" strokeWidth="3"/>
-      <circle cx="152" cy="104" r="12" fill="#eff6ff"/>
-      {/* A inside mag glass, glossary reference */}
-      <text x="146" y="110" fontSize="14" fill="#1068A8" fontFamily="serif" fontWeight="700">A</text>
-      {/* Handle */}
-      <line x1="164" y1="116" x2="178" y2="130" stroke="#1068A8" strokeWidth="4" strokeLinecap="round"/>
+      {/* Book cover */}
+      <rect x="26" y="24" width="56" height="104" rx="4"
+        fill="url(#book-front)" filter="url(#glos-shadow)"/>
+
+      {/* Cover highlight line */}
+      <rect x="28" y="24" width="52" height="104" rx="4"
+        fill="white" opacity="0.04"/>
+
+      {/* Cover decoration */}
+      <text x="54" y="62" textAnchor="middle" fontSize="32" fill="white"
+        opacity="0.15" fontFamily="Georgia, serif" fontWeight="700">A</text>
+
+      {/* Cover lines */}
+      <rect x="36" y="74" width="36" height="3" rx="1.5" fill="white" opacity="0.25"/>
+      <rect x="36" y="82" width="28" height="3" rx="1.5" fill="white" opacity="0.18"/>
+      <rect x="36" y="90" width="32" height="3" rx="1.5" fill="white" opacity="0.18"/>
+
+      {/* Bookmark ribbon */}
+      <path d="M72 24 L72 58 L68 54 L64 58 L64 24 Z" fill="#00B4A0"/>
+
+      {/* Magnifier */}
+      <circle cx="120" cy="42" r="14" stroke="#1068A8" strokeWidth="3"
+        fill="white" filter="url(#glos-shadow)"/>
+      <circle cx="120" cy="42" r="9" fill="#eff6ff"/>
+      <text x="120" y="47" textAnchor="middle" fontSize="12" fill="#1068A8"
+        fontFamily="Georgia, serif" fontWeight="700">A</text>
+      <line x1="130" y1="52" x2="140" y2="62"
+        stroke="#1068A8" strokeWidth="3.5" strokeLinecap="round"/>
     </svg>
   );
 }

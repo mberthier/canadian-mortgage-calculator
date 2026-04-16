@@ -1,48 +1,58 @@
 export default function IllustrationRates() {
   return (
-    <svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <filter id="rates-shadow">
+          <feDropShadow dx="0" dy="3" stdDeviation="4" floodColor="#1068A8" floodOpacity="0.15"/>
+        </filter>
+        <linearGradient id="line-grad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#60a5fa"/>
+          <stop offset="50%" stopColor="#1068A8"/>
+          <stop offset="100%" stopColor="#00B4A0"/>
+        </linearGradient>
+      </defs>
+
+      {/* Chart background card */}
+      <rect x="18" y="22" width="124" height="100" rx="10"
+        fill="white" stroke="#dbeafe" strokeWidth="1.5" filter="url(#rates-shadow)"/>
+
       {/* Grid lines */}
-      <line x1="24" y1="110" x2="186" y2="110" stroke="#eeeeee" strokeWidth="1"/>
-      <line x1="24" y1="88" x2="186" y2="88" stroke="#eeeeee" strokeWidth="1"/>
-      <line x1="24" y1="66" x2="186" y2="66" stroke="#eeeeee" strokeWidth="1"/>
-      <line x1="24" y1="44" x2="186" y2="44" stroke="#eeeeee" strokeWidth="1"/>
+      <line x1="30" y1="50" x2="130" y2="50" stroke="#f0f6ff" strokeWidth="1.5"/>
+      <line x1="30" y1="68" x2="130" y2="68" stroke="#f0f6ff" strokeWidth="1.5"/>
+      <line x1="30" y1="86" x2="130" y2="86" stroke="#f0f6ff" strokeWidth="1.5"/>
+      <line x1="30" y1="104" x2="130" y2="104" stroke="#f0f6ff" strokeWidth="1.5"/>
 
-      {/* Y axis */}
-      <line x1="24" y1="22" x2="24" y2="112" stroke="#dbeafe" strokeWidth="1.5"/>
+      {/* Rate line — rises then falls (BoC cycle) */}
+      <path d="M30 98 C45 95 52 88 60 70 C68 52 72 44 82 44 C90 44 94 52 100 60 C108 70 116 76 130 72"
+        stroke="url(#line-grad)" strokeWidth="3" strokeLinecap="round" fill="none"/>
 
-      {/* Rate labels */}
-      <text x="6" y="113" fontSize="8" fill="#999999" fontFamily="sans-serif">0%</text>
-      <text x="6" y="91" fontSize="8" fill="#999999" fontFamily="sans-serif">2%</text>
-      <text x="6" y="69" fontSize="8" fill="#999999" fontFamily="sans-serif">4%</text>
-      <text x="6" y="47" fontSize="8" fill="#999999" fontFamily="sans-serif">6%</text>
+      {/* Area fill under line */}
+      <path d="M30 98 C45 95 52 88 60 70 C68 52 72 44 82 44 C90 44 94 52 100 60 C108 70 116 76 130 72 L130 112 L30 112 Z"
+        fill="url(#line-grad)" opacity="0.08"/>
 
-      {/* 5yr Fixed rate line (blue → now green family), goes up then down */}
-      <path d="M28 100 L50 90 L70 72 L90 54 L106 50 L120 52 L136 58 L152 66 L170 68 L186 66"
-        stroke="#dbeafe" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"
-        strokeDasharray="5 3"/>
+      {/* Peak dot */}
+      <circle cx="82" cy="44" r="5" fill="#1068A8" filter="url(#rates-shadow)"/>
+      <circle cx="82" cy="44" r="3" fill="white"/>
 
-      {/* BoC overnight rate line, sharp rise, nine steps down */}
-      <path d="M28 108 L46 108 L46 86 L64 86 L64 70 L80 70 L80 55 L96 55 L96 55 L110 55
-               L110 63 L122 63 L122 70 L134 70 L134 80 L148 80 L148 88 L162 88 L162 88 L186 88"
-        stroke="#1068A8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+      {/* End dot */}
+      <circle cx="130" cy="72" r="5" fill="#00B4A0" filter="url(#rates-shadow)"/>
+      <circle cx="130" cy="72" r="3" fill="white"/>
 
-      {/* Peak annotation */}
-      <circle cx="96" cy="55" r="4" fill="#1068A8"/>
-      <rect x="88" y="36" width="38" height="16" rx="3" fill="#1068A8"/>
-      <text x="93" y="47" fontSize="8" fill="white" fontFamily="sans-serif" fontWeight="600">Peak 5%</text>
-      <line x1="96" y1="52" x2="96" y2="51" stroke="#1068A8" strokeWidth="1.5"/>
+      {/* % label at peak */}
+      <rect x="86" y="34" width="24" height="14" rx="4" fill="#1068A8"/>
+      <text x="98" y="45" textAnchor="middle" fontSize="8" fill="white"
+        fontFamily="sans-serif" fontWeight="700">5.0%</text>
 
-      {/* Current level annotation */}
-      <circle cx="186" cy="88" r="4" fill="#0d5a96"/>
-      <rect x="152" y="72" width="44" height="16" rx="3" fill="#eff6ff" stroke="#dbeafe" strokeWidth="1"/>
-      <text x="157" y="83" fontSize="8" fill="#1068A8" fontFamily="sans-serif" fontWeight="600">Now 2.25%</text>
+      {/* Current rate label */}
+      <rect x="106" y="60" width="30" height="14" rx="4" fill="#f0fdfa"
+        stroke="#99f6e4" strokeWidth="1"/>
+      <text x="121" y="71" textAnchor="middle" fontSize="7.5" fill="#0f766e"
+        fontFamily="sans-serif" fontWeight="700">3.35%</text>
 
-      {/* Legend */}
-      <line x1="28" y1="126" x2="44" y2="126" stroke="#1068A8" strokeWidth="2" strokeLinecap="round"/>
-      <text x="47" y="129" fontSize="8" fill="#999999" fontFamily="sans-serif">BoC Rate</text>
-      <line x1="100" y1="126" x2="116" y2="126" stroke="#dbeafe" strokeWidth="2"
-        strokeDasharray="5 3" strokeLinecap="round"/>
-      <text x="119" y="129" fontSize="8" fill="#999999" fontFamily="sans-serif">5yr Fixed</text>
+      {/* Axis labels */}
+      <text x="30" y="120" fontSize="7" fill="#999" fontFamily="sans-serif">2021</text>
+      <text x="72" y="120" fontSize="7" fill="#999" fontFamily="sans-serif">2023</text>
+      <text x="116" y="120" fontSize="7" fill="#999" fontFamily="sans-serif">2026</text>
     </svg>
   );
 }

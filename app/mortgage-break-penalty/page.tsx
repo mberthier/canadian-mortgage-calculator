@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import SiteLayout from "@/components/SiteLayout";
+import IllustrationBreakPenalty from "@/components/illustrations/IllustrationBreakPenalty";
 import PageHeader from "@/components/PageHeader";
 import Breadcrumb from "@/components/Breadcrumb";
 import FAQAccordion from "@/components/FAQAccordion";
@@ -52,6 +53,7 @@ export default function BreakPenaltyPage() {
           crumbs={[{ label: "CrystalKey", href: "/" }, { label: "Mortgage Break Penalty" }]}
           title="Mortgage Break Penalty Calculator"
           subtitle="Breaking your mortgage before the term ends costs money. Find out exactly how much, before you commit to anything."
+                    illustration={<IllustrationBreakPenalty />}
           needs={[
             { label: "Current mortgage balance" },
             { label: "Original and current interest rates" },

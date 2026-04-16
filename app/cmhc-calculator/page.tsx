@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import IllustrationCMHC from "@/components/illustrations/IllustrationCMHC";
 import PageHeader from "@/components/PageHeader";
 import Link from "next/link";
 import SiteLayout from "@/components/SiteLayout";
@@ -33,6 +34,7 @@ export default function CMHCPage() {
           crumbs={[{ label: "CrystalKey", href: "/" }, { label: "CMHC Calculator" }]}
           title="CMHC Mortgage Insurance Calculator"
           subtitle="Your lender requires this insurance when you put down less than 20%. Here is what it will actually cost you."
+                    illustration={<IllustrationCMHC />}
           needs={[
             { label: "Home purchase price" },
             { label: "Down payment amount or percentage" },
