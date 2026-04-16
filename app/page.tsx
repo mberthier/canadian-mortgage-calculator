@@ -464,17 +464,56 @@ export default function Home() {
       <SiteLayout>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10">
           {/* ── Hero header ── */}
-          <div className="mt-8 mb-8 text-center">
-            <h1 className="text-4xl font-bold leading-tight mb-3 tracking-tight" style={{ color: "var(--ink)" }}>
-              Canadian Mortgage Calculator
-            </h1>
-            <p className="text-lg" style={{ color: "var(--ink-muted)" }}>
-              Crystal clear numbers for one of the biggest financial decisions you'll make.
-            </p>
+          <div className="-mx-4 sm:-mx-6 mb-0 relative overflow-hidden"
+            style={{ background: "linear-gradient(135deg, #0B1927 0%, #1068A8 100%)" }}>
+            {/* Background geometry */}
+            <div className="absolute inset-0 opacity-10" aria-hidden="true">
+              <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full"
+                style={{ background: "#00B4A0" }} />
+              <div className="absolute -bottom-32 -left-16 w-80 h-80 rounded-full"
+                style={{ background: "#1068A8" }} />
+            </div>
+
+            <div className="relative px-6 pt-14 pb-20 text-center max-w-3xl mx-auto">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full mb-5 text-xs font-semibold uppercase tracking-widest"
+                style={{ background: "rgba(0,180,160,0.20)", color: "#5eead4", border: "1px solid rgba(0,180,160,0.30)" }}>
+                <span className="w-1.5 h-1.5 rounded-full" style={{ background: "#00B4A0" }} />
+                Canadian mortgage calculator
+              </div>
+              <h1 className="font-display text-5xl sm:text-6xl font-bold leading-tight tracking-tight mb-4"
+                style={{ color: "#fff", letterSpacing: "-0.02em" }}>
+                Crystal clear numbers.<br />
+                <span style={{ color: "#5eead4" }}>Zero guesswork.</span>
+              </h1>
+              <p className="text-lg leading-relaxed mb-8" style={{ color: "rgba(255,255,255,0.65)" }}>
+                Real payments, closing costs, and broker-grade insights for one of the biggest financial decisions you will make.
+              </p>
+
+              {/* Trust signals */}
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                {[
+                  "Canadian mortgage rules",
+                  "CMHC calculations",
+                  "All 13 provinces",
+                  "Stress test included",
+                ].map(label => (
+                  <span key={label}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium"
+                    style={{ background: "rgba(255,255,255,0.10)", color: "rgba(255,255,255,0.80)", border: "1px solid rgba(255,255,255,0.15)" }}>
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                      <path d="M2 5l2 2 4-4" stroke="#00B4A0" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    {label}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
 
-          {/* ── Mode selector, above everything ── */}
-          <ModeSelector mode={mode} onChange={setMode} />
+          {/* ── Mode selector — overlaps hero bottom ── */}
+          <div className="-mt-10 relative z-10 mb-8">
+            <ModeSelector mode={mode} onChange={setMode} />
+          </div>
 
           {/* ── Two-column layout ── */}
           <div className="grid grid-cols-1 lg:grid-cols-[360px,1fr] gap-8 items-start">
