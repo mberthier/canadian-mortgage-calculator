@@ -5,7 +5,6 @@ import Script from "next/script";
 import SiteLayout from "@/components/SiteLayout";
 import ModeSelector from "@/components/ModeSelector";
 import PageHeader from "@/components/PageHeader";
-import IllustrationCalculator from "@/components/illustrations/IllustrationCalculator";
 import GuidedForm from "@/components/GuidedForm";
 import SummaryCards from "@/components/SummaryCards";
 import InsightsPanel from "@/components/InsightsPanel";
@@ -469,7 +468,18 @@ export default function Home() {
             crumbs={[{ label: "CrystalKey", href: "/" }]}
             title="Canadian Mortgage Calculator"
             subtitle="Accurate payments, closing costs, stress test, and broker-grade insights for every Canadian province."
-            illustration={<IllustrationCalculator />}
+            needs={[
+              { label: "Home price or mortgage balance" },
+              { label: "Down payment amount or percentage" },
+              { label: "Your interest rate" },
+              { label: "Province" },
+            ]}
+            gets={[
+              { label: "Your exact monthly payment" },
+              { label: "Total cash needed on closing day" },
+              { label: "Interest vs principal over your term" },
+              { label: "Personalized broker-grade insights" },
+            ]}
           />
 
           {/* ── Mode selector ── */}

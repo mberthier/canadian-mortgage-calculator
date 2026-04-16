@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import IllustrationRates from "@/components/illustrations/IllustrationRates";
 import PageHeader from "@/components/PageHeader";
 import Link from "next/link";
 import SiteLayout from "@/components/SiteLayout";
@@ -33,8 +32,16 @@ export default function MortgageRatesPage() {
                 <PageHeader
           crumbs={[{ label: "CrystalKey", href: "/" }, { label: "Rate History" }]}
           title="Canadian Mortgage Rate History"
-          subtitle="The Bank of Canada raised rates to 5% in 2023, then cut nine times. Here's what that actually looked like, and where things stand now."
-          illustration={<IllustrationRates />}
+          subtitle="The Bank of Canada raised rates to 5% in 2023, then cut nine times. Here is what that looked like, and where things stand now."
+          needs={[
+            { label: "Nothing — this is a reference page" },
+          ]}
+          gets={[
+            { label: "BoC overnight rate from 2020 to today" },
+            { label: "How fixed vs variable rates diverged" },
+            { label: "Context for today's rate environment" },
+            { label: "What history suggests about future direction" },
+          ]}
         />
 
         <RateHistoryPageClient />

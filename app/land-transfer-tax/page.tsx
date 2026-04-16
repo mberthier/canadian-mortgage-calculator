@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import IllustrationLTT from "@/components/illustrations/IllustrationLTT";
 import PageHeader from "@/components/PageHeader";
 import Link from "next/link";
 import SiteLayout from "@/components/SiteLayout";
@@ -33,9 +32,20 @@ export default function LTTPage() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
         <PageHeader
           crumbs={[{ label: "CrystalKey", href: "/" }, { label: "Land Transfer Tax" }]}
-          title="Land Transfer Tax"
+          title="Land Transfer Tax Calculator"
           subtitle="The biggest closing cost most people forget to plan for. Every province calculated, rebates included."
-          illustration={<IllustrationLTT />}
+          needs={[
+            { label: "Home purchase price" },
+            { label: "Province" },
+            { label: "Whether you are a first-time buyer" },
+            { label: "Whether the property is in Toronto" },
+          ]}
+          gets={[
+            { label: "Exact LTT for your province" },
+            { label: "Toronto municipal surcharge if applicable" },
+            { label: "First-time buyer rebate automatically applied" },
+            { label: "Net amount due on closing day" },
+          ]}
         />
 
         <LTTCalculatorClient />

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import IllustrationAffordability from "@/components/illustrations/IllustrationAffordability";
 import PageHeader from "@/components/PageHeader";
 import Link from "next/link";
 import SiteLayout from "@/components/SiteLayout";
@@ -35,8 +34,19 @@ export default function AffordabilityPage() {
         <PageHeader
           crumbs={[{ label: "CrystalKey", href: "/" }, { label: "Affordability & Stress Test" }]}
           title="Mortgage Affordability & Stress Test"
-          subtitle="Your lender runs these exact numbers before saying yes. Find out where you stand, and what rate they'll actually test you at."
-          illustration={<IllustrationAffordability />}
+          subtitle="Your lender runs these exact numbers before saying yes. Find out where you stand, and what rate they will actually test you at."
+          needs={[
+            { label: "Gross annual household income" },
+            { label: "Monthly debt payments (car, student loans, etc.)" },
+            { label: "Target home price and down payment" },
+            { label: "Estimated property tax and heating costs" },
+          ]}
+          gets={[
+            { label: "Your GDS and TDS ratios vs lender limits" },
+            { label: "Whether you pass the stress test" },
+            { label: "Maximum home price you qualify for" },
+            { label: "Exactly what rate you will be tested at" },
+          ]}
         />
 
         <AffordabilityClient />

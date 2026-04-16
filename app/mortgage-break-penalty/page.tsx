@@ -52,6 +52,18 @@ export default function BreakPenaltyPage() {
           crumbs={[{ label: "CrystalKey", href: "/" }, { label: "Mortgage Break Penalty" }]}
           title="Mortgage Break Penalty Calculator"
           subtitle="Breaking your mortgage before the term ends costs money. Find out exactly how much, before you commit to anything."
+          needs={[
+            { label: "Current mortgage balance" },
+            { label: "Original and current interest rates" },
+            { label: "Months remaining in your term" },
+            { label: "Mortgage type (fixed or variable)" },
+          ]}
+          gets={[
+            { label: "3-months interest penalty (variable / short fixed)" },
+            { label: "IRD penalty estimate (long fixed)" },
+            { label: "Which method your lender will likely apply" },
+            { label: "Whether breaking early makes financial sense" },
+          ]}
         />
 
         <BreakPenaltyCalculatorClient />

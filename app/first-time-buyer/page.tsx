@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import IllustrationFirstTimeBuyer from "@/components/illustrations/IllustrationFirstTimeBuyer";
 import PageHeader from "@/components/PageHeader";
 import Link from "next/link";
 import SiteLayout from "@/components/SiteLayout";
@@ -42,8 +41,16 @@ export default function FirstTimeBuyerPage() {
                 <PageHeader
           crumbs={[{ label: "CrystalKey", href: "/" }, { label: "First-Time Buyers" }]}
           title="First-Time Home Buyer Guide"
-          subtitle="Buying your first home is the most financially complex thing most people ever do. Here's the part nobody explains clearly."
-          illustration={<IllustrationFirstTimeBuyer />}
+          subtitle="Buying your first home is the most financially complex thing most people ever do. Here is the part nobody explains clearly."
+          needs={[
+            { label: "Nothing — this is a reference guide" },
+          ]}
+          gets={[
+            { label: "Every federal and provincial FTB program explained" },
+            { label: "RRSP Home Buyers Plan rules and limits" },
+            { label: "First-time buyer LTT rebates by province" },
+            { label: "The correct order of steps from search to close" },
+          ]}
         />
 
         <div className="rounded-2xl p-6 mb-8 border" style={{ background: "var(--green-light)", borderColor: "var(--green-border)" }}>

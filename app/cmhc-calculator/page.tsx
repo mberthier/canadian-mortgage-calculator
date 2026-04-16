@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import IllustrationCMHC from "@/components/illustrations/IllustrationCMHC";
 import PageHeader from "@/components/PageHeader";
 import Link from "next/link";
 import SiteLayout from "@/components/SiteLayout";
@@ -33,8 +32,18 @@ export default function CMHCPage() {
         <PageHeader
           crumbs={[{ label: "CrystalKey", href: "/" }, { label: "CMHC Calculator" }]}
           title="CMHC Mortgage Insurance Calculator"
-          subtitle="Your lender requires this insurance when you put down less than 20%. Here's what it'll actually cost you."
-          illustration={<IllustrationCMHC />}
+          subtitle="Your lender requires this insurance when you put down less than 20%. Here is what it will actually cost you."
+          needs={[
+            { label: "Home purchase price" },
+            { label: "Down payment amount or percentage" },
+            { label: "Province (for provincial tax on premium)" },
+          ]}
+          gets={[
+            { label: "Exact CMHC premium amount" },
+            { label: "How much it adds to your monthly payment" },
+            { label: "Provincial tax due at closing (ON, QC, SK)" },
+            { label: "True total cost including compounded interest" },
+          ]}
         />
         <CMHCCalculatorClient />
         <div className="mt-12 space-y-8">

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import IllustrationGlossary from "@/components/illustrations/IllustrationGlossary";
 import PageHeader from "@/components/PageHeader";
 import Link from "next/link";
 import SiteLayout from "@/components/SiteLayout";
@@ -273,8 +272,15 @@ export default function GlossaryPage() {
                 <PageHeader
           crumbs={[{ label: "CrystalKey", href: "/" }, { label: "Glossary" }]}
           title="Canadian Mortgage Glossary"
-          subtitle="Every term you'll encounter when getting a mortgage in Canada, explained like a knowledgeable friend, not a legal document."
-          illustration={<IllustrationGlossary />}
+          subtitle="Every term you will encounter when getting a mortgage in Canada, explained like a knowledgeable friend, not a legal document."
+          needs={[
+            { label: "Nothing — search or browse by letter" },
+          ]}
+          gets={[
+            { label: "Plain English definitions for every mortgage term" },
+            { label: "Canadian-specific terms (stress test, CMHC, LTT)" },
+            { label: "How each term affects your mortgage decision" },
+          ]}
         />
 
         {/* Letter jump nav */}
