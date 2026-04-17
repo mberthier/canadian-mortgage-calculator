@@ -39,6 +39,10 @@ export const AMORTIZATION_OPTIONS = [5, 10, 15, 20, 25, 30];
 export const TERM_OPTIONS         = [1, 2, 3, 4, 5, 7, 10];
 
 // Live rates as of April 9, 2026
+export const RATES_UPDATED = "April 9, 2026";
+export const RATES_BOC_OVERNIGHT = 2.25;
+export const RATES_PRIME = 4.45;
+
 export const RATE_PRESETS: RatePreset[] = [
   { label: "Variable 5yr", rate: 3.35, term: 5,  type: "variable" },
   { label: "Fixed 3yr",    rate: 3.9,  term: 3,  type: "fixed"    },
