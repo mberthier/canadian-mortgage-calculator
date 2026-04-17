@@ -129,8 +129,8 @@ export default function BrokerMatchCard({ inputs, outputs }: Props) {
   };
 
   return (
-    <div className="rounded-2xl overflow-hidden"
-      style={{ border: "1px solid var(--green-border)", background: "var(--green-light)" }}>
+    <div className="rounded-2xl bg-white overflow-hidden"
+      style={{ border: "1px solid rgba(0,0,0,0.06)", borderLeft: "4px solid var(--green)" }}>
 
       {/* Card body */}
       <div className="px-5 py-5">
@@ -245,7 +245,7 @@ export default function BrokerMatchCard({ inputs, outputs }: Props) {
       {/* Footer trust line */}
       {!submitted && (
         <div className="px-5 py-2.5 border-t"
-          style={{ borderColor: "var(--green-border)", background: "rgba(255,255,255,0.5)" }}>
+          style={{ borderTop: "1px solid rgba(0,0,0,0.05)", background: "#fafafa" }}>
           <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
             CrystalKey partner brokers are licensed and independent. No obligation, no sales pressure.
           </p>

@@ -41,9 +41,9 @@ export default function StressTest({ outputs, inputs }: Props) {
   const base = scenarios[0].payment;
 
   return (
-    <div ref={sectionRef} className="rounded-2xl bg-white border border-neutral-100 overflow-hidden">
+    <div ref={sectionRef} className="rounded-2xl bg-white overflow-hidden" style={{ border: "1px solid rgba(0,0,0,0.06)" }}>
       {/* Header, always visible */}
-      <div className="px-5 pt-4 pb-3 border-b border-neutral-100 flex items-center justify-between">
+      <div className="px-6 pt-4 pb-3 flex items-center justify-between" style={{ borderBottom: "1px solid rgba(0,0,0,0.05)" }}>
         <div className="flex items-center gap-2">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"
@@ -54,12 +54,10 @@ export default function StressTest({ outputs, inputs }: Props) {
           </p>
         </div>
         <button onClick={() => setOpen(o => !o)}
-          className="text-xs font-medium px-3 py-1.5 rounded-lg transition-colors"
-          style={open
-            ? { background: "#f0f0f0", color: "var(--ink-mid)" }
-            : { background: "var(--green-light)", color: "var(--green)", border: "1px solid var(--green-border)" }}
+          className="w-7 h-7 flex items-center justify-center rounded-full transition-colors"
+          style={{ background: "rgba(0,0,0,0.05)", color: "var(--ink-mid)" }}
           aria-expanded={open}>
-          {open ? "Close" : "See rate scenarios →"}
+          <span className="text-base leading-none">{open ? "−" : "+"}</span>
         </button>
       </div>
       {!open && (
@@ -70,7 +68,7 @@ export default function StressTest({ outputs, inputs }: Props) {
         </div>
       )}
       {open && (
-      <div className="px-5 pb-5 pt-4">
+      <div className="px-6 pb-6 pt-4">
       <p className="text-sm text-neutral-500 mb-4">
         If your rate changes when your {inputs.termYears}-year term ends, your {FREQUENCY_LABELS[inputs.paymentFrequency].toLowerCase()} payment on the {formatCurrency(outputs.termEndBalance, 0, true)} remaining balance would be:
       </p>

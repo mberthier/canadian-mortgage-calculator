@@ -64,10 +64,11 @@ function ResultsNarrative({
   const mode     = inputs.mortgageMode;
 
   const box: React.CSSProperties = {
-    background: "var(--green-light)",
-    border: "1px solid var(--green-border)",
+    background: "#fff",
+    border: "1px solid rgba(0,0,0,0.06)",
     borderRadius: "1rem",
-    padding: "1rem 1.25rem",
+    padding: "1rem 1.5rem",
+    borderLeft: "3px solid var(--green)",
   };
 
   if (mode === "purchase" && inputs.homePrice > 0) {
@@ -85,7 +86,7 @@ function ResultsNarrative({
             ? ", enough to shop any lender freely without re-qualifying."
             : ", still below 20%, so CMHC rules would apply if you chose to refinance."}
         </p>
-        <p className="text-xs mt-2.5 pt-2.5 border-t" style={{ color: "var(--ink-muted)", borderColor: "var(--green-border)" }}>
+        <p className="text-xs mt-2.5 pt-2.5 border-t" style={{ color: "var(--ink-muted)", borderColor: "rgba(0,0,0,0.06)" }}>
           Total interest over {inputs.amortizationYears} years at this rate:{" "}
           <span className="font-medium" style={{ color: "var(--ink)" }}>
             {formatCurrency(outputs.totalInterest, 0, true)}
@@ -106,7 +107,7 @@ function ResultsNarrative({
           {" "}At your next renewal you will owe <H>{balance}</H>.
         </p>
         {hasCurrent && Math.abs(diff) > 1 && (
-          <p className="text-xs mt-2.5 pt-2.5 border-t" style={{ color: "var(--ink-muted)", borderColor: "var(--green-border)" }}>
+          <p className="text-xs mt-2.5 pt-2.5 border-t" style={{ color: "var(--ink-muted)", borderColor: "rgba(0,0,0,0.06)" }}>
             Payment {diff > 0 ? "increases" : "drops"} by{" "}
             <span className="font-medium" style={{ color: "var(--ink)" }}>
               {formatCurrency(Math.abs(diff), 0)}/{freq}
@@ -138,7 +139,7 @@ function ResultsNarrative({
           )}
         </p>
         {hasCurrent && Math.abs(diff) > 1 && (
-          <p className="text-xs mt-2.5 pt-2.5 border-t" style={{ color: "var(--ink-muted)", borderColor: "var(--green-border)" }}>
+          <p className="text-xs mt-2.5 pt-2.5 border-t" style={{ color: "var(--ink-muted)", borderColor: "rgba(0,0,0,0.06)" }}>
             Payment {diff > 0 ? "increases" : "drops"} by{" "}
             <span className="font-medium" style={{ color: "var(--ink)" }}>
               {formatCurrency(Math.abs(diff), 0)}/{freq}
@@ -188,8 +189,8 @@ function ContextualExplore({ mode, hasCMHC, isFirstTimeBuyer }: {
   };
 
   return (
-    <div className="rounded-2xl border border-neutral-100 bg-white overflow-hidden">
-      <div className="px-5 py-3.5 border-b border-neutral-100">
+    <div className="rounded-2xl bg-white overflow-hidden" style={{ border: "1px solid rgba(0,0,0,0.06)" }}>
+      <div className="px-6 py-3.5" style={{ borderBottom: "1px solid rgba(0,0,0,0.05)" }}>
         <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--ink-faint)" }}>
           Related tools
         </p>

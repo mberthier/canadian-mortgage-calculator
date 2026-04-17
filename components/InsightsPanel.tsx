@@ -601,9 +601,9 @@ export default function InsightsPanel({ inputs, outputs }: Props) {
   const hidden  = all.length - SHOW_BY_DEFAULT;
 
   return (
-    <div className="rounded-2xl border border-neutral-100 bg-white overflow-hidden">
+    <div className="rounded-2xl bg-white overflow-hidden" style={{ border: "1px solid rgba(0,0,0,0.06)" }}>
       {/* Header */}
-      <div className="px-5 py-3.5 border-b border-neutral-100 flex items-center gap-2">
+      <div className="px-6 py-3.5 flex items-center gap-2" style={{ borderBottom: "1px solid rgba(0,0,0,0.05)" }}>
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M9 18h6M10 22h4M12 2a7 7 0 017 7c0 2.4-1.2 4.5-3 5.7V17H8v-2.3C6.2 13.5 5 11.4 5 9a7 7 0 017-7z"
             stroke="var(--green)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -621,8 +621,8 @@ export default function InsightsPanel({ inputs, outputs }: Props) {
         {visible.map((ins, i) => {
           const s = TYPE_STYLE[ins.type];
           return (
-            <div key={i} className="py-4 pr-5 flex items-start gap-0"
-              style={{ paddingLeft: "1.25rem" }}>
+            <div key={i} className="py-4 pr-6 flex items-start gap-0"
+              style={{ paddingLeft: "1.5rem" }}>
               {/* Left border accent */}
               <div className="shrink-0 w-0.5 self-stretch rounded-full mr-4 mt-0.5"
                 style={{ background: s.border, minHeight: "1rem" }} />
@@ -662,8 +662,8 @@ export default function InsightsPanel({ inputs, outputs }: Props) {
       {all.length > SHOW_BY_DEFAULT && (
         <button
           onClick={() => setExpanded(e => !e)}
-          className="w-full flex items-center justify-center gap-1.5 px-5 py-3 text-xs font-medium border-t border-neutral-100 transition-colors hover:bg-neutral-50"
-          style={{ color: "var(--green)" }}>
+          className="w-full flex items-center justify-center gap-1.5 px-6 py-3 text-xs font-medium transition-colors hover:bg-neutral-50"
+          style={{ borderTop: "1px solid rgba(0,0,0,0.05)", color: "var(--green)" }}>
           {expanded ? (
             <>Show less
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"

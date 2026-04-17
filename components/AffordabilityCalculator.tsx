@@ -88,9 +88,9 @@ export default function AffordabilityCalculator({
   }
 
   return (
-    <div ref={sectionRef} className="rounded-2xl bg-white border border-neutral-100 overflow-hidden">
+    <div ref={sectionRef} className="rounded-2xl bg-white overflow-hidden" style={{ border: "1px solid rgba(0,0,0,0.06)" }}>
       {/* Header, always visible */}
-      <div className="px-5 pt-4 pb-3 border-b border-neutral-100 flex items-center justify-between">
+      <div className="px-6 pt-4 pb-3 flex items-center justify-between" style={{ borderBottom: "1px solid rgba(0,0,0,0.05)" }}>
         <div className="flex items-center gap-2">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M12 2a10 10 0 100 20A10 10 0 0012 2zm0 6v6l4 2"
@@ -101,12 +101,10 @@ export default function AffordabilityCalculator({
           </p>
         </div>
         <button onClick={() => setOpen(o => !o)}
-          className="text-xs font-medium px-3 py-1.5 rounded-lg transition-colors"
-          style={open
-            ? { background: "#f0f0f0", color: "var(--ink-mid)" }
-            : { background: "var(--green-light)", color: "var(--green)", border: "1px solid var(--green-border)" }}
+          className="w-7 h-7 flex items-center justify-center rounded-full transition-colors"
+          style={{ background: "rgba(0,0,0,0.05)", color: "var(--ink-mid)" }}
           aria-expanded={open}>
-          {open ? "Close" : "Check qualification →"}
+          <span className="text-base leading-none">{open ? "−" : "+"}</span>
         </button>
       </div>
       {!open && (
@@ -121,7 +119,7 @@ export default function AffordabilityCalculator({
         <div className="border-t border-neutral-100">
           {/* Prompt when no income yet */}
           {annualIncome === 0 && coIncome === 0 && (
-            <div className="px-5 py-5 text-center border-b border-neutral-100">
+            <div className="px-6 py-5 text-center" style={{ borderBottom: "1px solid rgba(0,0,0,0.05)" }}>
               <p className="text-sm font-medium text-neutral-700 mb-1">Enter your income below to see your ratios</p>
               <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
                 GDS and TDS tell you whether you qualify at this mortgage size.
@@ -132,7 +130,7 @@ export default function AffordabilityCalculator({
           {/* GDS/TDS gauges + verdict, only when income entered */}
           {(annualIncome > 0 || coIncome > 0) && (
             <>
-              <div className="px-5 py-4 grid grid-cols-2 gap-3">
+              <div className="px-6 py-4 grid grid-cols-2 gap-3">
                 {[
                   { key: "GDS", pct: gds, limit: GDS_LIMIT, color: gdsColor,
                     tip: "Gross Debt Service ratio. Measures your housing costs as a percentage of gross income. Includes: mortgage principal and interest, property tax, heating costs, and 50% of condo fees. Lender limit: 39%." },
@@ -153,8 +151,8 @@ export default function AffordabilityCalculator({
                   </div>
                 ))}
               </div>
-              <div className="px-5 py-3 border-t border-neutral-100"
-                style={qualifies ? { background: "var(--green-light)" } : { background: "#fef2f2" }}>
+              <div className="px-6 py-3"
+                style={{ borderTop: "1px solid rgba(0,0,0,0.05)", background: qualifies ? "var(--green-light)" : "#fef2f2" }}>
                 <p className="text-sm font-semibold" style={{ color: qualifies ? "var(--green)" : "#ef4444" }}>
                   {qualifies
                     ? `✓ At ${formatCurrency(annualIncome + coIncome, 0)}/yr gross income, you likely qualify`
@@ -168,7 +166,7 @@ export default function AffordabilityCalculator({
           )}
 
           {/* Inputs */}
-          <div className="px-5 py-4 space-y-4 border-t border-neutral-100">
+          <div className="px-6 py-4 space-y-4" style={{ borderTop: "1px solid rgba(0,0,0,0.05)" }}>
             <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
               Enter your gross (pre-tax) annual income, lenders use this to calculate how much you qualify for.
             </p>

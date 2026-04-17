@@ -80,7 +80,7 @@ export default function CashSummary({ inputs, outputs }: Props) {
       {/* ── All-in monthly cost — only when ownership costs entered ── */}
       {(inputs.propertyTax > 0 || inputs.heatingCost > 0 || inputs.condoFees > 0 || inputs.homeInsurance > 0) && (
         <div className="px-6 py-4 border-t border-neutral-100"
-          style={{ background: "#fafafa" }}>
+          style={{ background: "#fafafa", borderTop: "1px solid rgba(0,0,0,0.05)" }}>
           <div className="flex justify-between items-center">
             <div>
               <p className="text-sm font-medium text-neutral-700">All-in monthly cost</p>
