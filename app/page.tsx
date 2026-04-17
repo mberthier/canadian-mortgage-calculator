@@ -387,7 +387,7 @@ export default function Home() {
           </div>
 
           {/* ── Two-column layout ── */}
-          <div className="grid grid-cols-1 lg:grid-cols-[360px,1fr] gap-8 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-[360px,1fr] gap-8 items-end">
 
             {/* Left, guided inputs only */}
             <aside>
