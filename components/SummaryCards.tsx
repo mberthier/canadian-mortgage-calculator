@@ -7,9 +7,10 @@ import { formatCurrency } from "@/lib/formatters";
 import Tooltip from "./Tooltip";
 
 interface Props {
-  outputs:   MortgageOutputs;
-  inputs:    MortgageInputs;
-  shareURL?: string;
+  outputs:    MortgageOutputs;
+  inputs:     MortgageInputs;
+  shareURL?:  string;
+  minHeight?: number;
 }
 
 interface MetricProps {
@@ -50,7 +51,7 @@ function H({ children, color }: { children: React.ReactNode; color?: string }) {
   );
 }
 
-export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
+export default function SummaryCards({ outputs, inputs, shareURL, minHeight }: Props) {
   const [copied, setCopied] = useState(false);
   const mode    = inputs.mortgageMode;
   const isPurchase = mode === "purchase";
@@ -210,7 +211,8 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
   })();
 
   return (
-    <div className="rounded-2xl overflow-hidden shadow-sm" style={{ border: "1px solid rgba(0,0,0,0.06)" }}>
+    <div className="rounded-2xl overflow-hidden shadow-sm flex flex-col"
+      style={{ border: "1px solid rgba(0,0,0,0.06)", minHeight: minHeight ? `${minHeight}px` : undefined }}>
 
       {/* ── Hero ── */}
       <div className="px-6 pt-6 pb-0" style={{ background: "var(--green)" }}>
@@ -287,8 +289,8 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
         )}
       </div>
 
-      {/* ── Metrics + cash + narrative — flex column so narrative pins to bottom ── */}
-      <div style={{ background: "#fff" }} className="flex flex-col">
+      {/* ── Metrics + cash + narrative — flex-1 fills remaining card height ── */}
+      <div style={{ background: "#fff" }} className="flex flex-col flex-1">
         {isPurchase && (
           <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-y divide-neutral-100">
             <Metric label="Principal paid" value={formatCurrency(termPrincipal, 0, true)} sub={`This ${inputs.termYears}-yr term`} tip="How much of your mortgage balance you pay down during this term. The remainder is still owed at renewal." />
