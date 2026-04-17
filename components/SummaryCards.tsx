@@ -130,7 +130,7 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
       const canSwitch = equityPct >= 20;
       return (
         <>
-          <p className="text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>
+          <p className="text-sm leading-snug" style={{ color: "var(--ink-mid)" }}>
             Over your {inputs.termYears}-year term you will eliminate{" "}
             <H color="var(--green)">{termPrin}</H> of your mortgage balance and pay{" "}
             <H>{termInt}</H> in interest.
@@ -140,7 +140,7 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
               ? ", enough to shop any lender freely without re-qualifying."
               : ", still below 20%, so CMHC rules would apply if you chose to refinance."}
           </p>
-          <p className="text-xs mt-2.5 pt-2.5" style={{ color: "var(--ink-muted)", borderTop: "1px solid rgba(0,0,0,0.06)" }}>
+          <p className="text-xs mt-2 pt-2" style={{ color: "var(--ink-muted)", borderTop: "1px solid rgba(0,0,0,0.05)" }}>
             Total interest over {inputs.amortizationYears} years at this rate:{" "}
             <span className="font-medium" style={{ color: "var(--ink)" }}>
               {formatCurrency(outputs.totalInterest, 0, true)}
@@ -155,13 +155,13 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
       const diff = hasCurrent ? outputs.periodicPayment - outputs.currentPayment : 0;
       return (
         <>
-          <p className="text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>
+          <p className="text-sm leading-snug" style={{ color: "var(--ink-mid)" }}>
             This term you will pay <H>{termInt}</H> in interest and pay down{" "}
             <H color="var(--green)">{termPrin}</H> of your balance.
             {" "}At your next renewal you will owe <H>{balance}</H>.
           </p>
           {hasCurrent && Math.abs(diff) > 1 && (
-            <p className="text-xs mt-2.5 pt-2.5" style={{ color: "var(--ink-muted)", borderTop: "1px solid rgba(0,0,0,0.06)" }}>
+            <p className="text-xs mt-2 pt-2" style={{ color: "var(--ink-muted)", borderTop: "1px solid rgba(0,0,0,0.05)" }}>
               Payment {diff > 0 ? "increases" : "drops"} by{" "}
               <span className="font-medium" style={{ color: "var(--ink)" }}>
                 {formatCurrency(Math.abs(diff), 0)}/{freqLow}
@@ -184,7 +184,7 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
       const diff = hasCurrent ? outputs.periodicPayment - outputs.currentPayment : 0;
       return (
         <>
-          <p className="text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>
+          <p className="text-sm leading-snug" style={{ color: "var(--ink-mid)" }}>
             Your refinanced mortgage is <H>{formatCurrency(outputs.loanAmount, 0, true)}</H> at {inputs.interestRate}%
             {inputs.cashOutAmount > 0 && <>, including <H color="var(--green)">{formatCurrency(inputs.cashOutAmount, 0)}</H> cash-out</>}.
             {equityPct !== null && (
@@ -193,7 +193,7 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
             )}
           </p>
           {hasCurrent && Math.abs(diff) > 1 && (
-            <p className="text-xs mt-2.5 pt-2.5" style={{ color: "var(--ink-muted)", borderTop: "1px solid rgba(0,0,0,0.06)" }}>
+            <p className="text-xs mt-2 pt-2" style={{ color: "var(--ink-muted)", borderTop: "1px solid rgba(0,0,0,0.05)" }}>
               Payment {diff > 0 ? "increases" : "drops"} by{" "}
               <span className="font-medium" style={{ color: "var(--ink)" }}>
                 {formatCurrency(Math.abs(diff), 0)}/{freqLow}
@@ -314,60 +314,73 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
         )}
       </div>
 
-      {/* ── Cash needed at closing — purchase only ── */}
+      {/* ── Cash needed at closing — redesigned zone ── */}
       {isPurchase && inputs.homePrice > 0 && cashLines.length > 0 && (
-        <div style={{ borderTop: "1px solid rgba(0,0,0,0.06)" }}>
-          <div className="px-6 pt-5 pb-3">
-            <p className="text-xs font-semibold uppercase tracking-widest mb-3"
-              style={{ color: "var(--ink-faint)" }}>
-              Cash needed at closing
-            </p>
-            <p className="font-display leading-none mb-2"
-              style={{ fontSize: 44, color: "#0B1927", letterSpacing: "-0.02em" }}>
-              {formatCurrency(outputs.totalUpfrontCash, 0)}
-            </p>
-            <p className="text-sm mb-4" style={{ color: "var(--ink-muted)" }}>
-              Have this ready on closing day.
+        <div style={{ borderTop: "1px solid rgba(0,0,0,0.06)", background: "#fafaf8" }}>
+
+          {/* Number + label side by side — number is the hero */}
+          <div className="px-6 pt-5 pb-4 flex items-start justify-between gap-4">
+            <div className="flex-1">
+              <p className="text-xs font-semibold uppercase tracking-widest mb-1"
+                style={{ color: "var(--ink-faint)" }}>
+                Cash needed at closing
+              </p>
+              <p className="text-sm mt-1" style={{ color: "var(--ink-muted)" }}>
+                Have this ready on closing day.
+              </p>
               {!inputs.closingCosts && (
-                <span style={{ color: "var(--ink-faint)" }}> Closing costs estimated at $1,500 — add your actual figure in Refine your estimate.</span>
+                <p className="text-xs mt-0.5" style={{ color: "var(--ink-faint)" }}>
+                  Closing costs estimated — add your figure in Refine your estimate.
+                </p>
               )}
-            </p>
-            <div className="space-y-2">
-              {cashLines.map(({ label, value, negative, muted }) => (
-                <div key={label} className="flex justify-between items-baseline">
-                  <span className="text-xs" style={{ color: muted ? "var(--ink-faint)" : "var(--ink-muted)" }}>
-                    {label}
-                  </span>
-                  <span className="text-xs font-medium tabular-nums ml-4"
-                    style={{ color: negative ? "var(--green-mid)" : muted ? "var(--ink-faint)" : "var(--ink-mid)" }}>
-                    {negative ? "−" : ""}{formatCurrency(value, 0)}
-                  </span>
-                </div>
-              ))}
+            </div>
+            <div className="text-right shrink-0">
+              <p className="font-display leading-none"
+                style={{ fontSize: 40, color: "#0B1927", letterSpacing: "-0.02em" }}>
+                {formatCurrency(outputs.totalUpfrontCash, 0)}
+              </p>
             </div>
           </div>
-          {(inputs.propertyTax > 0 || inputs.heatingCost > 0 || inputs.condoFees > 0 || inputs.homeInsurance > 0) && (
-            <div className="px-6 py-4"
-              style={{ borderTop: "1px solid rgba(0,0,0,0.05)", background: "#fafafa" }}>
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-sm font-medium text-neutral-700">All-in monthly cost</p>
-                  <p className="text-xs mt-0.5" style={{ color: "var(--ink-faint)" }}>
-                    Mortgage{inputs.propertyTax > 0 ? " + tax" : ""}{inputs.heatingCost > 0 ? " + heat" : ""}{inputs.condoFees > 0 ? " + condo" : ""}{inputs.homeInsurance > 0 ? " + insurance" : ""}
-                  </p>
-                </div>
-                <span className="text-xl font-bold tabular-nums" style={{ color: "var(--brand-teal)" }}>
-                  {formatCurrency(outputs.totalMonthlyOwnership, 0)}/mo
+
+          {/* Breakdown as compact chips */}
+          <div className="px-6 pb-4 flex flex-wrap gap-2">
+            {cashLines.map(({ label, value, negative, muted }) => (
+              <div key={label}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs"
+                style={{
+                  background: negative ? "#f0fdf4" : muted ? "#f5f5f5" : "#fff",
+                  border: `1px solid ${negative ? "#bbf7d0" : muted ? "#e5e5e5" : "rgba(0,0,0,0.08)"}`,
+                  color: negative ? "var(--green-mid)" : muted ? "var(--ink-faint)" : "var(--ink-mid)",
+                }}>
+                <span>{label}</span>
+                <span className="font-semibold tabular-nums" style={{ color: negative ? "var(--green)" : muted ? "var(--ink-faint)" : "var(--ink)" }}>
+                  {negative ? "−" : ""}{formatCurrency(value, 0)}
                 </span>
               </div>
+            ))}
+          </div>
+
+          {/* All-in monthly — only when costs entered */}
+          {(inputs.propertyTax > 0 || inputs.heatingCost > 0 || inputs.condoFees > 0 || inputs.homeInsurance > 0) && (
+            <div className="px-6 py-3 flex items-center justify-between"
+              style={{ borderTop: "1px solid rgba(0,0,0,0.05)" }}>
+              <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
+                All-in monthly
+                {inputs.propertyTax > 0 ? " + tax" : ""}
+                {inputs.heatingCost > 0 ? " + heat" : ""}
+                {inputs.condoFees > 0 ? " + condo" : ""}
+              </p>
+              <span className="text-base font-bold tabular-nums" style={{ color: "var(--brand-teal)" }}>
+                {formatCurrency(outputs.totalMonthlyOwnership, 0)}/mo
+              </span>
             </div>
           )}
         </div>
       )}
 
-      {/* ── Narrative summary — synthesis at the bottom ── */}
+      {/* ── Narrative — plain caption, no box ── */}
       {narrativeContent && (
-        <div className="px-6 py-5" style={{ borderTop: "1px solid rgba(0,0,0,0.06)" }}>
+        <div className="px-6 py-4" style={{ borderTop: "1px solid rgba(0,0,0,0.06)" }}>
           {narrativeContent}
         </div>
       )}
