@@ -5,12 +5,7 @@ import Link from "next/link";
 import SiteLayout from "@/components/SiteLayout";
 import FAQAccordion from "@/components/FAQAccordion";
 import RateHistoryPageClient from "./RateHistoryPageClient";
-import {
-  RATE_PRESETS,
-  RATES_UPDATED,
-  RATES_BOC_OVERNIGHT,
-  RATES_PRIME,
-} from "@/lib/constants";
+import { getRates } from "@/lib/getRates";
 
 export const metadata: Metadata = {
   title: "Canadian Mortgage Rates Today 2026 — Best Fixed & Variable Rates",
@@ -23,44 +18,45 @@ export const metadata: Metadata = {
   },
 };
 
-const FAQ = [
-  {
-    question: "What is the Bank of Canada overnight rate in 2026?",
-    answer: `As of ${RATES_UPDATED}, the Bank of Canada overnight rate is ${RATES_BOC_OVERNIGHT}%. After nine consecutive cuts from the 5.0% peak in July 2023, the BoC has held at ${RATES_BOC_OVERNIGHT}% since September 2025, pausing as it monitors inflation and global economic uncertainty.`,
-  },
-  {
-    question: "What is the prime rate in Canada in 2026?",
-    answer: `The prime rate is ${RATES_PRIME}% as of ${RATES_UPDATED} — ${(RATES_PRIME - RATES_BOC_OVERNIGHT).toFixed(2)}% above the BoC overnight rate. Variable mortgage rates are priced relative to prime (e.g., prime − 1.10% = ${(RATES_PRIME - 1.10).toFixed(2)}%).`,
-  },
-  {
-    question: "What is the difference between insured and insurable mortgage rates?",
-    answer: "Insured mortgages (under 20% down payment) get the lowest available rates because lenders have no default risk — CMHC covers it. Insurable mortgages (20%+ down, under $1.5M, 25yr amortization) can be pool-insured by lenders and typically get rates close to insured pricing. Conventional mortgages (over $1.5M or 30yr amortization) carry more lender risk and are priced 0.10–0.25% higher.",
-  },
-  {
-    question: "Should I choose fixed or variable in 2026?",
-    answer: `With variable rates at ${RATE_PRESETS.find(r => r.type === "variable")?.rate}% and 5-year fixed at ${RATE_PRESETS.find(r => r.term === 5 && r.type === "fixed")?.rate}%, the spread is ${((RATE_PRESETS.find(r => r.term === 5 && r.type === "fixed")?.rate ?? 0) - (RATE_PRESETS.find(r => r.type === "variable")?.rate ?? 0)).toFixed(2)}%. Variable offers lower starting payments but rate risk at renewal. Fixed provides certainty. Given the BoC is on hold and fixed-rate premium is small, many Canadians are choosing fixed.`,
-  },
-  {
-    question: "Will Canadian mortgage rates go down further in 2026?",
-    answer: "The BoC signalled in early 2026 that it is pausing its rate cut cycle. Further cuts appear unlikely near-term. Fixed rates, driven by bond yields, have actually ticked upward slightly in early 2026 despite the overnight rate holding steady.",
-  },
-  {
-    question: "Are broker rates better than bank rates?",
-    answer: "Almost always, yes. The rates shown on this page are broker rates — the best available from monoline lenders and credit unions working through mortgage brokers. Major bank rates are typically 0.20–0.50% higher for the same product. A broker also has access to products and lenders that a single bank branch cannot offer.",
-  },
-];
-
-// Sort presets: variable first, then fixed by term ascending
-const sortedRates = [...RATE_PRESETS].sort((a, b) => {
-  if (a.type !== b.type) return a.type === "variable" ? -1 : 1;
-  return a.term - b.term;
-});
-
 const UNINSURABLE_PREMIUM = 0.20;
 
-export default function MortgageRatesPage() {
-  const fixed5yr = RATE_PRESETS.find(r => r.term === 5 && r.type === "fixed");
-  const variable = RATE_PRESETS.find(r => r.type === "variable");
+export default async function MortgageRatesPage() {
+  const { presets, updatedLabel, bocOvernight, prime } = await getRates();
+
+  const sortedRates = [...presets].sort((a, b) => {
+    if (a.type !== b.type) return a.type === "variable" ? -1 : 1;
+    return a.term - b.term;
+  });
+
+  const fixed5yr = presets.find(r => r.term === 5 && r.type === "fixed");
+  const variable = presets.find(r => r.type === "variable");
+
+  const FAQ = [
+    {
+      question: "What is the Bank of Canada overnight rate in 2026?",
+      answer: `As of ${updatedLabel}, the Bank of Canada overnight rate is ${bocOvernight}%. After nine consecutive cuts from the 5.0% peak in July 2023, the BoC has held at ${bocOvernight}% since September 2025, pausing as it monitors inflation and global economic uncertainty.`,
+    },
+    {
+      question: "What is the prime rate in Canada in 2026?",
+      answer: `The prime rate is ${prime}% as of ${updatedLabel} — ${(prime - bocOvernight).toFixed(2)}% above the BoC overnight rate. Variable mortgage rates are priced relative to prime (e.g., prime − 1.10% = ${(prime - 1.10).toFixed(2)}%).`,
+    },
+    {
+      question: "What is the difference between insured and insurable mortgage rates?",
+      answer: "Insured mortgages (under 20% down payment) get the lowest available rates because lenders have no default risk — CMHC covers it. Insurable mortgages (20%+ down, under $1.5M, 25yr amortization) can be pool-insured by lenders and typically get rates close to insured pricing. Conventional mortgages (over $1.5M or 30yr amortization) carry more lender risk and are priced 0.10–0.25% higher.",
+    },
+    {
+      question: "Should I choose fixed or variable in 2026?",
+      answer: `With variable rates at ${variable?.rate ?? "—"}% and 5-year fixed at ${fixed5yr?.rate ?? "—"}%, the spread is ${((fixed5yr?.rate ?? 0) - (variable?.rate ?? 0)).toFixed(2)}%. Variable offers lower starting payments but rate risk at renewal. Fixed provides certainty. Given the BoC is on hold and fixed-rate premium is small, many Canadians are choosing fixed.`,
+    },
+    {
+      question: "Will Canadian mortgage rates go down further in 2026?",
+      answer: "The BoC signalled in early 2026 that it is pausing its rate cut cycle. Further cuts appear unlikely near-term. Fixed rates, driven by bond yields, have actually ticked upward slightly in early 2026 despite the overnight rate holding steady.",
+    },
+    {
+      question: "Are broker rates better than bank rates?",
+      answer: "Almost always, yes. The rates shown on this page are broker rates — the best available from monoline lenders and credit unions working through mortgage brokers. Major bank rates are typically 0.20–0.50% higher for the same product. A broker also has access to products and lenders that a single bank branch cannot offer.",
+    },
+  ];
 
   return (
     <SiteLayout>
@@ -88,7 +84,7 @@ export default function MortgageRatesPage() {
             <div className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-green-300 animate-pulse"/>
               <p className="text-xs" style={{ color: "rgba(255,255,255,0.75)" }}>
-                Updated {RATES_UPDATED}
+                Updated {updatedLabel}
               </p>
             </div>
           </div>
@@ -97,8 +93,8 @@ export default function MortgageRatesPage() {
           <div className="grid grid-cols-2 divide-x bg-white"
             style={{ borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
             {[
-              { label: "BoC Overnight Rate", value: `${RATES_BOC_OVERNIGHT}%`, note: "Held since Sep 2025" },
-              { label: "Prime Rate", value: `${RATES_PRIME}%`, note: `BoC + 2.20%` },
+              { label: "BoC Overnight Rate", value: `${bocOvernight}%`, note: "Held since Sep 2025" },
+              { label: "Prime Rate", value: `${prime}%`, note: `BoC + 2.20%` },
             ].map(({ label, value, note }) => (
               <div key={label} className="px-5 py-4">
                 <p className="text-xs font-medium uppercase tracking-wide mb-1"
@@ -141,7 +137,7 @@ export default function MortgageRatesPage() {
                       {isVariable && (
                         <span className="ml-2 text-xs px-1.5 py-0.5 rounded-full"
                           style={{ background: "#f0fdf4", color: "var(--green-mid)", border: "1px solid #bbf7d0" }}>
-                          prime − {(RATES_PRIME - preset.rate).toFixed(2)}%
+                          prime − {(prime - preset.rate).toFixed(2)}%
                         </span>
                       )}
                     </td>
@@ -210,10 +206,10 @@ export default function MortgageRatesPage() {
                 Canadian mortgage rates went on an unprecedented journey between 2022 and 2026. The Bank of Canada raised its overnight rate from 0.25% to 5.0% in 18 months — the fastest tightening cycle in Canadian history — to combat inflation that peaked above 8%.
               </p>
               <p>
-                Starting in June 2024, the BoC cut rates nine consecutive times, bringing the overnight rate from 5.0% to {RATES_BOC_OVERNIGHT}% by October 2025. Fixed mortgage rates followed bond yields lower, dropping from nearly 6% to around {fixed5yr?.rate}% today.
+                Starting in June 2024, the BoC cut rates nine consecutive times, bringing the overnight rate from 5.0% to {bocOvernight}% by October 2025. Fixed mortgage rates followed bond yields lower, dropping from nearly 6% to around {fixed5yr?.rate ?? 3.89}% today.
               </p>
               <p>
-                Since September 2025, the BoC has held at {RATES_BOC_OVERNIGHT}%, pausing as it monitors global trade tensions and whether inflation remains near its 2% target. Fixed rates have ticked upward slightly in early 2026 as bond yields rise on global uncertainty.
+                Since September 2025, the BoC has held at {bocOvernight}%, pausing as it monitors global trade tensions and whether inflation remains near its 2% target. Fixed rates have ticked upward slightly in early 2026 as bond yields rise on global uncertainty.
               </p>
             </div>
           </section>

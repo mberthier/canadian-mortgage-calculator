@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { MortgageInputs, MortgageOutputs } from "@/lib/types";
 import { formatCurrency } from "@/lib/formatters";
 import { calculateMortgagePayment } from "@/lib/mortgageMath";
-import { RATE_PRESETS } from "@/lib/constants";
+import { RATE_PRESETS } from "@/lib/constants"; // fallback only
 
 interface Props {
   inputs:  MortgageInputs;
@@ -25,9 +25,14 @@ interface Insight {
 
 // ── Rate gap helper ───────────────────────────────────────────────────────────
 
-function getBestAvailableRate(mortgageType: "insured" | "insurable" | "uninsurable"): number {
-  // Best 5yr fixed from RATE_PRESETS — insured and insurable get same rate, uninsurable +0.20
-  const best5yr = Math.min(...RATE_PRESETS.filter(r => r.term === 5).map(r => r.rate));
+function getBestAvailableRate(
+  mortgageType: "insured" | "insurable" | "uninsurable",
+  presets: typeof RATE_PRESETS
+): number {
+  const fixed5yr = presets.filter(r => r.term === 5 && r.type === "fixed");
+  const best5yr  = fixed5yr.length > 0
+    ? Math.min(...fixed5yr.map(r => r.rate))
+    : Math.min(...RATE_PRESETS.filter(r => r.term === 5).map(r => r.rate));
   return mortgageType === "uninsurable" ? best5yr + 0.20 : best5yr;
 }
 
@@ -38,14 +43,18 @@ function getMortgageType(inputs: MortgageInputs): "insured" | "insurable" | "uni
   return "insurable";
 }
 
-function computeRateGapSavings(inputs: MortgageInputs, outputs: MortgageOutputs): {
+function computeRateGapSavings(
+  inputs: MortgageInputs,
+  outputs: MortgageOutputs,
+  presets: typeof RATE_PRESETS
+): {
   mortgageType: "insured" | "insurable" | "uninsurable";
   bestRate: number;
   savings: number;
 } | null {
   if (!inputs.interestRate || outputs.loanAmount <= 0) return null;
   const mortgageType = getMortgageType(inputs);
-  const bestRate     = getBestAvailableRate(mortgageType);
+  const bestRate     = getBestAvailableRate(mortgageType, presets);
   const gap          = inputs.interestRate - bestRate;
   if (gap <= 0.1) return null; // less than 0.1% gap, not worth showing
 
@@ -394,13 +403,13 @@ function getInsights(inputs: MortgageInputs, outputs: MortgageOutputs): Insight[
 
 // ── Rate gap CTA component ────────────────────────────────────────────────────
 
-function RateGateCTA({ inputs, outputs }: { inputs: MortgageInputs; outputs: MortgageOutputs }) {
+function RateGateCTA({ inputs, outputs, livePresets }: { inputs: MortgageInputs; outputs: MortgageOutputs; livePresets: typeof RATE_PRESETS }) {
   const [step, setStep]   = useState<"teaser" | "form" | "done">("teaser");
   const [name, setName]   = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const gapData = computeRateGapSavings(inputs, outputs);
+  const gapData = computeRateGapSavings(inputs, outputs, livePresets);
   if (!gapData) return null;
 
   const { mortgageType, bestRate, savings } = gapData;
@@ -592,11 +601,20 @@ const SHOW_BY_DEFAULT = 3;
 
 // ── Component ──────────────────────────────────────────────────────────────────
 export default function InsightsPanel({ inputs, outputs }: Props) {
+  const [livePresets, setLivePresets] = useState(RATE_PRESETS);
+
+  useEffect(() => {
+    fetch("/api/rates")
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { if (data?.presets?.length) setLivePresets(data.presets); })
+      .catch(() => {}); // silent fallback to RATE_PRESETS
+  }, []);
+
   const [expanded, setExpanded] = useState(false);
   const all = getInsights(inputs, outputs);
   if (all.length === 0) return null;
 
-  const gapData = computeRateGapSavings(inputs, outputs);
+  const gapData = computeRateGapSavings(inputs, outputs, livePresets);
   const visible = expanded ? all : all.slice(0, SHOW_BY_DEFAULT);
   const hidden  = all.length - SHOW_BY_DEFAULT;
 
@@ -614,7 +632,7 @@ export default function InsightsPanel({ inputs, outputs }: Props) {
       </div>
 
       {/* Rate gap CTA — first position when applicable */}
-      <RateGateCTA inputs={inputs} outputs={outputs} />
+      <RateGateCTA inputs={inputs} outputs={outputs} livePresets={livePresets} />
 
       {/* Insight rows — left border accent, no coloured badges */}
       <div className="divide-y divide-neutral-50">
