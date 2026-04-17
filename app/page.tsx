@@ -68,7 +68,6 @@ function ResultsNarrative({
     border: "1px solid rgba(0,0,0,0.06)",
     borderRadius: "1rem",
     padding: "1rem 1.5rem",
-    borderLeft: "3px solid var(--green)",
   };
 
   if (mode === "purchase" && inputs.homePrice > 0) {
