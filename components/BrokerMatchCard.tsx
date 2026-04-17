@@ -93,22 +93,27 @@ function getContent(inputs: MortgageInputs, outputs: MortgageOutputs): {
 
 export default function BrokerMatchCard({ inputs, outputs }: Props) {
   const [submitted, setSubmitted] = useState(false);
-  const [name, setName]   = useState("");
-  const [email, setEmail] = useState("");
-  const [open, setOpen]   = useState(false);
+  const [name, setName]     = useState("");
+  const [email, setEmail]   = useState("");
+  const [phone, setPhone]   = useState("");
+  const [contact, setContact] = useState<"email" | "phone">("email");
+  const [open, setOpen]     = useState(false);
   const [loading, setLoading] = useState(false);
 
   const { eyebrow, headline, body, cta } = getContent(inputs, outputs);
 
+  const canSubmit = contact === "email" ? email.includes("@") : phone.length >= 10;
+
   const handleSubmit = async () => {
-    if (!email.includes("@")) return;
+    if (!canSubmit) return;
     setLoading(true);
     try {
       await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name, email,
+          name, email, phone,
+          preferredContact: contact,
           mode: inputs.mortgageMode,
           province: inputs.province,
           homePrice: inputs.homePrice,
@@ -158,21 +163,50 @@ export default function BrokerMatchCard({ inputs, outputs }: Props) {
 
         {/* Inline form */}
         {open && !submitted && (
-          <div className="mt-4 space-y-2">
-            <div className="grid grid-cols-2 gap-2">
-              <input
-                type="text" placeholder="Full name" value={name}
-                onChange={e => setName(e.target.value)}
-                className="px-3 py-2 rounded-lg border border-neutral-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-400/20 focus:border-blue-400 transition-colors"/>
+          <div className="mt-4 space-y-3">
+            {/* Full name */}
+            <input
+              type="text" placeholder="Full name" value={name}
+              onChange={e => setName(e.target.value)}
+              className="w-full px-3 py-2 rounded-lg border border-neutral-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-400/20 focus:border-blue-400 transition-colors"/>
+
+            {/* Contact preference toggle */}
+            <div>
+              <p className="text-xs font-medium mb-1.5" style={{ color: "var(--ink-muted)" }}>
+                How should the broker reach you?
+              </p>
+              <div className="flex rounded-lg overflow-hidden border border-neutral-200 w-fit bg-white text-sm">
+                {(["email", "phone"] as const).map(opt => (
+                  <button key={opt} type="button"
+                    onClick={() => setContact(opt)}
+                    className="px-4 py-1.5 font-medium transition-colors capitalize"
+                    style={contact === opt
+                      ? { background: "var(--green)", color: "#fff" }
+                      : { color: "var(--ink-muted)" }}>
+                    {opt === "email" ? "Email" : "Phone"}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Contact field */}
+            {contact === "email" ? (
               <input
                 type="email" placeholder="Email address" value={email}
                 onChange={e => setEmail(e.target.value)}
-                className="px-3 py-2 rounded-lg border border-neutral-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-400/20 focus:border-blue-400 transition-colors"/>
-            </div>
+                className="w-full px-3 py-2 rounded-lg border border-neutral-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-400/20 focus:border-blue-400 transition-colors"/>
+            ) : (
+              <input
+                type="tel" placeholder="Phone number" value={phone}
+                onChange={e => setPhone(e.target.value.replace(/[^0-9+\-\s()]/g, ""))}
+                className="w-full px-3 py-2 rounded-lg border border-neutral-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-400/20 focus:border-blue-400 transition-colors"/>
+            )}
+
+            {/* Submit + cancel */}
             <div className="flex gap-2">
               <button
                 onClick={handleSubmit}
-                disabled={!email.includes("@") || loading}
+                disabled={!canSubmit || loading}
                 className="flex-1 py-2 rounded-lg text-sm font-semibold transition-all disabled:opacity-50"
                 style={{ background: "var(--green)", color: "#fff" }}>
                 {loading ? "Sending..." : "Connect me with a broker"}
@@ -184,7 +218,9 @@ export default function BrokerMatchCard({ inputs, outputs }: Props) {
               </button>
             </div>
             <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
-              No obligation. A CrystalKey partner broker will reach out within one business day.
+              {contact === "phone"
+                ? "A partner broker will call you within one business day."
+                : "No obligation. A partner broker will email you within one business day."}
             </p>
           </div>
         )}

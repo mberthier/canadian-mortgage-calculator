@@ -14,7 +14,7 @@ async function appendToSheet(row: string[]) {
 
   await sheets.spreadsheets.values.append({
     spreadsheetId: process.env.GOOGLE_SHEET_ID,
-    range:         "Sheet1!A:L",
+    range:         "Sheet1!A:O",
     valueInputOption: "USER_ENTERED",
     requestBody: {
       values: [row],
@@ -26,9 +26,9 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const {
-      name, email,
+      name, email, phone, preferredContact,
       mortgageType, savings, bestRate, userRate,
-      homePrice, balance, mode, province,
+      homePrice, balance, mode, province, source,
     } = body;
 
     if (!email || !email.includes("@")) {
@@ -44,6 +44,9 @@ export async function POST(req: NextRequest) {
       timestamp,
       name         || "",
       email,
+      phone        || "",
+      preferredContact || "email",
+      source       || "",
       mode         || "",
       province     || "",
       mortgageType || "",
