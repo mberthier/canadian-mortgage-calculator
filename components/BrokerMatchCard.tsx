@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { MortgageInputs, MortgageOutputs } from "@/lib/types";
 import { formatCurrency } from "@/lib/formatters";
-import { RATE_PRESETS } from "@/lib/constants";
 
 interface Props {
   inputs:  MortgageInputs;
@@ -16,10 +15,6 @@ function getMortgageType(inputs: MortgageInputs): "insured" | "insurable" | "uni
   return "insurable";
 }
 
-function getBestRate(): number {
-  return Math.min(...RATE_PRESETS.filter(r => r.term === 5).map(r => r.rate));
-}
-
 function getContent(inputs: MortgageInputs, outputs: MortgageOutputs): {
   eyebrow: string;
   headline: string;
@@ -27,17 +22,16 @@ function getContent(inputs: MortgageInputs, outputs: MortgageOutputs): {
   cta: string;
 } {
   const mode = inputs.mortgageMode;
-  const bestRate = getBestRate();
 
   if (mode === "renewal") {
     const diff = outputs.periodicPayment - outputs.currentPayment;
     const hasDiff = outputs.currentPayment > 0 && Math.abs(diff) > 1;
     return {
-      eyebrow: "Renewal opportunity",
+      eyebrow: "Ready to act?",
       headline: "Your lender's first offer is rarely their best",
       body: hasDiff && diff > 0
-        ? `Your payment is going up ${formatCurrency(diff, 0)}/period at renewal. Since November 2024 you can switch lenders without re-qualifying — use that leverage to get a competing offer before you sign anything.`
-        : `Since November 2024 you can switch lenders at renewal without re-qualifying. Your existing lender knows this. Get at least one competing quote from a broker before you sign.`,
+        ? `Your payment is going up ${formatCurrency(diff, 0)}/period. Since November 2024 you can switch lenders without re-qualifying — your existing lender knows this, which is why they often send a low-effort offer first. A broker can get you a competing quote before you sign anything.`
+        : `Since November 2024 you can switch lenders at renewal without re-qualifying. A broker can get a competing offer from 30+ lenders in 24 hours — usually at no cost to you.`,
       cta: "Get a competing renewal quote",
     };
   }
@@ -47,11 +41,11 @@ function getContent(inputs: MortgageInputs, outputs: MortgageOutputs): {
       ? ((inputs.homeValue - outputs.loanAmount) / inputs.homeValue * 100).toFixed(0)
       : null;
     return {
-      eyebrow: "Refinance strategy",
+      eyebrow: "Ready to act?",
       headline: equityPct && Number(equityPct) >= 35
-        ? `${equityPct}% equity gives you real negotiating power`
+        ? "You have the numbers. A broker can make it happen"
         : "Get competing offers before you commit to breaking your mortgage",
-      body: `Breaking a mortgage early has a cost. A broker can calculate your exact penalty, compare it against your interest savings, and shop 30+ lenders to make sure the numbers actually work in your favour.`,
+      body: `A broker will calculate your exact break penalty, confirm the interest savings stack up, and handle the lender comparison — so you are not making a permanent decision based on estimates.`,
       cta: "Talk to a broker about your refinance",
     };
   }
@@ -65,33 +59,35 @@ function getContent(inputs: MortgageInputs, outputs: MortgageOutputs): {
       : null;
     const isClose = needed !== null && needed < 30_000;
     return {
-      eyebrow: "Purchase insight",
+      eyebrow: "Ready to act?",
       headline: isClose
-        ? `${formatCurrency(needed!, 0)} more eliminates CMHC — a broker can show you if it's worth it`
-        : "A broker can find the best insured rate for your profile",
+        ? `You are ${formatCurrency(needed!, 0)} from 20% down — worth modelling before you commit`
+        : "You have done the math. A broker can turn it into an application",
       body: isClose
-        ? `You're ${formatCurrency(needed!, 0)} away from 20% down. Whether it's worth saving more before buying depends on your timeline, carrying costs, and market conditions. A broker can model both scenarios with real numbers.`
-        : `Insured mortgages at under 20% down have the lowest rates available — lenders compete for them. A broker shopping across 30+ lenders will find you a better rate than going to your bank directly.`,
-      cta: "Get matched with a broker",
+        ? `At ${formatCurrency(needed!, 0)} away from 20% down, the decision depends on your timeline, carrying costs, and whether waiting makes sense in your market. A broker can model both paths with actual numbers.`
+        : `A broker can pre-approve you at this purchase price, lock in a rate hold while you shop, and handle the lender comparison — one conversation instead of five bank appointments.`,
+      cta: "Get pre-approved with a broker",
     };
   }
 
   if (mortgageType === "insurable") {
     return {
-      eyebrow: "Rate opportunity",
-      headline: "Your mortgage qualifies for insurable pricing — most buyers never ask for it",
-      body: `With 20%+ down, under $1.5M, and a 25-year amortization, lenders can pool-insure your mortgage even without a CMHC premium. This unlocks rates close to what insured buyers get. Most bank advisors won't mention it. A broker will.`,
-      cta: "Ask a broker about insurable pricing",
+      eyebrow: "Ready to act?",
+      headline: "You have done the math. A broker can turn it into a pre-approval",
+      body: `A broker can lock in a rate hold at today's best available rate while you continue shopping, compare offers from 30+ lenders, and walk you through the full process — at no cost to you as the buyer.`,
+      cta: "Get pre-approved with a broker",
     };
   }
 
   // Uninsurable
-  const reason = inputs.homePrice > 1_500_000 ? "over $1.5M" : "30-year amortization";
+  const isHighValue = inputs.homePrice > 1_500_000;
   return {
-    eyebrow: "Conventional mortgage",
-    headline: "At this tier, broker shopping has more impact than on a standard purchase",
-    body: `${reason === "over $1.5M" ? "Purchases over $1.5M" : "A 30-year amortization"} means conventional pricing — typically 0.10 to 0.25% higher than insured rates, and the spread between lenders is wider. A broker with access to multiple lenders makes a meaningful difference here.`,
-    cta: "Find the best conventional rate",
+    eyebrow: "Ready to act?",
+    headline: "Before you go to your bank — get an independent comparison first",
+    body: isHighValue
+      ? `At this price point lenders set their own conventional rates and the spread between them is wider than on standard purchases. A broker who works with multiple lenders will negotiate on your behalf in a way a single bank cannot.`
+      : `A 30-year amortization puts you in conventional pricing territory. The spread between lenders is wider here — a broker comparison before you commit is worth the 24-hour turnaround.`,
+    cta: "Get an independent rate comparison",
   };
 }
 
