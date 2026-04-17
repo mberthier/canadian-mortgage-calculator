@@ -515,34 +515,6 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Three modes explained */}
-          <section>
-            <h2 className="text-2xl font-semibold mb-6 tracking-tight" style={{ color: "var(--ink)" }}>
-              Purchase, renewal, or refinance — what is the difference?
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-              {[
-                {
-                  mode: "Purchase",
-                  desc: "Calculate your full cost of buying a home: monthly payment, CMHC insurance if applicable, land transfer tax by province, and total cash needed on closing day. The most complete pre-offer calculation available.",
-                },
-                {
-                  mode: "Renewal",
-                  desc: "Your term is ending and you need to know your new payment. Enter your remaining balance and new rate to see how much your payment changes, and compare it against the best available rates. Since November 2024, you can switch lenders without re-qualifying.",
-                },
-                {
-                  mode: "Refinance",
-                  desc: "Access your home equity, consolidate debt, or lower your rate mid-term. The calculator shows your new payment, remaining equity, break penalty context, and whether refinancing improves your total interest position.",
-                },
-              ].map(({ mode, desc }) => (
-                <div key={mode} className="rounded-2xl p-5 bg-white" style={{ border: "1px solid rgba(0,0,0,0.06)" }}>
-                  <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "var(--green)" }}>{mode}</p>
-                  <p className="text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>{desc}</p>
-                </div>
-              ))}
-            </div>
-          </section>
-
         </div>
 
         {/* Mobile sticky footer */}
