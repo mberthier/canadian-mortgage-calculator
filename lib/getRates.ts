@@ -28,7 +28,7 @@ async function fetchFromSheet(): Promise<LiveRates | null> {
 
     const res = await sheets.spreadsheets.values.get({
       spreadsheetId: id,
-      range: "Rates!A2:F20", // skip header row
+      range: "Rates!A2:G20", // skip header row, include UpdatedLabel in col G
     });
 
     const rows = res.data.values;
@@ -51,11 +51,11 @@ async function fetchFromSheet(): Promise<LiveRates | null> {
 
       presets.push({ label, rate, term, type: type as "fixed" | "variable" });
 
-      // Meta fields on first row
+      // Meta fields on first data row only (col E=BocOvernight, F=Prime, G=UpdatedLabel)
       if (i === 0) {
-        if (row[4]) bocOvernight = parseFloat(row[4]) || bocOvernight;
-        if (row[5]) prime        = parseFloat(row[5]) || prime;
-        if (row[6]) updatedLabel = row[6] || updatedLabel;
+        if (row[4] && !isNaN(parseFloat(row[4]))) bocOvernight = parseFloat(row[4]);
+        if (row[5] && !isNaN(parseFloat(row[5]))) prime        = parseFloat(row[5]);
+        if (row[6] && row[6].trim())              updatedLabel = row[6].trim();
       }
     });
 
@@ -83,6 +83,6 @@ export const getRates = unstable_cache(
       source:       "fallback",
     };
   },
-  ["live-rates"],
+  ["live-rates-v2"],
   { revalidate: 3600 } // 1 hour
 );
