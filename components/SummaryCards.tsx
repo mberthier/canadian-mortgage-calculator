@@ -319,28 +319,22 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
       {isPurchase && inputs.homePrice > 0 && cashLines.length > 0 && (
         <div style={{ borderTop: "1px solid rgba(0,0,0,0.06)", background: "#fafaf8" }}>
 
-          {/* Number + label side by side — number is the hero */}
-          <div className="px-6 pt-5 pb-4 flex items-start justify-between gap-4">
-            <div className="flex-1">
-              <p className="text-xs font-semibold uppercase tracking-widest mb-1"
-                style={{ color: "var(--ink-faint)" }}>
-                Cash needed at closing
-              </p>
-              <p className="text-sm mt-1" style={{ color: "var(--ink-muted)" }}>
-                Have this ready on closing day.
-              </p>
+          {/* Label → number → sub-line, stacked like the hero */}
+          <div className="px-6 pt-5 pb-4">
+            <p className="text-xs font-semibold uppercase tracking-widest mb-2"
+              style={{ color: "var(--ink-faint)" }}>
+              Cash needed at closing
+            </p>
+            <p className="font-display leading-none mb-2"
+              style={{ fontSize: 40, color: "#0B1927", letterSpacing: "-0.02em" }}>
+              {formatCurrency(outputs.totalUpfrontCash, 0)}
+            </p>
+            <p className="text-sm" style={{ color: "var(--ink-muted)" }}>
+              Have this ready on closing day.
               {!inputs.closingCosts && (
-                <p className="text-xs mt-0.5" style={{ color: "var(--ink-faint)" }}>
-                  Closing costs estimated — add your figure in Refine your estimate.
-                </p>
+                <span style={{ color: "var(--ink-faint)" }}> Closing costs estimated — add your figure in Refine your estimate.</span>
               )}
-            </div>
-            <div className="text-right shrink-0">
-              <p className="font-display leading-none"
-                style={{ fontSize: 40, color: "#0B1927", letterSpacing: "-0.02em" }}>
-                {formatCurrency(outputs.totalUpfrontCash, 0)}
-              </p>
-            </div>
+            </p>
           </div>
 
           {/* Breakdown as compact chips */}
