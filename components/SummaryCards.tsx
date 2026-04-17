@@ -7,10 +7,9 @@ import { formatCurrency } from "@/lib/formatters";
 import Tooltip from "./Tooltip";
 
 interface Props {
-  outputs:    MortgageOutputs;
-  inputs:     MortgageInputs;
-  shareURL?:  string;
-  minHeight?: number;
+  outputs:   MortgageOutputs;
+  inputs:    MortgageInputs;
+  shareURL?: string;
 }
 
 interface MetricProps {
@@ -23,7 +22,7 @@ interface MetricProps {
 
 function Metric({ label, value, sub, tip, highlight }: MetricProps) {
   return (
-    <div className="px-5 py-6 flex flex-col">
+    <div className="px-5 py-5 flex flex-col">
       {/* Label row — fixed 2-line height so all values align */}
       <div className="flex items-start gap-0.5 mb-2" style={{ minHeight: "2.5em" }}>
         <p className="text-xs font-medium uppercase tracking-wide leading-tight"
@@ -51,7 +50,7 @@ function H({ children, color }: { children: React.ReactNode; color?: string }) {
   );
 }
 
-export default function SummaryCards({ outputs, inputs, shareURL, minHeight }: Props) {
+export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
   const [copied, setCopied] = useState(false);
   const mode    = inputs.mortgageMode;
   const isPurchase = mode === "purchase";
@@ -132,7 +131,7 @@ export default function SummaryCards({ outputs, inputs, shareURL, minHeight }: P
       const canSwitch = equityPct >= 20;
       return (
         <>
-          <p className="text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>
+          <p className="text-sm leading-snug" style={{ color: "var(--ink-mid)" }}>
             Over your {inputs.termYears}-year term you will eliminate{" "}
             <H color="var(--green)">{termPrin}</H> of your mortgage balance and pay{" "}
             <H>{termInt}</H> in interest.
@@ -157,7 +156,7 @@ export default function SummaryCards({ outputs, inputs, shareURL, minHeight }: P
       const diff = hasCurrent ? outputs.periodicPayment - outputs.currentPayment : 0;
       return (
         <>
-          <p className="text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>
+          <p className="text-sm leading-snug" style={{ color: "var(--ink-mid)" }}>
             This term you will pay <H>{termInt}</H> in interest and pay down{" "}
             <H color="var(--green)">{termPrin}</H> of your balance.
             {" "}At your next renewal you will owe <H>{balance}</H>.
@@ -186,7 +185,7 @@ export default function SummaryCards({ outputs, inputs, shareURL, minHeight }: P
       const diff = hasCurrent ? outputs.periodicPayment - outputs.currentPayment : 0;
       return (
         <>
-          <p className="text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>
+          <p className="text-sm leading-snug" style={{ color: "var(--ink-mid)" }}>
             Your refinanced mortgage is <H>{formatCurrency(outputs.loanAmount, 0, true)}</H> at {inputs.interestRate}%
             {inputs.cashOutAmount > 0 && <>, including <H color="var(--green)">{formatCurrency(inputs.cashOutAmount, 0)}</H> cash-out</>}.
             {equityPct !== null && (
@@ -211,8 +210,7 @@ export default function SummaryCards({ outputs, inputs, shareURL, minHeight }: P
   })();
 
   return (
-    <div className="rounded-2xl overflow-hidden shadow-sm flex flex-col"
-      style={{ border: "1px solid rgba(0,0,0,0.06)", minHeight: minHeight ? `${minHeight}px` : undefined }}>
+    <div className="rounded-2xl overflow-hidden shadow-sm" style={{ border: "1px solid rgba(0,0,0,0.06)" }}>
 
       {/* ── Hero ── */}
       <div className="px-6 pt-6 pb-0" style={{ background: "var(--green)" }}>
@@ -289,8 +287,8 @@ export default function SummaryCards({ outputs, inputs, shareURL, minHeight }: P
         )}
       </div>
 
-      {/* ── Metrics + cash + narrative — flex-1 fills remaining card height ── */}
-      <div style={{ background: "#fff" }} className="flex flex-col flex-1">
+      {/* ── Metrics — flush against hero ── */}
+      <div style={{ background: "#fff" }}>
         {isPurchase && (
           <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-y divide-neutral-100">
             <Metric label="Principal paid" value={formatCurrency(termPrincipal, 0, true)} sub={`This ${inputs.termYears}-yr term`} tip="How much of your mortgage balance you pay down during this term. The remainder is still owed at renewal." />
@@ -322,13 +320,13 @@ export default function SummaryCards({ outputs, inputs, shareURL, minHeight }: P
         <div style={{ borderTop: "1px solid rgba(0,0,0,0.06)", background: "#fafaf8" }}>
 
           {/* Label → number → sub-line, stacked like the hero */}
-          <div className="px-6 pt-6 pb-4">
+          <div className="px-6 pt-5 pb-4">
             <p className="text-xs font-semibold uppercase tracking-widest mb-2"
               style={{ color: "var(--ink-faint)" }}>
               Cash needed at closing
             </p>
             <p className="font-display leading-none mb-2"
-              style={{ fontSize: 46, color: "#0B1927", letterSpacing: "-0.02em" }}>
+              style={{ fontSize: 40, color: "#0B1927", letterSpacing: "-0.02em" }}>
               {formatCurrency(outputs.totalUpfrontCash, 0)}
             </p>
             <p className="text-sm" style={{ color: "var(--ink-muted)" }}>
@@ -340,7 +338,7 @@ export default function SummaryCards({ outputs, inputs, shareURL, minHeight }: P
           </div>
 
           {/* Breakdown as compact chips */}
-          <div className="px-6 pb-6 flex flex-wrap gap-2">
+          <div className="px-6 pb-4 flex flex-wrap gap-2">
             {cashLines.map(({ label, value, negative, muted }) => (
               <div key={label}
                 className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs"
@@ -375,9 +373,9 @@ export default function SummaryCards({ outputs, inputs, shareURL, minHeight }: P
         </div>
       )}
 
-      {/* ── Narrative — flex-grow pins it toward bottom ── */}
+      {/* ── Narrative — plain caption, no box ── */}
       {narrativeContent && (
-        <div className="px-6 pt-5 pb-8 flex-1 flex flex-col justify-end" style={{ borderTop: "1px solid rgba(0,0,0,0.06)" }}>
+        <div className="px-6 py-4" style={{ borderTop: "1px solid rgba(0,0,0,0.06)" }}>
           {narrativeContent}
         </div>
       )}

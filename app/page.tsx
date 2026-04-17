@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect, useState as useStateLayout } from "react";
+import React from "react";
 import Script from "next/script";
 import SiteLayout from "@/components/SiteLayout";
 import ModeSelector from "@/components/ModeSelector";
@@ -342,21 +342,6 @@ export default function Home() {
     setLumpSumForYear, setField,
   } = useMortgageCalculator();
 
-  const asideRef = useRef<HTMLElement>(null);
-  const [formHeight, setFormHeight] = useStateLayout<number | undefined>(undefined);
-
-  useEffect(() => {
-    const el = asideRef.current;
-    if (!el) return;
-    const ro = new ResizeObserver(entries => {
-      for (const entry of entries) {
-        setFormHeight(entry.contentRect.height);
-      }
-    });
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
-
   const isPurchase  = mode === "purchase";
   const isRenewal   = mode === "renewal";
   const isRefinance = mode === "refinance";
@@ -405,7 +390,7 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-[360px,1fr] gap-8 items-start">
 
             {/* Left, guided inputs only */}
-            <aside ref={asideRef}>
+            <aside>
               <div className="rounded-2xl bg-white p-5"
                 style={{ border: "1px solid #e8e8e8" }}>
                 <GuidedForm
@@ -443,7 +428,7 @@ export default function Home() {
                 />
               ) : (
               <>
-              <SummaryCards outputs={outputs} inputs={inputs} shareURL={shareURL} minHeight={formHeight} />
+              <SummaryCards outputs={outputs} inputs={inputs} shareURL={shareURL} />
 
               {/* Insights */}
               <InsightsPanel inputs={inputs} outputs={outputs} />
