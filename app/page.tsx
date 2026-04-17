@@ -15,6 +15,7 @@ import AmortizationChart from "@/components/AmortizationChart";
 import PrincipalInterestByYear from "@/components/PrincipalInterestByYear";
 import AmortizationTable from "@/components/AmortizationTable";
 import StressTest from "@/components/StressTest";
+import BrokerMatchCard from "@/components/BrokerMatchCard";
 import AffordabilityCalculator from "@/components/AffordabilityCalculator";
 import MortgageComparison from "@/components/MortgageComparison";
 import ShareButton from "@/components/ShareButton";
@@ -559,6 +560,9 @@ export default function Home() {
               {outputs.amortizationSchedule.length > 0 && (
                 <StressTest outputs={outputs} inputs={inputs} />
               )}
+
+              {/* Broker match card — after stress test, before breakdown */}
+              <BrokerMatchCard inputs={inputs} outputs={outputs} />
 
               {/* Charts + tools, collapsed breakdown */}
               {outputs.amortizationSchedule.length > 0 && (
