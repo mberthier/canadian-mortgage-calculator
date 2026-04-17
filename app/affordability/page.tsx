@@ -53,51 +53,98 @@ export default function AffordabilityPage() {
 
         <AffordabilityClient />
 
-        <div className="mt-12 space-y-10">
+        <div className="mt-14 space-y-10">
+
+          {/* Section 1 */}
           <section>
-            <h2 className="text-2xl font-semibold mb-4 tracking-tight" style={{ color: "var(--ink)" }}>How affordability works in Canada</h2>
+            <h2 className="text-2xl font-semibold mb-4 tracking-tight" style={{ color: "var(--ink)" }}>
+              How affordability is calculated in Canada
+            </h2>
             <div className="space-y-4 text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>
-              <p>Canadian lenders apply two standardized tests. GDS and TDS, both calculated at the <strong className="text-neutral-700">stress test rate</strong> (the higher of your contract rate + 2% or 5.25%), not your actual rate. CMHC raised the GDS limit from 32% to 39% in December 2024, meaningfully increasing qualifying power.</p>
-              <p>Your maximum purchase price is determined by whichever constraint binds first. Adding a co-applicant, reducing debts, or increasing your down payment all improve your position.</p>
+              <p>
+                Canadian lenders use two standardized debt ratios — GDS and TDS — both calculated at the <strong className="text-neutral-800">stress test rate</strong> rather than your actual rate. The stress test rate is the greater of your contract rate + 2% or 5.25%. This ensures you can handle higher payments if rates rise at renewal.
+              </p>
+              <p>
+                <strong className="text-neutral-800">GDS (Gross Debt Service)</strong> covers housing costs only: principal and interest, property taxes, heating, and 50% of condo fees if applicable. The maximum is 39% of gross income.
+              </p>
+              <p>
+                <strong className="text-neutral-800">TDS (Total Debt Service)</strong> adds all other debt obligations — car loans, student loans, credit card minimums, lines of credit — to your GDS. The maximum is 44% of gross income.
+              </p>
+              <p>
+                Your maximum purchase price is wherever one of those constraints binds first. Usually TDS is the binding constraint for buyers with significant debt. For buyers with minimal non-mortgage debt, GDS binds. Reducing your debts before applying is often more effective than saving more for a down payment.
+              </p>
             </div>
           </section>
 
+          {/* Section 2 — 2024 rule changes */}
           <section>
-            <h2 className="text-2xl font-semibold mb-4 tracking-tight" style={{ color: "var(--ink)" }}>Stress test rates by contract rate</h2>
-            <div className="rounded-2xl overflow-hidden border border-neutral-100">
+            <h2 className="text-2xl font-semibold mb-4 tracking-tight" style={{ color: "var(--ink)" }}>
+              What changed in December 2024
+            </h2>
+            <div className="space-y-4 text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>
+              <p>
+                Effective December 15, 2024, the federal government made the most significant affordability changes in a decade. Three things changed simultaneously:
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 my-2">
+                {[
+                  { label: "Insured limit", before: "$1,000,000", after: "$1,500,000", note: "Buyers up to $1.5M can now use less than 20% down" },
+                  { label: "GDS limit", before: "32%", after: "39%", note: "Housing cost ratio increased — more qualifying power" },
+                  { label: "30-year amortization", before: "Not available insured", after: "Available for first-time buyers", note: "Lower monthly payments, more qualifying room" },
+                ].map(item => (
+                  <div key={item.label} className="rounded-xl p-4" style={{ background: "var(--green-light)", border: "1px solid var(--green-border)" }}>
+                    <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: "var(--green)" }}>{item.label}</p>
+                    <p className="text-xs mb-1" style={{ color: "var(--ink-muted)" }}>Was: <span className="line-through">{item.before}</span></p>
+                    <p className="text-sm font-bold mb-1" style={{ color: "var(--ink)" }}>Now: {item.after}</p>
+                    <p className="text-xs" style={{ color: "var(--green-mid)" }}>{item.note}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Section 3 — Rate table */}
+          <section>
+            <h2 className="text-2xl font-semibold mb-4 tracking-tight" style={{ color: "var(--ink)" }}>
+              GDS and TDS limits at a glance
+            </h2>
+            <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(0,0,0,0.06)" }}>
               <table className="w-full text-sm">
                 <thead>
                   <tr style={{ background: "var(--green)", color: "#fff" }}>
-                    <th className="px-5 py-3.5 text-left font-semibold">Contract rate</th>
-                    <th className="px-5 py-3.5 text-right font-semibold">Stress test rate</th>
-                    <th className="px-5 py-3.5 text-right font-semibold">Rule applied</th>
+                    <th className="px-5 py-3.5 text-left font-semibold">Ratio</th>
+                    <th className="px-5 py-3.5 text-left font-semibold">What it includes</th>
+                    <th className="px-5 py-3.5 text-right font-semibold">Maximum</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-neutral-50">
+                <tbody className="divide-y divide-neutral-50 bg-white">
                   {[
-                    ["3.89%", "5.89%", "Contract + 2%"],
-                    ["3.50%", "5.50%", "Contract + 2%"],
-                    ["3.00%", "5.25%", "5.25% floor"],
-                    ["2.50%", "5.25%", "5.25% floor"],
-                  ].map(([rate, stress, why]) => (
-                    <tr key={rate} className="hover:bg-neutral-50">
-                      <td className="px-5 py-3 font-medium text-neutral-800">{rate}</td>
-                      <td className="px-5 py-3 text-right font-semibold" style={{ color: "var(--green)" }}>{stress}</td>
-                      <td className="px-5 py-3 text-right text-neutral-500 text-xs">{why}</td>
+                    ["GDS", "Mortgage P&I + property tax + heating + 50% condo fees", "39%"],
+                    ["TDS", "GDS + all other debt payments (car, student, credit)", "44%"],
+                  ].map(([ratio, includes, max]) => (
+                    <tr key={ratio} className="hover:bg-neutral-50">
+                      <td className="px-5 py-3.5 font-bold" style={{ color: "var(--ink)" }}>{ratio}</td>
+                      <td className="px-5 py-3.5 text-neutral-600">{includes}</td>
+                      <td className="px-5 py-3.5 text-right font-semibold" style={{ color: "var(--green)" }}>{max}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
+            <p className="text-xs mt-2 px-1" style={{ color: "var(--ink-faint)" }}>
+              Both ratios are calculated at the stress test rate (contract rate + 2%, minimum 5.25%), not your actual rate.
+            </p>
           </section>
 
+          {/* FAQ */}
           <section>
-            <h2 className="text-2xl font-semibold mb-4 tracking-tight" style={{ color: "var(--ink)" }}>Frequently asked questions</h2>
+            <h2 className="text-2xl font-semibold mb-4 tracking-tight" style={{ color: "var(--ink)" }}>
+              Frequently asked questions
+            </h2>
             <FAQAccordion items={FAQ} pageUrl="https://crystalkey.ca/affordability" />
           </section>
         </div>
 
-        <div className="mt-12 rounded-2xl p-8 text-center" style={{ background: "var(--green)" }}>
+        <div className="mt-14 rounded-2xl p-8 text-center" style={{ background: "var(--green)" }}>
           <h2 className="text-2xl font-semibold tracking-tight text-white mb-2">Calculate your full mortgage</h2>
           <p className="text-sm mb-5" style={{ color: "rgba(255,255,255,0.7)" }}>
             See your payment, CMHC, land transfer tax, and full amortization schedule.

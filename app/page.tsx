@@ -470,6 +470,81 @@ export default function Home() {
 
         </div>
 
+        {/* ── Supporting content — SEO + trust below the calculator ── */}
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 pb-16 mt-16 space-y-12">
+
+          {/* How it works */}
+          <section className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            <div>
+              <h2 className="text-2xl font-semibold mb-4 tracking-tight" style={{ color: "var(--ink)" }}>
+                How this calculator works
+              </h2>
+              <div className="space-y-4 text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>
+                <p>
+                  This calculator applies Canadian mortgage rules precisely: semi-annual compounding as required by the Interest Act, CMHC premium tiers updated for December 2024, land transfer tax with first-time buyer rebates for all 13 provinces and the Toronto municipal surcharge, and the correct stress test qualifying rate.
+                </p>
+                <p>
+                  Most online calculators use monthly compounding, which understates your true payment. Canadian mortgages compound semi-annually — this matters and we get it right.
+                </p>
+                <p>
+                  The insights panel compares your rate against the best available rates for your mortgage type. Insured mortgages (under 20% down) access different pricing than insurable (20%+ down, under $1.5M) and conventional (over $1.5M or 30yr amortization) mortgages.
+                </p>
+              </div>
+            </div>
+            <div>
+              <h2 className="text-2xl font-semibold mb-4 tracking-tight" style={{ color: "var(--ink)" }}>
+                Canadian mortgage rules you should know
+              </h2>
+              <div className="space-y-3">
+                {[
+                  { label: "Minimum down payment", detail: "5% on first $500K, 10% on $500K–$999K, 20% on $1M–$1.5M. No insured mortgages above $1.5M." },
+                  { label: "Stress test", detail: "All federally regulated lenders qualify you at contract rate + 2% or 5.25%, whichever is higher." },
+                  { label: "CMHC insurance", detail: "Required when down payment is under 20%. Premium is 2.8%–4% of the mortgage, added to your balance." },
+                  { label: "Semi-annual compounding", detail: "Canadian law requires semi-annual compounding on fixed mortgages. Your effective rate is slightly higher than stated." },
+                  { label: "Renewal vs refinance", detail: "Renewing at term end with a new lender no longer requires stress test re-qualification as of November 2024." },
+                ].map(({ label, detail }) => (
+                  <div key={label} className="flex gap-3 text-sm">
+                    <span className="mt-0.5 w-1.5 h-1.5 rounded-full shrink-0" style={{ background: "var(--green)", marginTop: "0.45rem" }}/>
+                    <div>
+                      <span className="font-semibold" style={{ color: "var(--ink)" }}>{label}: </span>
+                      <span style={{ color: "var(--ink-mid)" }}>{detail}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Three modes explained */}
+          <section>
+            <h2 className="text-2xl font-semibold mb-6 tracking-tight" style={{ color: "var(--ink)" }}>
+              Purchase, renewal, or refinance — what is the difference?
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+              {[
+                {
+                  mode: "Purchase",
+                  desc: "Calculate your full cost of buying a home: monthly payment, CMHC insurance if applicable, land transfer tax by province, and total cash needed on closing day. The most complete pre-offer calculation available.",
+                },
+                {
+                  mode: "Renewal",
+                  desc: "Your term is ending and you need to know your new payment. Enter your remaining balance and new rate to see how much your payment changes, and compare it against the best available rates. Since November 2024, you can switch lenders without re-qualifying.",
+                },
+                {
+                  mode: "Refinance",
+                  desc: "Access your home equity, consolidate debt, or lower your rate mid-term. The calculator shows your new payment, remaining equity, break penalty context, and whether refinancing improves your total interest position.",
+                },
+              ].map(({ mode, desc }) => (
+                <div key={mode} className="rounded-2xl p-5 bg-white" style={{ border: "1px solid rgba(0,0,0,0.06)" }}>
+                  <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "var(--green)" }}>{mode}</p>
+                  <p className="text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>{desc}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+        </div>
+
         {/* Mobile sticky footer */}
         <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 border-t"
           style={{ borderColor: "#ebebea", background: "#ffffff" }}>
