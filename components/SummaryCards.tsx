@@ -22,8 +22,9 @@ interface MetricProps {
 
 function Metric({ label, value, sub, tip, highlight }: MetricProps) {
   return (
-    <div className="px-5 py-5">
-      <div className="flex items-start gap-0.5 mb-3">
+    <div className="px-5 py-5 flex flex-col">
+      {/* Label row — fixed 2-line height so all values align */}
+      <div className="flex items-start gap-0.5 mb-2" style={{ minHeight: "2.5em" }}>
         <p className="text-xs font-medium uppercase tracking-wide leading-tight"
           style={{ color: highlight ? "var(--ink-mid)" : "var(--ink-faint)" }}>
           {label}
