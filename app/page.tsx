@@ -22,6 +22,7 @@ import Wordmark from "@/components/Wordmark";
 import { useMortgageCalculator } from "@/hooks/useMortgageCalculator";
 import { formatCurrency } from "@/lib/formatters";
 import { FREQUENCY_LABELS } from "@/lib/constants";
+import FAQAccordion from "@/components/FAQAccordion";
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -471,49 +472,77 @@ export default function Home() {
         </div>
 
         {/* ── Supporting content — SEO + trust below the calculator ── */}
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 pb-16 mt-16 space-y-12">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 pb-16 mt-16 space-y-10">
 
-          {/* How it works */}
-          <section className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-            <div>
-              <h2 className="text-2xl font-semibold mb-4 tracking-tight" style={{ color: "var(--ink)" }}>
-                How this calculator works
-              </h2>
-              <div className="space-y-4 text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>
-                <p>
-                  This calculator applies Canadian mortgage rules precisely: semi-annual compounding as required by the Interest Act, CMHC premium tiers updated for December 2024, land transfer tax with first-time buyer rebates for all 13 provinces and the Toronto municipal surcharge, and the correct stress test qualifying rate.
-                </p>
-                <p>
-                  Most online calculators use monthly compounding, which understates your true payment. Canadian mortgages compound semi-annually — this matters and we get it right.
-                </p>
-                <p>
-                  The insights panel compares your rate against the best available rates for your mortgage type. Insured mortgages (under 20% down) access different pricing than insurable (20%+ down, under $1.5M) and conventional (over $1.5M or 30yr amortization) mortgages.
-                </p>
-              </div>
-            </div>
-            <div>
-              <h2 className="text-2xl font-semibold mb-4 tracking-tight" style={{ color: "var(--ink)" }}>
-                Canadian mortgage rules you should know
-              </h2>
-              <div className="space-y-3">
-                {[
-                  { label: "Minimum down payment", detail: "5% on first $500K, 10% on $500K–$999K, 20% on $1M–$1.5M. No insured mortgages above $1.5M." },
-                  { label: "Stress test", detail: "All federally regulated lenders qualify you at contract rate + 2% or 5.25%, whichever is higher." },
-                  { label: "CMHC insurance", detail: "Required when down payment is under 20%. Premium is 2.8%–4% of the mortgage, added to your balance." },
-                  { label: "Semi-annual compounding", detail: "Canadian law requires semi-annual compounding on fixed mortgages. Your effective rate is slightly higher than stated." },
-                  { label: "Renewal vs refinance", detail: "Renewing at term end with a new lender no longer requires stress test re-qualification as of November 2024." },
-                ].map(({ label, detail }) => (
-                  <div key={label} className="flex gap-3 text-sm">
-                    <span className="mt-0.5 w-1.5 h-1.5 rounded-full shrink-0" style={{ background: "var(--green)", marginTop: "0.45rem" }}/>
-                    <div>
-                      <span className="font-semibold" style={{ color: "var(--ink)" }}>{label}: </span>
-                      <span style={{ color: "var(--ink-mid)" }}>{detail}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
+          <section>
+            <h2 className="text-2xl font-semibold mb-4 tracking-tight" style={{ color: "var(--ink)" }}>
+              How this calculator works
+            </h2>
+            <div className="space-y-4 text-sm leading-relaxed" style={{ color: "var(--ink-mid)" }}>
+              <p>
+                This calculator applies Canadian mortgage rules precisely: semi-annual compounding as required by the Interest Act, CMHC premium tiers updated for December 2024, land transfer tax with first-time buyer rebates for all 13 provinces and the Toronto municipal surcharge, and the correct stress test qualifying rate.
+              </p>
+              <p>
+                Most online calculators use monthly compounding, which understates your true payment. Canadian mortgages compound semi-annually — this matters and we get it right.
+              </p>
+              <p>
+                The insights panel compares your rate against the best available rates for your mortgage type. Insured mortgages (under 20% down) access different pricing than insurable (20%+ down, under $1.5M) and conventional (over $1.5M or 30yr amortization) mortgages.
+              </p>
             </div>
           </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-4 tracking-tight" style={{ color: "var(--ink)" }}>
+              Canadian mortgage rules you should know
+            </h2>
+            <div className="space-y-3">
+              {[
+                { label: "Minimum down payment", detail: "5% on first $500K, 10% on $500K–$999K, 20% on $1M–$1.5M. No insured mortgages above $1.5M." },
+                { label: "Stress test", detail: "All federally regulated lenders qualify you at contract rate + 2% or 5.25%, whichever is higher." },
+                { label: "CMHC insurance", detail: "Required when down payment is under 20%. Premium is 2.8%–4% of the mortgage, added to your balance." },
+                { label: "Semi-annual compounding", detail: "Canadian law requires semi-annual compounding on fixed mortgages. Your effective rate is slightly higher than stated." },
+                { label: "Renewal vs refinance", detail: "Renewing at term end with a new lender no longer requires stress test re-qualification as of November 2024." },
+              ].map(({ label, detail }) => (
+                <div key={label} className="flex gap-3 text-sm">
+                  <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: "var(--green)", marginTop: "0.45rem" }}/>
+                  <div>
+                    <span className="font-semibold" style={{ color: "var(--ink)" }}>{label}: </span>
+                    <span style={{ color: "var(--ink-mid)" }}>{detail}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-4 tracking-tight" style={{ color: "var(--ink)" }}>
+              Frequently asked questions
+            </h2>
+            <FAQAccordion items={[
+              { question: "How accurate is this mortgage calculator?", answer: "This calculator uses the exact formulas required by Canadian law: semi-annual compounding under the Interest Act, CMHC premium tiers updated for December 2024, and land transfer tax rates for all 13 provinces with first-time buyer rebates applied automatically. The stress test rate (contract rate + 2%, minimum 5.25%) is calculated correctly. Most online calculators use monthly compounding which understates your actual payment." },
+              { question: "What is the minimum down payment in Canada?", answer: "The minimum down payment is 5% on the first $500,000, 10% on the portion between $500,000 and $999,999, and 20% on purchases from $1,000,000 to $1,500,000. Homes over $1.5 million require at least 20% down and are not eligible for CMHC insurance." },
+              { question: "What is CMHC mortgage insurance and do I need it?", answer: "CMHC mortgage default insurance is required for any purchase with less than 20% down on a home under $1.5 million. It protects the lender, not you, but you pay the premium. The premium is 2.80% to 4.00% of the mortgage amount and is added to your mortgage balance. Ontario, Quebec, and Saskatchewan charge provincial tax on the premium, due in cash at closing." },
+              { question: "How does the stress test affect my maximum purchase price?", answer: "The stress test requires lenders to qualify you at your contract rate + 2% or 5.25%, whichever is higher. At today's typical rate of 3.89%, the qualifying rate is 5.89%. This reduces your maximum purchase price by roughly 15–20% compared to qualifying at your actual rate." },
+              { question: "What is the difference between a mortgage term and amortization?", answer: "Your amortization is the total time to pay off your mortgage — typically 25 years in Canada. Your term is how long your current rate is locked in — typically 5 years. At the end of each term you renew at whatever rate is available. You are paying down the same mortgage over multiple terms." },
+              { question: "Can I switch lenders at renewal without re-qualifying?", answer: "Yes, since November 2024. A straight switch to a new lender at renewal — same balance, different lender — no longer requires stress test re-qualification. This means your existing lender's renewal offer is genuinely competitive for the first time. Always get at least one competing quote before signing." },
+              { question: "What closing costs should I budget for in Canada?", answer: "Beyond your down payment, budget for: land transfer tax (provincial and potentially Toronto municipal), legal fees ($1,500–$2,500), home inspection ($400–$600), title insurance (~$300), and moving costs. If you have less than 20% down, budget for any provincial tax on your CMHC premium in cash at closing." },
+            ]} pageUrl="https://crystalkey.ca" />
+          </section>
+
+          <div className="rounded-2xl p-8 text-center" style={{ background: "var(--green)" }}>
+            <h2 className="text-2xl font-semibold tracking-tight text-white mb-2">
+              Ready to act on these numbers?
+            </h2>
+            <p className="text-sm mb-5" style={{ color: "rgba(255,255,255,0.7)" }}>
+              A CrystalKey partner broker can turn your calculation into a pre-approval — at no cost to you.
+            </p>
+            <a href="#top"
+              onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm cursor-pointer"
+              style={{ background: "#fff", color: "var(--green)" }}>
+              Back to calculator →
+            </a>
+          </div>
 
         </div>
 
