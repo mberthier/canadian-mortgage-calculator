@@ -375,7 +375,7 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
 
       {/* ── Narrative — plain caption, no box ── */}
       {narrativeContent && (
-        <div className="px-6 py-4" style={{ borderTop: "1px solid rgba(0,0,0,0.06)" }}>
+        <div className="px-6 pt-4 pb-7" style={{ borderTop: "1px solid rgba(0,0,0,0.06)" }}>
           {narrativeContent}
         </div>
       )}
