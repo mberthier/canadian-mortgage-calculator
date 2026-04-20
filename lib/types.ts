@@ -24,6 +24,9 @@ export interface MortgageInputs {
   renewalAmortization: number;   // renewal: new amortization (may differ from remaining)
   homeValue:           number;   // refinance: needed for LTV check
   cashOutAmount:       number;   // refinance: equity withdrawn
+  monthsRemainingInTerm: number; // refinance: months left in current term
+  lenderType:          "bank" | "broker"; // refinance: affects IRD calculation
+  knownPenalty:        number;   // refinance: user-supplied break penalty (overrides estimate)
 
   // Common
   interestRate:       number;

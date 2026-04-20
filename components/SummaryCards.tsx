@@ -62,12 +62,6 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
   const termInterest  = outputs.termInterestPaid  ?? 0;
   const termPrincipal = outputs.termPrincipalPaid ?? 0;
 
-  const refiInterestSaved = mode === "refinance" && outputs.currentPayment > 0
-    ? Math.max(0, Math.round(
-        (outputs.currentPayment - outputs.periodicPayment) * outputs.amortizationSchedule.length
-      ))
-    : 0;
-
   const heroSub = (() => {
     const amort = inputs.amortizationYears;
     const rate  = inputs.interestRate;
@@ -347,11 +341,7 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
                   </div>
                 </div>
               </div>
-              {refiInterestSaved > 0 && (
-                <p className="text-xs mt-2" style={{ color: "rgba(255,255,255,0.55)" }}>
-                  Saves {formatCurrency(refiInterestSaved, 0, true)} in total interest over the amortization
-                </p>
-              )}
+
             </div>
           );
         })()}

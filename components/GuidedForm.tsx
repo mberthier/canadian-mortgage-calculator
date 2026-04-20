@@ -607,10 +607,92 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
           )}
           {errors.ltv && <p className="text-xs text-red-600">{errors.ltv}</p>}
 
+          <RateInput id="current-rate-refi" label="Current rate"
+            tip="Your existing contracted rate. Used to estimate your break penalty and calculate what you're giving up."
+            value={inputs.currentRate} onChange={(v) => setField("currentRate", v)} />
+
           <CurrencyInput id="current-payment-refi" label="Current monthly payment"
-            tip="Your actual payment from your mortgage statement. Used to show exactly how much your payment changes after refinancing."
+            tip="Your actual payment from your mortgage statement."
             value={inputs.currentMonthlyPayment} onChange={(v) => setField("currentMonthlyPayment", v)}
             placeholder="e.g. 2,850" />
+
+          {/* Months remaining in term */}
+          <div>
+            <label htmlFor="months-remaining" className={`${lbl} flex items-center`}>
+              Months remaining in term
+              <Tooltip content="How many months are left before your current term expires. Check your mortgage statement or renewal notice." />
+            </label>
+            <div className="relative">
+              <input
+                id="months-remaining"
+                type="number"
+                min="1" max="120"
+                inputMode="numeric"
+                value={inputs.monthsRemainingInTerm || ""}
+                onChange={(e) => {
+                  const v = parseInt(e.target.value);
+                  if (!isNaN(v) && v >= 1 && v <= 120) setField("monthsRemainingInTerm", v);
+                  else if (e.target.value === "") setField("monthsRemainingInTerm", 0);
+                }}
+                placeholder="e.g. 36"
+                className={inp}
+              />
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs"
+                style={{ color: "var(--ink-faint)" }}>mo</span>
+            </div>
+          </div>
+
+          {/* Lender type toggle */}
+          <div>
+            <label className={`${lbl} flex items-center`}>
+              Lender type
+              <Tooltip content="Bank mortgages use posted rates for IRD, which inflates the penalty significantly. Broker lenders (First National, MCAP, etc.) use a fairer calculation. If you got your mortgage through a broker, choose Broker lender." />
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              {(["bank", "broker"] as const).map((t) => (
+                <button key={t} type="button"
+                  onClick={() => setField("lenderType", t)}
+                  className="py-2.5 rounded-xl text-sm font-medium border transition-all"
+                  style={inputs.lenderType === t ? {
+                    background: "var(--ink)", color: "#fff", borderColor: "var(--ink)",
+                  } : {
+                    background: "#fff", color: "var(--ink-mid)", borderColor: "#e7e5e4",
+                  }}>
+                  {t === "bank" ? "Bank" : "Broker lender"}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Known penalty — optional override */}
+          <div>
+            <label className={`${lbl} flex items-center`}>
+              Break penalty
+              <span className="ml-1.5 text-xs font-normal" style={{ color: "var(--ink-faint)" }}>(optional)</span>
+              <Tooltip content="If your lender has already given you an exact penalty amount, enter it here. Otherwise we'll estimate it." />
+            </label>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm"
+                style={{ color: "var(--ink-faint)" }}>$</span>
+              <input
+                id="known-penalty"
+                type="text"
+                inputMode="numeric"
+                value={inputs.knownPenalty > 0 ? inputs.knownPenalty.toLocaleString("en-CA") : ""}
+                onChange={(e) => {
+                  const v = parseFloat(e.target.value.replace(/,/g, ""));
+                  setField("knownPenalty", isNaN(v) ? 0 : v);
+                }}
+                placeholder="Leave blank to estimate"
+                className={`${inp} pl-7`}
+              />
+            </div>
+            {inputs.knownPenalty > 0 && (
+              <p className="text-xs mt-1" style={{ color: "var(--green)" }}>
+                Using your lender's quoted penalty
+              </p>
+            )}
+          </div>
 
           <RateInput id="new-rate-refi" label="New interest rate"
             tip="The rate on the refinanced mortgage."
@@ -623,14 +705,10 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
             open={showRefine}
             onToggle={() => setShowRefine(o => !o)}
             label="Refine your estimate"
-            hint="Add your current rate, term, and cash-out details" />
+            hint="Adjust amortization, term, cash-out, and payment frequency" />
 
           {showRefine && (
             <div className="space-y-4 pt-1">
-              <RateInput id="current-rate-refi" label="Current (expiring) rate"
-                tip="Your existing contracted rate, used to compare current vs new payment."
-                value={inputs.currentRate} onChange={(v) => setField("currentRate", v)} />
-
               <div className="grid grid-cols-2 gap-3">
                 <SelectField id="new-term-refi" label="New term"
                   value={inputs.termYears} onChange={(v) => setField("termYears", Number(v))}>
@@ -654,21 +732,6 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
                   <option key={k} value={k}>{v}</option>
                 ))}
               </SelectField>
-            </div>
-          )}
-
-          {/* ── REPAY FASTER ───────────────────────────────── */}
-          <SectionToggle
-            open={showRepay}
-            onToggle={() => setShowRepay(o => !o)}
-            label="Repay faster"
-            hint="Model extra payments against your refinanced mortgage"
-            variant="action" />
-
-          {showRepay && (
-            <div className="space-y-3 pt-1 pl-3 border-l-2" style={{ borderColor: "#e5e5e5" }}>
-              <CurrencyInput id="extra-refi" label="Extra payment per period"
-                value={inputs.extraPayment} onChange={(v) => setField("extraPayment", v)} />
             </div>
           )}
         </>

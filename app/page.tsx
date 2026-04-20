@@ -16,6 +16,7 @@ import AmortizationTable from "@/components/AmortizationTable";
 import StressTest from "@/components/StressTest";
 import BrokerMatchCard from "@/components/BrokerMatchCard";
 import RenewalAmortizationWidget from "@/components/RenewalAmortizationWidget";
+import RefinanceBreakEven from "@/components/RefinanceBreakEven";
 import AffordabilityCalculator from "@/components/AffordabilityCalculator";
 import MortgageComparison from "@/components/MortgageComparison";
 import ShareButton from "@/components/ShareButton";
@@ -260,8 +261,8 @@ function BreakdownSection({ outputs, inputs, isPurchase, isRefinance }: {
 }
 
 // ── Empty state, shown before user enters essential fields ──────────────────
-function EmptyState({ mode, hasPrice, hasRate, hasProvince, hasDown, hasPayment }: {
-  mode: string; hasPrice: boolean; hasRate: boolean; hasProvince: boolean; hasDown?: boolean; hasPayment?: boolean;
+function EmptyState({ mode, hasPrice, hasRate, hasProvince, hasDown, hasPayment, inputs }: {
+  mode: string; hasPrice: boolean; hasRate: boolean; hasProvince: boolean; hasDown?: boolean; hasPayment?: boolean; inputs?: any;
 }) {
   const steps = mode === "purchase"
     ? [
@@ -277,10 +278,12 @@ function EmptyState({ mode, hasPrice, hasRate, hasProvince, hasDown, hasPayment 
           { label: "New rate",           done: hasRate  },
         ]
       : [
-          { label: "Home value",         done: hasPrice },
-          { label: "Balance owing",      done: hasPrice },
-          { label: "Current payment",    done: !!hasPayment },
-          { label: "New rate",           done: hasRate  },
+          { label: "Home value",         done: inputs.homeValue > 0 },
+          { label: "Balance owing",      done: inputs.currentBalance > 0 },
+          { label: "Current rate",       done: inputs.currentRate > 0 },
+          { label: "Months remaining",   done: inputs.monthsRemainingInTerm > 0 },
+          { label: "Current payment",    done: inputs.currentMonthlyPayment > 0 },
+          { label: "New rate",           done: hasRate },
         ];
 
   const doneCount = steps.filter(s => s.done).length;
@@ -352,7 +355,7 @@ export default function Home() {
     if (isPurchase && !inputs.province) return false; // province only required for purchase
     if (isPurchase)  return inputs.homePrice > 0 && inputs.downPaymentPercent > 0 && inputs.interestRate > 0;
     if (isRenewal)   return inputs.currentBalance > 0 && inputs.interestRate > 0 && inputs.currentMonthlyPayment > 0;
-    if (isRefinance) return inputs.homeValue > 0 && inputs.currentBalance > 0 && inputs.interestRate > 0 && inputs.currentMonthlyPayment > 0;
+    if (isRefinance) return inputs.homeValue > 0 && inputs.currentBalance > 0 && inputs.interestRate > 0 && inputs.currentMonthlyPayment > 0 && inputs.currentRate > 0 && inputs.monthsRemainingInTerm > 0;
     return false;
   })();
   const homePrice  = isPurchase ? inputs.homePrice : inputs.homeValue;
@@ -428,6 +431,7 @@ export default function Home() {
                   hasDown={inputs.downPaymentPercent > 0}
                   hasPayment={inputs.currentMonthlyPayment > 0}
                   hasRate={inputs.interestRate > 0}
+                  inputs={inputs}
                 />
               ) : (
               <>
@@ -437,6 +441,11 @@ export default function Home() {
               {/* Amortization trade-off widget — renewal only */}
               {isRenewal && (
                 <RenewalAmortizationWidget inputs={inputs} setField={setField} />
+              )}
+
+              {/* Break-even analysis — refinance only */}
+              {isRefinance && (
+                <RefinanceBreakEven inputs={inputs} outputs={outputs} />
               )}
 
               <InsightsPanel inputs={inputs} outputs={outputs} />
