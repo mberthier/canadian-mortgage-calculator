@@ -253,8 +253,8 @@ export function useMortgageCalculator() {
     inputs.extraPayment, inputs.lumpSumsByYear,
     inputs.includeCMHC, inputs.closingCosts,
     inputs.province, inputs.city, inputs.isFirstTimeBuyer, inputs.isNewBuild,
-    inputs.currentRate, inputs.renewalAmortization,
-    inputs.currentMonthlyPayment,
+    inputs.currentRate, inputs.currentMonthlyPayment,
+    inputs.renewalAmortization,
   ), [inputs]);
 
   // ── Validation — only for touched fields ───────────────────────────────────
