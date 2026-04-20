@@ -123,7 +123,7 @@ export default function RenewalAmortizationWidget({ inputs, setField }: Props) {
         {/* Column headers */}
         <div className="grid grid-cols-4 px-6 py-2.5"
           style={{ borderBottom: "1px solid rgba(0,0,0,0.05)" }}>
-          {["Amortization", "Monthly payment", "Total interest", "vs selected"].map(h => (
+          {["Amortization", "Monthly payment", "Total interest", "Interest saved"].map(h => (
             <p key={h} className="text-xs font-semibold uppercase tracking-wide"
               style={{ color: "var(--ink-faint)" }}>{h}</p>
           ))}
@@ -154,13 +154,11 @@ export default function RenewalAmortizationWidget({ inputs, setField }: Props) {
             </p>
 
             <div className="flex items-center justify-between gap-2">
-              {samePaymentRow.interest < baseRow.interest ? (
-                <span className="text-xs font-semibold" style={{ color: "#16a34a" }}>
-                  saves {formatCurrency(baseRow.interest - samePaymentRow.interest, 0, true)}
-                </span>
-              ) : (
-                <span className="text-xs" style={{ color: "var(--ink-faint)" }}>—</span>
-              )}
+              <span className="text-xs font-semibold" style={{ color: "#16a34a" }}>
+                {samePaymentRow.interest < baseRow.interest
+                  ? `saves ${formatCurrency(baseRow.interest - samePaymentRow.interest, 0, true)}`
+                  : "—"}
+              </span>
               <button
                 onClick={() => setField("renewalAmortization", Math.round(samePaymentRow.years))}
                 className="text-xs px-2.5 py-1 rounded-lg font-medium transition-colors shrink-0"
@@ -213,11 +211,16 @@ export default function RenewalAmortizationWidget({ inputs, setField }: Props) {
               <div className="flex items-center justify-between gap-2">
                 {isCurrent ? (
                   <span className="text-xs" style={{ color: "var(--ink-faint)" }}>—</span>
-                ) : (
-                  <span className="text-xs font-semibold"
-                    style={{ color: isDeltaPos ? "#ef4444" : isDeltaNeg ? "#16a34a" : "var(--ink-faint)" }}>
-                    {isDeltaPos ? "+" : ""}{formatCurrency(interestDelta, 0, true)}
+                ) : isDeltaNeg ? (
+                  <span className="text-xs font-semibold" style={{ color: "#16a34a" }}>
+                    saves {formatCurrency(Math.abs(interestDelta), 0, true)}
                   </span>
+                ) : isDeltaPos ? (
+                  <span className="text-xs font-semibold" style={{ color: "#ef4444" }}>
+                    costs {formatCurrency(interestDelta, 0, true)} more
+                  </span>
+                ) : (
+                  <span className="text-xs" style={{ color: "var(--ink-faint)" }}>—</span>
                 )}
                 {!isCurrent && (
                   <button
