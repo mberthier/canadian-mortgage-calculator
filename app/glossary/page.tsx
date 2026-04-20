@@ -3,6 +3,7 @@ import IllustrationGlossary from "@/components/illustrations/IllustrationGlossar
 import PageHeader from "@/components/PageHeader";
 import Link from "next/link";
 import SiteLayout from "@/components/SiteLayout";
+import { getRates } from "@/lib/getRates";
 import Breadcrumb from "@/components/Breadcrumb";
 
 export const dynamic = "force-dynamic";
@@ -167,7 +168,7 @@ const TERMS: Term[] = [
   },
   {
     term: "Prime Rate",
-    definition: "The benchmark interest rate used by major Canadian banks to price variable rate mortgages and lines of credit. The prime rate is typically 2.20% above the Bank of Canada overnight rate. When the BoC changes its overnight rate, Canadian banks usually adjust the prime rate by the same amount within a day. As of April 2026, the prime rate is 4.45%.",
+    definition: "PRIME_RATE_PLACEHOLDER",
     related: ["Bank of Canada Rate", "Variable Rate Mortgage", "HELOC"],
   },
   {
@@ -242,14 +243,21 @@ const grouped = TERMS.reduce<Record<string, Term[]>>((acc, term) => {
 
 const letters = Object.keys(grouped).sort();
 
-export default function GlossaryPage() {
+export default async function GlossaryPage() {
+  const { prime, updatedLabel } = await getRates();
+
+  // Patch the prime rate definition with live values
+  const liveTerms: Term[] = TERMS.map((t: Term) => t.term === "Prime Rate"
+    ? { ...t, definition: `The benchmark interest rate used by major Canadian banks to price variable rate mortgages and lines of credit. The prime rate is typically 2.20% above the Bank of Canada overnight rate. When the BoC changes its overnight rate, Canadian banks usually adjust the prime rate by the same amount within a day. As of ${updatedLabel}, the prime rate is ${prime}%.` }
+    : t
+  );
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "DefinedTermSet",
     "name": "Canadian Mortgage Glossary",
     "description": "Plain-language definitions of Canadian mortgage terms",
     "url": "https://crystalkey.ca/glossary",
-    "hasDefinedTerm": TERMS.map((t) => ({
+    "hasDefinedTerm": liveTerms.map((t) => ({
       "@type": "DefinedTerm",
       "name": t.term,
       "description": t.definition,

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { calculateCMHCPremium, calculateCMHCProvincialTax, calculateMortgagePayment } from "@/lib/mortgageMath";
 import { formatCurrency } from "@/lib/formatters";
 import { PROVINCES } from "@/lib/constants";

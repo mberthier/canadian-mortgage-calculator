@@ -57,6 +57,4 @@ export const RATE_HISTORY: RatePoint[] = [
   { date: "2026-04-01", label: "Apr '26", overnight: 2.25, fiveYearFixed: 3.89 },
 ];
 
-export const CURRENT_OVERNIGHT = 2.25;
-export const CURRENT_PRIME = 4.45;
-export const RATE_DATA_AS_OF = "April 9, 2026";
+// Current values are sourced from getRates() via Google Sheets — not hardcoded here

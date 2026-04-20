@@ -193,7 +193,12 @@ export default async function MortgageRatesPage() {
         </div>
 
         {/* Rate history chart */}
-        <RateHistoryPageClient />
+        <RateHistoryPageClient
+          bocOvernight={bocOvernight}
+          prime={prime}
+          best5yrFixed={fixed5yr?.rate ?? 3.89}
+          updatedLabel={updatedLabel}
+        />
 
         {/* Supporting content */}
         <div className="mt-12 space-y-8">

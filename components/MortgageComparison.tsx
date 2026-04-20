@@ -12,6 +12,15 @@ interface Props {
 }
 
 export default function MortgageComparison({ inputs, loanAmount }: Props) {
+  const [livePresets, setLivePresets] = useState(RATE_PRESETS);
+
+  useEffect(() => {
+    fetch("/api/rates")
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { if (data?.presets?.length) setLivePresets(data.presets); })
+      .catch(() => {});
+  }, []);
+
   const [open, setOpen] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
@@ -119,7 +128,7 @@ export default function MortgageComparison({ inputs, loanAmount }: Props) {
                 </div>
               </div>
               <div className="flex flex-wrap gap-1 mt-2">
-                {RATE_PRESETS.slice(0, 3).map((p) => (
+                {livePresets.slice(0, 3).map((p) => (
                   <button key={p.label} onClick={() => { setRateBRaw(p.rate.toFixed(2)); setAmortB(inputs.amortizationYears); }}
                     className="text-xs px-2 py-0.5 rounded border border-neutral-200 text-neutral-500 hover:bg-neutral-50 transition-colors">
                     {p.rate.toFixed(2)}%

@@ -5,7 +5,7 @@ import {
   AreaChart, Area, XAxis, YAxis, Tooltip,
   ResponsiveContainer, CartesianGrid, ReferenceLine,
 } from "recharts";
-import { RATE_HISTORY, CURRENT_OVERNIGHT, CURRENT_PRIME, RATE_DATA_AS_OF } from "@/lib/rateHistory";
+import { RATE_HISTORY } from "@/lib/rateHistory";
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload?.length) return null;
@@ -26,7 +26,19 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   );
 };
 
-export default function RateHistoryPageClient() {
+interface Props {
+  bocOvernight?: number;
+  prime?: number;
+  best5yrFixed?: number;
+  updatedLabel?: string;
+}
+
+export default function RateHistoryPageClient({
+  bocOvernight = 2.25,
+  prime = 4.45,
+  best5yrFixed = 3.89,
+  updatedLabel = "April 9, 2026",
+}: Props) {
   const [range, setRange] = useState<"1y" | "2y" | "3y">("3y");
 
   const cutoff = range === "1y" ? "2025-04" : range === "2y" ? "2024-04" : "2023-01";
@@ -41,9 +53,9 @@ export default function RateHistoryPageClient() {
       {/* Key stats */}
       <div className="grid grid-cols-3 gap-3">
         {[
-          { label: "BoC Overnight Rate", value: `${CURRENT_OVERNIGHT}%`, sub: "Held since Sep 2025", color: "var(--green)" },
-          { label: "Prime Rate", value: `${CURRENT_PRIME}%`, sub: "All major banks", color: "var(--ink)" },
-          { label: "Best 5yr Fixed", value: "3.89%", sub: "As of Apr 9, 2026", color: "var(--ink)" },
+          { label: "BoC Overnight Rate", value: `${bocOvernight}%`, sub: "Held since Sep 2025", color: "var(--green)" },
+          { label: "Prime Rate", value: `${prime}%`, sub: "All major banks", color: "var(--ink)" },
+          { label: "Best 5yr Fixed", value: `${best5yrFixed}%`, sub: `As of ${updatedLabel}`, color: "var(--ink)" },
         ].map(({ label, value, sub, color }) => (
           <div key={label} className="rounded-2xl bg-white border border-neutral-100 p-4 text-center shadow-sm">
             <p className="text-2xl font-semibold" style={{ color }}>{value}</p>
@@ -58,7 +70,7 @@ export default function RateHistoryPageClient() {
         <div className="flex items-center justify-between mb-4">
           <p className="text-sm font-semibold text-neutral-700">Rate History</p>
           <div className="flex items-center gap-3">
-            <p className="text-xs" style={{ color: "var(--ink-faint)" }}>Updated {RATE_DATA_AS_OF}</p>
+            <p className="text-xs" style={{ color: "var(--ink-faint)" }}>Updated {updatedLabel}</p>
             <div className="flex bg-neutral-100 rounded-lg p-0.5 text-xs">
               {(["1y", "2y", "3y"] as const).map((r) => (
                 <button key={r} onClick={() => setRange(r)}

@@ -17,7 +17,17 @@ export default function BreakPenalty() {
     return () => el.removeEventListener("open-section", handler);
   }, []);  const [balance, setBalance]     = useState(400_000);
   const [originalRate, setOrig]   = useState(4.5);
-  const [currentRate, setCurrent] = useState(3.89);
+  const [currentRate, setCurrent] = useState(3.89); // replaced by sheet on mount
+
+  useEffect(() => {
+    fetch("/api/rates")
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        const fixed5yr = data?.presets?.find((p: any) => p.term === 5 && p.type === "fixed");
+        if (fixed5yr?.rate) setCurrent(fixed5yr.rate);
+      })
+      .catch(() => {});
+  }, []);
   const [remainingMonths, setMonths] = useState(36);
   const [isVariable, setVariable] = useState(false);
 

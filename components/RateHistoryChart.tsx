@@ -5,11 +5,15 @@ import {
   AreaChart, Area, XAxis, YAxis, Tooltip,
   ResponsiveContainer, CartesianGrid, ReferenceLine,
 } from "recharts";
-import { RATE_HISTORY, CURRENT_OVERNIGHT, CURRENT_PRIME, RATE_DATA_AS_OF } from "@/lib/rateHistory";
+import { RATE_HISTORY } from "@/lib/rateHistory";
 
 interface Props {
-  currentRate: number;
+  currentRate:   number;
   onSelectRate?: (rate: number) => void;
+  bocOvernight?: number;
+  prime?:        number;
+  best5yrFixed?: number;
+  updatedLabel?: string;
 }
 
 const CustomTooltip = ({ active, payload, label }: any) => {
@@ -31,7 +35,14 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   );
 };
 
-export default function RateHistoryChart({ currentRate, onSelectRate }: Props) {
+export default function RateHistoryChart({
+  currentRate,
+  onSelectRate,
+  bocOvernight = 2.25,
+  prime = 4.45,
+  best5yrFixed = 3.89,
+  updatedLabel = "April 9, 2026",
+}: Props) {
   const [open, setOpen] = useState(false);
   const [range, setRange] = useState<"1y" | "2y" | "3y">("2y");
 
@@ -40,8 +51,6 @@ export default function RateHistoryChart({ currentRate, onSelectRate }: Props) {
 
   const minRate = Math.min(...data.map((p) => Math.min(p.overnight, p.fiveYearFixed))) - 0.2;
   const maxRate = Math.max(...data.map((p) => Math.max(p.overnight, p.fiveYearFixed))) + 0.2;
-
-  // Interval for x-axis ticks based on range
   const tickInterval = range === "1y" ? 1 : range === "2y" ? 2 : 4;
 
   return (
@@ -54,7 +63,7 @@ export default function RateHistoryChart({ currentRate, onSelectRate }: Props) {
         <span>Rate History</span>
         <div className="flex items-center gap-2">
           <span className="normal-case font-normal" style={{ color: "var(--ink-faint)" }}>
-            BoC {CURRENT_OVERNIGHT}% · Prime {CURRENT_PRIME}%
+            BoC {bocOvernight}% · Prime {prime}%
           </span>
           <span className="text-base">{open ? "−" : "+"}</span>
         </div>
@@ -64,15 +73,15 @@ export default function RateHistoryChart({ currentRate, onSelectRate }: Props) {
         <div className="mt-4 space-y-4">
           <p className="text-xs leading-relaxed" style={{ color: "var(--ink-faint)" }}>
             Bank of Canada overnight rate and best available 5-year fixed mortgage rate.
-            After 9 consecutive cuts, the BoC has held at 2.25% since September 2025.
+            After 9 consecutive cuts, the BoC has held at {bocOvernight}% since September 2025.
           </p>
 
           {/* Key stats */}
           <div className="grid grid-cols-3 gap-2">
             {[
-              { label: "BoC Overnight", value: `${CURRENT_OVERNIGHT}%`, sub: "Held since Sep '25", color: "var(--green)" },
-              { label: "Prime Rate", value: `${CURRENT_PRIME}%`, sub: "All major banks", color: "var(--ink)" },
-              { label: "Best 5yr Fixed", value: "3.89%", sub: "As of Apr 9, 2026", color: "var(--ink)" },
+              { label: "BoC Overnight", value: `${bocOvernight}%`, sub: "Held since Sep '25", color: "var(--green)" },
+              { label: "Prime Rate",    value: `${prime}%`,        sub: "All major banks",    color: "var(--ink)" },
+              { label: "Best 5yr Fixed", value: `${best5yrFixed}%`, sub: `As of ${updatedLabel}`, color: "var(--ink)" },
             ].map(({ label, value, sub, color }) => (
               <div key={label} className="rounded-xl p-3 text-center border border-neutral-100"
                 style={{ background: "#fafafa" }}>
@@ -86,7 +95,7 @@ export default function RateHistoryChart({ currentRate, onSelectRate }: Props) {
           {/* Range toggle */}
           <div className="flex items-center justify-between">
             <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
-              Updated {RATE_DATA_AS_OF}
+              Updated {updatedLabel}
             </p>
             <div className="flex bg-neutral-100 rounded-lg p-0.5 text-xs">
               {(["1y", "2y", "3y"] as const).map((r) => (
@@ -125,7 +134,6 @@ export default function RateHistoryChart({ currentRate, onSelectRate }: Props) {
                   domain={[Math.max(0, minRate), maxRate]}
                   width={36} />
                 <Tooltip content={<CustomTooltip />} />
-                {/* Current user rate line */}
                 {currentRate > 0 && (
                   <ReferenceLine y={currentRate} stroke="var(--amber)"
                     strokeDasharray="4 3" strokeWidth={1.5}
@@ -149,11 +157,11 @@ export default function RateHistoryChart({ currentRate, onSelectRate }: Props) {
                 Use today's best rate in your calculation:
               </span>
               <button
-                onClick={() => onSelectRate(3.89)}
+                onClick={() => onSelectRate(best5yrFixed)}
                 className="px-3 py-1.5 rounded-lg font-semibold text-xs transition-colors"
                 style={{ background: "var(--green-light)", color: "var(--green)", border: "1px solid var(--green-border)" }}
               >
-                Use 3.89% →
+                Use {best5yrFixed}% →
               </button>
             </div>
           )}
