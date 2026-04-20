@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { MortgageOutputs, MortgageInputs } from "@/lib/types";
 import { FREQUENCY_LABELS } from "@/lib/constants";
+import { calculateMortgagePayment, getPaymentsPerYear } from "@/lib/mortgageMath";
 import { formatCurrency } from "@/lib/formatters";
 import Tooltip from "./Tooltip";
 
@@ -78,7 +79,11 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
     }
     if (mode === "renewal") {
       const remaining = inputs.renewalAmortization || amort;
-      return `${formatCurrency(inputs.currentBalance, 0, true)} balance · ${rate}% · ${remaining} years remaining`;
+      const totalMonths = Math.round(remaining * 12);
+      const y = Math.floor(totalMonths / 12);
+      const m = totalMonths % 12;
+      const amortLabel = m === 0 ? `${y} years` : `${y}y ${m}mo`;
+      return `${formatCurrency(inputs.currentBalance, 0, true)} balance · ${rate}% · ${amortLabel} remaining`;
     }
     if (mode === "refinance") {
       const cashOut = inputs.cashOutAmount > 0
@@ -87,6 +92,23 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
       return `${formatCurrency(outputs.loanAmount, 0, true)} refinanced${cashOut} · ${rate}% · ${amort} years`;
     }
     return "";
+  })();
+
+  // Savings vs 25yr when user keeps their current payment
+  const samePaymentSavings = (() => {
+    if (mode !== "renewal") return null;
+    if (!inputs.currentMonthlyPayment || !inputs.currentBalance || !inputs.interestRate) return null;
+    const diff = Math.abs(outputs.periodicPayment - inputs.currentMonthlyPayment);
+    if (diff > 0.05) return null; // not in same-payment mode
+    const renewAmort = inputs.renewalAmortization || 25;
+    if (renewAmort >= 25) return null; // only show when shorter than 25yr
+    const ppy      = getPaymentsPerYear(inputs.paymentFrequency);
+    const pmt25    = calculateMortgagePayment(inputs.currentBalance, inputs.interestRate, 25, inputs.paymentFrequency);
+    const int25    = Math.max(0, pmt25 * 25 * ppy - inputs.currentBalance);
+    const intNow   = outputs.totalInterest;
+    const saved    = Math.round(int25 - intNow);
+    if (saved <= 0) return null;
+    return saved;
   })();
 
   const handleCopy = async () => {
@@ -280,6 +302,31 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
             </div>
           );
         })()}
+
+        {/* Same-payment savings pill */}
+        {samePaymentSavings !== null && (
+          <div className="pb-5 -mt-2">
+            <div className="rounded-xl px-4 py-3 flex items-center gap-3"
+              style={{ background: "rgba(255,255,255,0.10)" }}>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <circle cx="7" cy="7" r="6" stroke="#86efac" strokeWidth="1.5"/>
+                <path d="M4.5 7l2 2 3-3" stroke="#86efac" strokeWidth="1.5"
+                  strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              <p className="text-xs">
+                <span style={{ color: "rgba(255,255,255,0.65)" }}>
+                  Maintaining your payment saves{" "}
+                </span>
+                <span className="font-semibold text-white">
+                  {formatCurrency(samePaymentSavings, 0, true)} in interest
+                </span>
+                <span style={{ color: "rgba(255,255,255,0.65)" }}>
+                  {" "}vs a 25-year amortization
+                </span>
+              </p>
+            </div>
+          </div>
+        )}
         {mode === "refinance" && outputs.currentPayment > 0 && (() => {
           const diff = outputs.periodicPayment - outputs.currentPayment;
           const hasDiff = Math.abs(diff) >= 1;
