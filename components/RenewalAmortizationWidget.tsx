@@ -134,14 +134,19 @@ export default function RenewalAmortizationWidget({ inputs, setField }: Props) {
           <div className="grid grid-cols-4 items-center px-6 py-4"
             style={{ borderBottom: "1px solid rgba(0,0,0,0.06)", background: "#f0fdf4" }}>
 
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold" style={{ color: "#16a34a" }}>
-                {samePaymentRow.years} years
-              </span>
-              <span className="text-xs px-1.5 py-0.5 rounded-full font-medium"
-                style={{ background: "#16a34a", color: "#fff" }}>
-                same pmt
-              </span>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-semibold" style={{ color: "#16a34a" }}>
+                  {samePaymentRow.years} years
+                </span>
+                <span className="text-xs px-1.5 py-0.5 rounded-full font-medium"
+                  style={{ background: "#16a34a", color: "#fff" }}>
+                  same pmt
+                </span>
+              </div>
+              <p className="text-xs mt-0.5" style={{ color: "#16a34a", opacity: 0.8 }}>
+                Keep paying {formatCurrency(samePaymentRow.pmt, 2)}/mo
+              </p>
             </div>
 
             <p className="text-sm font-semibold" style={{ color: "var(--ink)" }}>

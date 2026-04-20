@@ -507,11 +507,30 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
                   value={inputs.termYears} onChange={(v) => setField("termYears", Number(v))}>
                   {TERM_OPTIONS.map((y) => <option key={y} value={y}>{y} yr{y !== 1 ? "s" : ""}</option>)}
                 </SelectField>
-                <SelectField id="new-amort" label="Amortization"
-                  tip="Shorter saves more in total interest. Longer lowers your payment but costs more over time. See the trade-off table in your results."
-                  value={inputs.renewalAmortization} onChange={(v) => setField("renewalAmortization", Number(v))}>
-                  {AMORTIZATION_OPTIONS.map((y) => <option key={y} value={y}>{y} yrs</option>)}
-                </SelectField>
+                <div>
+                  <label htmlFor="new-amort" className={`${lbl} flex items-center`}>
+                    Amortization
+                    <Tooltip content="Shorter saves more in total interest. Longer lowers your payment but costs more over time. See the trade-off table in your results." />
+                  </label>
+                  <div className="relative">
+                    <input
+                      id="new-amort"
+                      type="number"
+                      min="1" max="30" step="0.1"
+                      inputMode="decimal"
+                      value={inputs.renewalAmortization || ""}
+                      onChange={(e) => {
+                        const v = parseFloat(e.target.value);
+                        if (!isNaN(v) && v >= 1 && v <= 30) setField("renewalAmortization", v);
+                        else if (e.target.value === "") setField("renewalAmortization", 0);
+                      }}
+                      placeholder="e.g. 6.9"
+                      className={inp}
+                    />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs"
+                      style={{ color: "var(--ink-faint)" }}>yrs</span>
+                  </div>
+                </div>
               </div>
 
               <SelectField id="freq-renewal" label="Payment frequency"
