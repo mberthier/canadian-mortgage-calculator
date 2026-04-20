@@ -35,7 +35,7 @@ export const FREQUENCY_LABELS: Record<PaymentFrequency, string> = {
   "accelerated-weekly":   "Accelerated Weekly",
 };
 
-export const AMORTIZATION_OPTIONS = [5, 10, 15, 20, 25, 30];
+export const AMORTIZATION_OPTIONS = Array.from({ length: 26 }, (_, i) => i + 5); // 5 to 30 inclusive
 export const TERM_OPTIONS         = [1, 2, 3, 4, 5, 7, 10];
 
 // Live rates as of April 9, 2026
