@@ -513,22 +513,15 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
                     <Tooltip content="Shorter saves more in total interest. Longer lowers your payment but costs more over time. See the trade-off table in your results." />
                   </label>
                   <div className="relative">
-                    <input
+                    <select
                       id="new-amort"
-                      type="number"
-                      min="1" max="30" step="0.1"
-                      inputMode="decimal"
-                      value={inputs.renewalAmortization || ""}
-                      onChange={(e) => {
-                        const v = parseFloat(e.target.value);
-                        if (!isNaN(v) && v >= 1 && v <= 30) setField("renewalAmortization", v);
-                        else if (e.target.value === "") setField("renewalAmortization", 0);
-                      }}
-                      placeholder="e.g. 6.9"
-                      className={inp}
-                    />
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs"
-                      style={{ color: "var(--ink-faint)" }}>yrs</span>
+                      value={Math.round(inputs.renewalAmortization) || 25}
+                      onChange={(e) => setField("renewalAmortization", Number(e.target.value))}
+                      className={inp}>
+                      {Array.from({ length: 26 }, (_, i) => i + 5).map((y) => (
+                        <option key={y} value={y}>{y} yrs</option>
+                      ))}
+                    </select>
                   </div>
                 </div>
               </div>
