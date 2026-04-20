@@ -266,14 +266,10 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
             <div className="pb-5 -mt-2">
               {/* Before / After comparison bar */}
               <div className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.10)" }}>
-                <div className="grid grid-cols-3 divide-x" style={{ borderColor: "rgba(255,255,255,0.12)" }}>
+                <div className="grid grid-cols-2 divide-x" style={{ borderColor: "rgba(255,255,255,0.12)" }}>
                   <div className="px-4 py-3 text-center">
-                    <p className="text-xs mb-1" style={{ color: "rgba(255,255,255,0.5)" }}>Previous</p>
+                    <p className="text-xs mb-1" style={{ color: "rgba(255,255,255,0.5)" }}>Previous payment</p>
                     <p className="text-base font-semibold text-white">{formatCurrency(outputs.currentPayment, 2)}</p>
-                  </div>
-                  <div className="px-4 py-3 text-center">
-                    <p className="text-xs mb-1" style={{ color: "rgba(255,255,255,0.5)" }}>New</p>
-                    <p className="text-base font-semibold text-white">{formatCurrency(outputs.periodicPayment, 2)}</p>
                   </div>
                   <div className="px-4 py-3 text-center">
                     <p className="text-xs mb-1" style={{ color: "rgba(255,255,255,0.5)" }}>Change</p>
@@ -293,14 +289,10 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
           return (
             <div className="pb-5 -mt-2">
               <div className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.10)" }}>
-                <div className="grid grid-cols-3 divide-x" style={{ borderColor: "rgba(255,255,255,0.12)" }}>
+                <div className="grid grid-cols-2 divide-x" style={{ borderColor: "rgba(255,255,255,0.12)" }}>
                   <div className="px-4 py-3 text-center">
-                    <p className="text-xs mb-1" style={{ color: "rgba(255,255,255,0.5)" }}>Current</p>
+                    <p className="text-xs mb-1" style={{ color: "rgba(255,255,255,0.5)" }}>Current payment</p>
                     <p className="text-base font-semibold text-white">{formatCurrency(outputs.currentPayment, 2)}</p>
-                  </div>
-                  <div className="px-4 py-3 text-center">
-                    <p className="text-xs mb-1" style={{ color: "rgba(255,255,255,0.5)" }}>After refi</p>
-                    <p className="text-base font-semibold text-white">{formatCurrency(outputs.periodicPayment, 2)}</p>
                   </div>
                   <div className="px-4 py-3 text-center">
                     <p className="text-xs mb-1" style={{ color: "rgba(255,255,255,0.5)" }}>Change</p>
