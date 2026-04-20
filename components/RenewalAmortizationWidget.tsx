@@ -20,7 +20,7 @@ function computeRow(balance: number, rate: number, years: number, frequency: str
   return { pmt, interest, years };
 }
 
-// Binary search: find the amortization (in years, fractional) that produces
+// Binary search: find the amortization (in years, high precision) that produces
 // a payment equal to targetPayment. Returns null if not feasible.
 function solveAmortizationForPayment(
   balance: number,
@@ -31,19 +31,22 @@ function solveAmortizationForPayment(
   const minPmt = calculateMortgagePayment(balance, rate, 30, frequency as any);
   if (targetPayment < minPmt) return null; // even 30yr isn't enough
 
-  const maxPmt = calculateMortgagePayment(balance, rate, 5, frequency as any);
-  if (targetPayment > maxPmt) return null; // payment already exceeds 5yr
+  const maxPmt = calculateMortgagePayment(balance, rate, 1, frequency as any);
+  if (targetPayment > maxPmt) return null; // payment already exceeds 1yr
 
-  // Binary search between 1 and 30 years (in months for precision)
-  let lo = 1, hi = 30;
-  for (let i = 0; i < 60; i++) {
+  // Binary search — 100 iterations gives sub-cent precision
+  let lo = 0.5, hi = 30;
+  for (let i = 0; i < 100; i++) {
     const mid = (lo + hi) / 2;
     const pmt = calculateMortgagePayment(balance, rate, mid, frequency as any);
-    if (Math.abs(pmt - targetPayment) < 0.01) return Math.round(mid * 10) / 10;
+    if (Math.abs(pmt - targetPayment) < 0.001) {
+      // Return exact value — do NOT round, preserve full precision for hero calc
+      return mid;
+    }
     if (pmt > targetPayment) lo = mid;
     else hi = mid;
   }
-  return Math.round(((lo + hi) / 2) * 10) / 10;
+  return (lo + hi) / 2;
 }
 
 export default function RenewalAmortizationWidget({ inputs, setField }: Props) {
@@ -75,7 +78,7 @@ export default function RenewalAmortizationWidget({ inputs, setField }: Props) {
       const interestSaved = formatCurrency(baseRow.interest - samePaymentRow.interest, 0);
       const yearsEarlier  = Math.round(current - samePaymentRow.years);
       if (yearsEarlier > 0) {
-        return `Keeping your current payment means you'd be mortgage-free in ${samePaymentRow.years} years — ${yearsEarlier} year${yearsEarlier !== 1 ? "s" : ""} earlier than your selected option — and save ${interestSaved} in interest at no extra cost.`;
+        return `Keeping your current payment means you'd be mortgage-free in ${Math.round(samePaymentRow.years * 10) / 10} years — ${yearsEarlier} year${yearsEarlier !== 1 ? "s" : ""} earlier than your selected option — and save ${interestSaved} in interest at no extra cost.`;
       }
     }
     const maxOption = Math.max(...AMORT_OPTIONS);
@@ -137,7 +140,7 @@ export default function RenewalAmortizationWidget({ inputs, setField }: Props) {
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-sm font-semibold" style={{ color: "#16a34a" }}>
-                  {samePaymentRow.years} years
+                  {Math.round(samePaymentRow.years * 10) / 10} years
                 </span>
                 <span className="text-xs px-1.5 py-0.5 rounded-full font-medium"
                   style={{ background: "#16a34a", color: "#fff" }}>
