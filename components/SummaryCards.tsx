@@ -167,10 +167,7 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
               <span className="font-medium" style={{ color: "var(--ink)" }}>
                 {formatCurrency(Math.abs(diff), 0)}/{freqLow}
               </span>{" "}
-              vs your current rate. Total interest remaining:{" "}
-              <span className="font-medium" style={{ color: "var(--ink)" }}>
-                {formatCurrency(outputs.totalInterest, 0, true)}
-              </span>.
+              vs your previous payment.
             </p>
           )}
         </>
