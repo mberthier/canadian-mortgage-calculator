@@ -18,8 +18,9 @@ export interface MortgageInputs {
   downPaymentPercent: number;
 
   // Renewal / refinance fields
-  currentBalance:      number;
-  currentRate:         number;   // renewal/refinance: existing contracted rate
+  currentBalance:         number;
+  currentRate:            number;   // renewal/refinance: existing contracted rate
+  currentMonthlyPayment:  number;   // renewal/refinance: actual payment from mortgage statement
   renewalAmortization: number;   // renewal: new amortization (may differ from remaining)
   homeValue:           number;   // refinance: needed for LTV check
   cashOutAmount:       number;   // refinance: equity withdrawn

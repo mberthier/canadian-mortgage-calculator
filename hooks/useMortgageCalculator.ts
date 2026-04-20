@@ -77,7 +77,7 @@ function freshPurchase(overrides: Partial<MortgageInputs> = {}): MortgageInputs 
   return {
     mortgageMode: "purchase",
     homePrice, downPayment, downPaymentPercent,
-    currentBalance: 0, currentRate: 0, renewalAmortization: DEFAULTS.renewalAmortization,
+    currentBalance: 0, currentRate: 0, currentMonthlyPayment: 0, renewalAmortization: DEFAULTS.renewalAmortization,
     homeValue: 0, cashOutAmount: 0,
     interestRate:      overrides.interestRate      ?? 0,
     amortizationYears: overrides.amortizationYears ?? DEFAULTS.amortizationYears,
@@ -98,6 +98,7 @@ function freshRenewal(overrides: Partial<MortgageInputs> = {}): MortgageInputs {
     homePrice: 0, downPayment: 0, downPaymentPercent: 0,
     currentBalance: overrides.currentBalance ?? 0,
     currentRate: 0,
+    currentMonthlyPayment: 0,
     renewalAmortization: overrides.amortizationYears ?? DEFAULTS.renewalAmortization,
     homeValue: 0, cashOutAmount: 0,
     interestRate:      overrides.interestRate      ?? 0,
@@ -118,6 +119,7 @@ function freshRefinance(overrides: Partial<MortgageInputs> = {}): MortgageInputs
     homePrice: 0, downPayment: 0, downPaymentPercent: 0,
     currentBalance: overrides.currentBalance ?? 0,
     currentRate: 0,
+    currentMonthlyPayment: 0,
     renewalAmortization: DEFAULTS.renewalAmortization,
     homeValue: overrides.homeValue ?? 0,
     cashOutAmount: 0,
@@ -252,6 +254,7 @@ export function useMortgageCalculator() {
     inputs.includeCMHC, inputs.closingCosts,
     inputs.province, inputs.city, inputs.isFirstTimeBuyer, inputs.isNewBuild,
     inputs.currentRate, inputs.renewalAmortization,
+    inputs.currentMonthlyPayment,
   ), [inputs]);
 
   // ── Validation — only for touched fields ───────────────────────────────────

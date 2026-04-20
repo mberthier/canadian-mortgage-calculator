@@ -481,6 +481,11 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
             value={inputs.currentBalance} onChange={(v) => setField("currentBalance", v)} placeholder="e.g. 480,000" />
           {errors.currentBalance && <p className="text-xs text-red-600 -mt-2">{errors.currentBalance}</p>}
 
+          <CurrencyInput id="current-payment-renewal" label="Current monthly payment"
+            tip="Your actual payment from your mortgage statement. Used to show exactly how much your payment changes at renewal."
+            value={inputs.currentMonthlyPayment} onChange={(v) => setField("currentMonthlyPayment", v)}
+            placeholder="e.g. 2,850" />
+
           <RateInput id="new-rate" label="New interest rate"
             tip="The rate you expect at renewal. Check broker rates for best available, you can switch lenders without re-qualifying."
             value={inputs.interestRate} onChange={(v) => setField("interestRate", v)}
@@ -492,7 +497,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
             open={showRefine}
             onToggle={() => setShowRefine(o => !o)}
             label="Refine your estimate"
-            hint="Add your current rate to compare payment changes" />
+            hint="Add your current rate and term details" />
 
           {showRefine && (
             <div className="space-y-4 pt-1">
@@ -624,6 +629,11 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
           )}
           {errors.ltv && <p className="text-xs text-red-600">{errors.ltv}</p>}
 
+          <CurrencyInput id="current-payment-refi" label="Current monthly payment"
+            tip="Your actual payment from your mortgage statement. Used to show exactly how much your payment changes after refinancing."
+            value={inputs.currentMonthlyPayment} onChange={(v) => setField("currentMonthlyPayment", v)}
+            placeholder="e.g. 2,850" />
+
           <RateInput id="new-rate-refi" label="New interest rate"
             tip="The rate on the refinanced mortgage."
             value={inputs.interestRate} onChange={(v) => setField("interestRate", v)}
@@ -642,14 +652,6 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
               <RateInput id="current-rate-refi" label="Current (expiring) rate"
                 tip="Your existing contracted rate, used to compare current vs new payment."
                 value={inputs.currentRate} onChange={(v) => setField("currentRate", v)} />
-
-              {outputs.currentPayment > 0 && (
-                <div className="rounded-lg px-3 py-2.5 text-sm flex justify-between border"
-                  style={{ background: "#fafafa", borderColor: "#e8e8e8" }}>
-                  <span style={{ color: "var(--ink-mid)" }}>Current payment at {inputs.currentRate.toFixed(2)}%</span>
-                  <span className="font-semibold text-neutral-800">{formatCurrency(outputs.currentPayment, 2)}</span>
-                </div>
-              )}
 
               <div className="grid grid-cols-2 gap-3">
                 <SelectField id="new-term-refi" label="New term"

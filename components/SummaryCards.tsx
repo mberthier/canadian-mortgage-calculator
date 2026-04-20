@@ -259,32 +259,66 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
             )}
           </div>
         )}
-        {mode === "renewal" && outputs.currentPayment > 0 && (
-          <div className="flex flex-wrap gap-2 pb-5 -mt-2">
-            <div className="rounded-lg px-3 py-1.5 text-xs" style={{ background: "rgba(255,255,255,0.12)" }}>
-              <span style={{ color: "rgba(255,255,255,0.65)" }}>Previous payment: </span>
-              <span className="font-semibold text-white">{formatCurrency(outputs.currentPayment, 2)}</span>
-            </div>
-            {(() => {
-              const diff = outputs.periodicPayment - outputs.currentPayment;
-              if (Math.abs(diff) < 1) return null;
-              return (
-                <div className="rounded-lg px-3 py-1.5 text-xs" style={{ background: "rgba(255,255,255,0.12)" }}>
-                  <span style={{ color: "rgba(255,255,255,0.65)" }}>{diff > 0 ? "Increases by: " : "Saves: "}</span>
-                  <span className="font-semibold text-white">{diff > 0 ? "+" : ""}{formatCurrency(diff, 2)}/period</span>
+        {mode === "renewal" && outputs.currentPayment > 0 && (() => {
+          const diff = outputs.periodicPayment - outputs.currentPayment;
+          const hasDiff = Math.abs(diff) >= 1;
+          return (
+            <div className="pb-5 -mt-2">
+              {/* Before / After comparison bar */}
+              <div className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.10)" }}>
+                <div className="grid grid-cols-3 divide-x" style={{ borderColor: "rgba(255,255,255,0.12)" }}>
+                  <div className="px-4 py-3 text-center">
+                    <p className="text-xs mb-1" style={{ color: "rgba(255,255,255,0.5)" }}>Previous</p>
+                    <p className="text-base font-semibold text-white">{formatCurrency(outputs.currentPayment, 2)}</p>
+                  </div>
+                  <div className="px-4 py-3 text-center">
+                    <p className="text-xs mb-1" style={{ color: "rgba(255,255,255,0.5)" }}>New</p>
+                    <p className="text-base font-semibold text-white">{formatCurrency(outputs.periodicPayment, 2)}</p>
+                  </div>
+                  <div className="px-4 py-3 text-center">
+                    <p className="text-xs mb-1" style={{ color: "rgba(255,255,255,0.5)" }}>Change</p>
+                    <p className="text-base font-semibold"
+                      style={{ color: diff > 1 ? "#fca5a5" : diff < -1 ? "#86efac" : "rgba(255,255,255,0.7)" }}>
+                      {!hasDiff ? "No change" : `${diff > 0 ? "+" : ""}${formatCurrency(diff, 2)}`}
+                    </p>
+                  </div>
                 </div>
-              );
-            })()}
-          </div>
-        )}
-        {mode === "refinance" && refiInterestSaved > 0 && (
-          <div className="flex flex-wrap gap-2 pb-5 -mt-2">
-            <div className="rounded-lg px-3 py-1.5 text-xs" style={{ background: "rgba(255,255,255,0.12)" }}>
-              <span style={{ color: "rgba(255,255,255,0.65)" }}>Interest saved over amortization: </span>
-              <span className="font-semibold text-white">{formatCurrency(refiInterestSaved, 0, true)}</span>
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
+        {mode === "refinance" && outputs.currentPayment > 0 && (() => {
+          const diff = outputs.periodicPayment - outputs.currentPayment;
+          const hasDiff = Math.abs(diff) >= 1;
+          return (
+            <div className="pb-5 -mt-2">
+              <div className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.10)" }}>
+                <div className="grid grid-cols-3 divide-x" style={{ borderColor: "rgba(255,255,255,0.12)" }}>
+                  <div className="px-4 py-3 text-center">
+                    <p className="text-xs mb-1" style={{ color: "rgba(255,255,255,0.5)" }}>Current</p>
+                    <p className="text-base font-semibold text-white">{formatCurrency(outputs.currentPayment, 2)}</p>
+                  </div>
+                  <div className="px-4 py-3 text-center">
+                    <p className="text-xs mb-1" style={{ color: "rgba(255,255,255,0.5)" }}>After refi</p>
+                    <p className="text-base font-semibold text-white">{formatCurrency(outputs.periodicPayment, 2)}</p>
+                  </div>
+                  <div className="px-4 py-3 text-center">
+                    <p className="text-xs mb-1" style={{ color: "rgba(255,255,255,0.5)" }}>Change</p>
+                    <p className="text-base font-semibold"
+                      style={{ color: diff > 1 ? "#fca5a5" : diff < -1 ? "#86efac" : "rgba(255,255,255,0.7)" }}>
+                      {!hasDiff ? "No change" : `${diff > 0 ? "+" : ""}${formatCurrency(diff, 2)}`}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              {refiInterestSaved > 0 && (
+                <p className="text-xs mt-2" style={{ color: "rgba(255,255,255,0.55)" }}>
+                  Saves {formatCurrency(refiInterestSaved, 0, true)} in total interest over the amortization
+                </p>
+              )}
+            </div>
+          );
+        })()}
       </div>
 
       {/* ── Metrics — flush against hero ── */}

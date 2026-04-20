@@ -301,6 +301,7 @@ export function calculateMortgage(
   isFirstTimeBuyer: boolean,
   isNewBuild: boolean,
   currentRate: number = 0,
+  currentMonthlyPayment: number = 0,
   renewalAmortization: number = 0,
 ): MortgageOutputs {
   // ── Loan amount by mode ──────────────────────────────────────────────────
@@ -397,9 +398,13 @@ export function calculateMortgage(
   const loanWithoutCMHC    = isPurchase ? Math.max(0, homePrice * 0.8) : 0;
   const paymentWithoutCMHC  = isPurchase ? calculateMortgagePayment(loanWithoutCMHC, annualRate, amortizationYears, frequency) : 0;
   // Renewal: current payment at old contracted rate + remaining amortization
-  const currentPayment      = isRenewal && currentRate > 0 && currentBalance > 0
-    ? calculateMortgagePayment(currentBalance, currentRate, amortizationYears, frequency)
-    : 0;
+  // Use the actual payment from the user's mortgage statement when provided
+  // Fall back to estimate from currentRate only if not provided
+  const currentPayment = currentMonthlyPayment > 0
+    ? currentMonthlyPayment
+    : (isRenewal || isRefinance) && currentRate > 0 && currentBalance > 0
+      ? calculateMortgagePayment(currentBalance, currentRate, amortizationYears, frequency)
+      : 0;
 
   return {
     periodicPayment,
