@@ -145,7 +145,7 @@ export default function RenewalAmortizationWidget({ inputs, setField }: Props) {
             </div>
 
             <p className="text-sm font-semibold" style={{ color: "var(--ink)" }}>
-              {formatCurrency(samePaymentRow.pmt, 0)}
+              {formatCurrency(samePaymentRow.pmt, 2)}
               <span className="text-xs font-normal ml-0.5" style={{ color: "var(--ink-faint)" }}>/mo</span>
             </p>
 
