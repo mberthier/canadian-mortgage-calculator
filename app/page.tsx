@@ -259,8 +259,8 @@ function BreakdownSection({ outputs, inputs, isPurchase, isRefinance }: {
 }
 
 // ── Empty state, shown before user enters essential fields ──────────────────
-function EmptyState({ mode, hasPrice, hasRate, hasProvince, hasDown }: {
-  mode: string; hasPrice: boolean; hasRate: boolean; hasProvince: boolean; hasDown?: boolean;
+function EmptyState({ mode, hasPrice, hasRate, hasProvince, hasDown, hasPayment }: {
+  mode: string; hasPrice: boolean; hasRate: boolean; hasProvince: boolean; hasDown?: boolean; hasPayment?: boolean;
 }) {
   const steps = mode === "purchase"
     ? [
@@ -271,15 +271,17 @@ function EmptyState({ mode, hasPrice, hasRate, hasProvince, hasDown }: {
       ]
     : mode === "renewal"
       ? [
-          { label: "Province",          done: hasProvince },
-          { label: "Remaining balance", done: hasPrice },
-          { label: "New rate",          done: hasRate  },
+          { label: "Province",           done: hasProvince },
+          { label: "Remaining balance",  done: hasPrice },
+          { label: "Current payment",    done: !!hasPayment },
+          { label: "New rate",           done: hasRate  },
         ]
       : [
-          { label: "Province",       done: hasProvince },
-          { label: "Home value",     done: hasPrice },
-          { label: "Balance owing",  done: hasPrice },
-          { label: "New rate",       done: hasRate  },
+          { label: "Province",           done: hasProvince },
+          { label: "Home value",         done: hasPrice },
+          { label: "Balance owing",      done: hasPrice },
+          { label: "Current payment",    done: !!hasPayment },
+          { label: "New rate",           done: hasRate  },
         ];
 
   const doneCount = steps.filter(s => s.done).length;
@@ -350,8 +352,8 @@ export default function Home() {
   const hasResults = (() => {
     if (!inputs.province) return false; // province required for all modes
     if (isPurchase)  return inputs.homePrice > 0 && inputs.downPaymentPercent > 0 && inputs.interestRate > 0;
-    if (isRenewal)   return inputs.currentBalance > 0 && inputs.interestRate > 0;
-    if (isRefinance) return inputs.homeValue > 0 && inputs.currentBalance > 0 && inputs.interestRate > 0;
+    if (isRenewal)   return inputs.currentBalance > 0 && inputs.interestRate > 0 && inputs.currentMonthlyPayment > 0;
+    if (isRefinance) return inputs.homeValue > 0 && inputs.currentBalance > 0 && inputs.interestRate > 0 && inputs.currentMonthlyPayment > 0;
     return false;
   })();
   const homePrice  = isPurchase ? inputs.homePrice : inputs.homeValue;
@@ -425,6 +427,7 @@ export default function Home() {
                   hasProvince={inputs.province !== ""}
                   hasPrice={isPurchase ? inputs.homePrice > 0 : inputs.homeValue > 0 || inputs.currentBalance > 0}
                   hasDown={inputs.downPaymentPercent > 0}
+                  hasPayment={inputs.currentMonthlyPayment > 0}
                   hasRate={inputs.interestRate > 0}
                 />
               ) : (
