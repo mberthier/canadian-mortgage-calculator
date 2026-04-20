@@ -78,11 +78,12 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
       return `${amount} · ${rate}% · ${amort} years`;
     }
     if (mode === "renewal") {
-      const remaining = inputs.renewalAmortization || amort;
-      const displayAmort = Number.isInteger(remaining)
-        ? `${remaining} years`
-        : `${remaining.toFixed(1)} years`;
-      return `${formatCurrency(inputs.currentBalance, 0, true)} balance · ${rate}% · ${displayAmort} remaining`;
+      const remaining   = inputs.renewalAmortization || amort;
+      const totalMonths = Math.round(remaining * 12);
+      const y = Math.floor(totalMonths / 12);
+      const m = totalMonths % 12;
+      const amortLabel  = m === 0 ? `${y} years` : `${y}y ${m}mo`;
+      return `${formatCurrency(inputs.currentBalance, 0, true)} balance · ${rate}% · ${amortLabel} remaining`;
     }
     if (mode === "refinance") {
       const cashOut = inputs.cashOutAmount > 0
@@ -371,7 +372,7 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
             <Metric label="Principal paid" value={formatCurrency(termPrincipal, 0, true)} sub={`This ${inputs.termYears}-yr term`} tip="How much debt you eliminate during this term." />
             <Metric label="Interest paid" value={formatCurrency(termInterest, 0, true)} sub={`This ${inputs.termYears}-yr term`} tip="Total interest charges this term." highlight />
             <Metric label="Balance at renewal" value={formatCurrency(outputs.termEndBalance, 0, true)} sub={`After ${inputs.termYears}-yr term`} tip="Your outstanding balance when this term ends." />
-            <Metric label="Total interest left" value={formatCurrency(outputs.totalInterest, 0, true)} sub={`Over ${(() => { const r = inputs.renewalAmortization || inputs.amortizationYears; return Number.isInteger(r) ? r : r.toFixed(1); })()} yr remaining`} tip="Total interest remaining over your full amortization from today." />
+            <Metric label="Total interest left" value={formatCurrency(outputs.totalInterest, 0, true)} sub={`Over ${(() => { const r = inputs.renewalAmortization || inputs.amortizationYears; const tm = Math.round(r * 12); const y = Math.floor(tm/12); const m = tm%12; return m === 0 ? `${y} yr` : `${y}y ${m}mo`; })()} remaining`} tip="Total interest remaining over your full amortization from today." />
           </div>
         )}
         {mode === "refinance" && (

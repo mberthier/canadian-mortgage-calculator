@@ -12,16 +12,6 @@ interface Props {
 
 const AMORT_OPTIONS = [15, 20, 25, 30];
 
-// Convert decimal years to "Xy Zm" display format
-function formatYearsMonths(years: number): string {
-  const totalMonths = Math.round(years * 12);
-  const y = Math.floor(totalMonths / 12);
-  const m = totalMonths % 12;
-  if (m === 0) return `${y} yr`;
-  if (y === 0) return `${m} mo`;
-  return `${y}y ${m}mo`;
-}
-
 function computeRow(balance: number, rate: number, years: number, frequency: string) {
   const pmt      = calculateMortgagePayment(balance, rate, years, frequency as any);
   const ppy      = getPaymentsPerYear(frequency as any);
@@ -88,7 +78,7 @@ export default function RenewalAmortizationWidget({ inputs, setField }: Props) {
       const interestSaved = formatCurrency(baseRow.interest - samePaymentRow.interest, 0);
       const yearsEarlier  = Math.round(current - samePaymentRow.years);
       if (yearsEarlier > 0) {
-        return `Keeping your current payment means you'd be mortgage-free in ${formatYearsMonths(samePaymentRow.years)} — ${yearsEarlier} year${yearsEarlier !== 1 ? "s" : ""} earlier than your selected option — and save ${interestSaved} in interest at no extra cost.`;
+        return `Keeping your current payment means you'd be mortgage-free in ${samePaymentRow.years.toFixed(1)} yrs — ${yearsEarlier} year${yearsEarlier !== 1 ? "s" : ""} earlier than your selected option — and save ${interestSaved} in interest at no extra cost.`;
       }
     }
     const maxOption = Math.max(...AMORT_OPTIONS);
@@ -150,7 +140,7 @@ export default function RenewalAmortizationWidget({ inputs, setField }: Props) {
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-sm font-semibold" style={{ color: "#16a34a" }}>
-                  {formatYearsMonths(samePaymentRow.years)}
+                  {samePaymentRow.years.toFixed(1)} yrs
                 </span>
                 <span className="text-xs px-1.5 py-0.5 rounded-full font-medium"
                   style={{ background: "#16a34a", color: "#fff" }}>

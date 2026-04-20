@@ -467,14 +467,6 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
       ══════════════════════════════════════════════════════════════ */}
       {mode === "renewal" && (
         <>
-          {/* ── PROVINCE FIRST ─────────────────────────────── */}
-          <SelectField id="province-renewal" label="Where is your property?"
-            tip="Province affects applicable rules and any provincial calculations."
-            value={inputs.province} onChange={(v) => setField("province", v)}>
-            <option value="">Select your province</option>
-            {PROVINCES.map((p) => <option key={p.code} value={p.code}>{p.name}</option>)}
-          </SelectField>
-
           {/* ── ESSENTIAL ──────────────────────────────────── */}
           <CurrencyInput id="balance" label="Remaining balance"
             tip="Your outstanding mortgage balance at renewal."
@@ -593,14 +585,6 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
       ══════════════════════════════════════════════════════════════ */}
       {mode === "refinance" && (
         <>
-          {/* ── PROVINCE FIRST ─────────────────────────────── */}
-          <SelectField id="province-refi" label="Where is your property?"
-            tip="Province affects applicable rules and calculations."
-            value={inputs.province} onChange={(v) => setField("province", v)}>
-            <option value="">Select your province</option>
-            {PROVINCES.map((p) => <option key={p.code} value={p.code}>{p.name}</option>)}
-          </SelectField>
-
           {/* ── ESSENTIAL ──────────────────────────────────── */}
           <CurrencyInput id="home-value" label="Home value"
             tip="Current market value. Refinances are capped at 80% loan-to-value."
