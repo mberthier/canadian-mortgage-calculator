@@ -165,7 +165,7 @@ export default function RenewalAmortizationWidget({ inputs, setField }: Props) {
                   : "—"}
               </span>
               <button
-                onClick={() => setField("renewalAmortization", Math.round(samePaymentRow.years))}
+                onClick={() => setField("renewalAmortization", samePaymentRow.years)}
                 className="text-xs px-2.5 py-1 rounded-lg font-medium transition-colors shrink-0"
                 style={{ background: "#16a34a", color: "#fff" }}>
                 Select
