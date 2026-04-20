@@ -309,8 +309,8 @@ export function calculateMortgage(
   const isRenewal   = mode === "renewal";
   const isRefinance = mode === "refinance";
 
-  // For renewal: use renewalAmortization if > 0, otherwise fall back to amortizationYears
-  const amortForCalc = isRenewal && renewalAmortization > 0 ? renewalAmortization : amortizationYears;
+  // Renewal uses renewalAmortization directly; purchase/refinance use amortizationYears
+  const amortForCalc = isRenewal ? (renewalAmortization > 0 ? renewalAmortization : 25) : amortizationYears;
 
   const minimumDownPayment = isPurchase ? calculateMinimumDownPayment(homePrice) : 0;
   const isValidDownPayment = isPurchase

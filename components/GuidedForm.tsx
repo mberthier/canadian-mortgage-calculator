@@ -497,28 +497,18 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
             open={showRefine}
             onToggle={() => setShowRefine(o => !o)}
             label="Refine your estimate"
-            hint="Add your current rate and term details" />
+            hint="Adjust amortization, term, and payment frequency" />
 
           {showRefine && (
             <div className="space-y-4 pt-1">
-              <RateInput id="current-rate" label="Current (expiring) rate"
-                tip="Your existing contracted rate, used to show how your payment changes at renewal."
-                value={inputs.currentRate} onChange={(v) => setField("currentRate", v)} />
-
-              <SelectField id="amort-renewal" label="Remaining amortization"
-                tip="Years left on your original amortization schedule."
-                value={inputs.amortizationYears} onChange={(v) => setField("amortizationYears", Number(v))}>
-                {AMORTIZATION_OPTIONS.map((y) => <option key={y} value={y}>{y} years</option>)}
-              </SelectField>
-
               <div className="grid grid-cols-2 gap-3">
                 <SelectField id="new-term" label="New term"
                   tip="The length of the new contract you are renewing into."
                   value={inputs.termYears} onChange={(v) => setField("termYears", Number(v))}>
                   {TERM_OPTIONS.map((y) => <option key={y} value={y}>{y} yr{y !== 1 ? "s" : ""}</option>)}
                 </SelectField>
-                <SelectField id="new-amort" label="New amortization"
-                  tip="You can extend or shorten at renewal. Shorter saves more in interest; longer lowers the payment."
+                <SelectField id="new-amort" label="Amortization"
+                  tip="Shorter saves more in total interest. Longer lowers your payment but costs more over time. See the trade-off table in your results."
                   value={inputs.renewalAmortization} onChange={(v) => setField("renewalAmortization", Number(v))}>
                   {AMORTIZATION_OPTIONS.map((y) => <option key={y} value={y}>{y} yrs</option>)}
                 </SelectField>
@@ -531,14 +521,6 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
                   <option key={k} value={k}>{v}</option>
                 ))}
               </SelectField>
-
-              {outputs.currentPayment > 0 && (
-                <div className="rounded-lg px-3 py-2.5 text-sm flex justify-between border"
-                  style={{ background: "#fafafa", borderColor: "#e8e8e8" }}>
-                  <span style={{ color: "var(--ink-mid)" }}>Current payment at {inputs.currentRate.toFixed(2)}%</span>
-                  <span className="font-semibold text-neutral-800">{formatCurrency(outputs.currentPayment, 2)}</span>
-                </div>
-              )}
             </div>
           )}
 

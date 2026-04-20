@@ -15,6 +15,7 @@ import PrincipalInterestByYear from "@/components/PrincipalInterestByYear";
 import AmortizationTable from "@/components/AmortizationTable";
 import StressTest from "@/components/StressTest";
 import BrokerMatchCard from "@/components/BrokerMatchCard";
+import RenewalAmortizationWidget from "@/components/RenewalAmortizationWidget";
 import AffordabilityCalculator from "@/components/AffordabilityCalculator";
 import MortgageComparison from "@/components/MortgageComparison";
 import ShareButton from "@/components/ShareButton";
@@ -435,6 +436,11 @@ export default function Home() {
               <SummaryCards outputs={outputs} inputs={inputs} shareURL={shareURL} />
 
               {/* Insights */}
+              {/* Amortization trade-off widget — renewal only */}
+              {isRenewal && (
+                <RenewalAmortizationWidget inputs={inputs} setField={setField} />
+              )}
+
               <InsightsPanel inputs={inputs} outputs={outputs} />
 
               {/* Can you afford this? — purchase only */}
