@@ -596,7 +596,10 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
                 { key: "equity",   label: "Access equity",    sub: "Pull cash out for reno, invest, or debt" },
               ] as const).map(({ key, label, sub }) => (
                 <button key={key} type="button"
-                  onClick={() => setField("refiScenario", key)}
+                  onClick={() => {
+                    setField("refiScenario", key);
+                    if (key !== "equity") setField("cashOutAmount", 0);
+                  }}
                   className="w-full flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium border transition-all text-left"
                   style={inputs.refiScenario === key || (!inputs.refiScenario && key === "rate") ? {
                     background: "var(--green-light)", color: "var(--green)", borderColor: "var(--green-border)",
