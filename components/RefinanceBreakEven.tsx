@@ -72,31 +72,37 @@ export default function RefinanceBreakEven({ inputs, outputs }: Props) {
 
   // Same time-horizon interest comparison (over monthsRemaining)
   const ppy = getPaymentsPerYear(paymentFrequency);
-  const periodsRemaining = Math.round(monthsRemainingInTerm / 12 * ppy);
+  // ── Same time-horizon comparison (monthsRemainingInTerm) ────────────────
+  // Compares total true cost: cash out of pocket + remaining balance difference
+  // Uses monthly compounding steps (semi-annual compounding periodic rate)
+  const currentMonthlyRate = Math.pow(Math.pow(1 + currentRate / 200, 2), 1/12) - 1;
+  const newMonthlyRate     = Math.pow(Math.pow(1 + interestRate / 200, 2), 1/12) - 1;
 
-  // Path A: stay — interest = sum of interest portion of current payments
-  // Simplified: current payment × periods - principal reduction
-  const currentMonthlyRate  = Math.pow(Math.pow(1 + currentRate / 200, 2), 1/12) - 1;
-  let pathAInterest = 0;
-  let pathABalance  = currentBalance;
-  for (let i = 0; i < periodsRemaining && pathABalance > 0; i++) {
-    const interest = pathABalance * currentMonthlyRate;
-    pathAInterest += interest;
-    pathABalance  -= (currentMonthlyPayment / (ppy / 12) - interest);
+  // Path A: stay — run current payment for monthsRemainingInTerm months
+  let pathABalance = currentBalance;
+  let pathACash    = 0;
+  for (let i = 0; i < monthsRemainingInTerm && pathABalance > 0; i++) {
+    const interest   = pathABalance * currentMonthlyRate;
+    const principal  = Math.min(currentMonthlyPayment - interest, pathABalance);
+    pathACash       += interest + principal;
+    pathABalance    -= principal;
   }
 
-  // Path B: break — interest on new mortgage for same period + penalty
-  const newMonthlyRate = Math.pow(Math.pow(1 + interestRate / 200, 2), 1/12) - 1;
-  let pathBInterest = penalty.amount; // penalty treated as upfront interest cost
-  let pathBBalance  = currentBalance + (cashOutAmount || 0);
-  for (let i = 0; i < periodsRemaining && pathBBalance > 0; i++) {
-    const interest = pathBBalance * newMonthlyRate;
-    pathBInterest += interest;
-    pathBBalance  -= (newPayment / (ppy / 12) - interest);
+  // Path B: break — pay penalty upfront, then new payment for same period
+  let pathBBalance = currentBalance + (cashOutAmount || 0);
+  let pathBCash    = penalty.amount; // penalty is immediate cash cost
+  for (let i = 0; i < monthsRemainingInTerm && pathBBalance > 0; i++) {
+    const interest  = pathBBalance * newMonthlyRate;
+    const principal = Math.min(newPayment - interest, pathBBalance);
+    pathBCash      += interest + principal;
+    pathBBalance   -= principal;
   }
 
-  const netSavingOverTerm = Math.round(pathAInterest - pathBInterest);
-  const worthBreaking     = netSavingOverTerm > 0;
+  // True saving = Path A total cost − Path B total cost
+  // If Path B has higher remaining balance, it's a cost (you still owe more)
+  const balanceDiff        = pathBBalance - pathABalance; // positive = B owes more
+  const netSavingOverTerm  = Math.round((pathACash - pathBCash) - balanceDiff);
+  const worthBreaking      = netSavingOverTerm > 0;
 
   const tabs = [
     { key: "rate",      label: "Lower rate" },
