@@ -368,7 +368,7 @@ export default function RefinanceBreakEven({ inputs, outputs, setField }: Props)
         {/* Bank warning */}
         {penaltyEst.bankWarning && knownPenalty === 0 && (
           <p className="text-xs mt-3" style={faint}>
-            ⚠ Bank penalties are often 2–3× higher than estimates because they use posted rates for their calculation. Call your bank for the exact number before deciding.
+Bank penalties are often 2–3× higher than estimates because they use posted rates for their calculation. Call your bank for the exact number before deciding.
           </p>
         )}
 
@@ -606,28 +606,34 @@ export default function RefinanceBreakEven({ inputs, outputs, setField }: Props)
       </div>
 
       {/* ── Section 3: Considerations ── */}
-      <div className="px-6 py-4 space-y-3">
+      <div className="px-6 py-4 space-y-3" style={{ borderTop: "1px solid rgba(0,0,0,0.05)" }}>
 
         {/* Same-payment insight */}
         {samePayAmort && monthlySavingSame > 0 && (
-          <p className="text-sm" style={mid}>
-            💡 If you keep paying {formatCurrency(currentMonthlyPayment, 0)}/month after breaking, you'd be mortgage-free in{" "}
-            <span className="font-semibold" style={ink}>{Math.round(samePayAmort * 10) / 10} years</span>{" "}
-            instead of {Math.round(sameAmort * 10) / 10} years — and save more in total interest.
-          </p>
+          <div className="flex gap-3 text-sm">
+            <span className="w-1.5 h-1.5 rounded-full shrink-0 mt-1.5" style={{ background: "var(--green)" }} />
+            <p style={mid}>
+              If you keep paying {formatCurrency(currentMonthlyPayment, 0)}/month after breaking, you'd be mortgage-free in{" "}
+              <span className="font-semibold" style={ink}>{Math.round(samePayAmort * 10) / 10} years</span>{" "}
+              instead of {Math.round(sameAmort * 10) / 10} years.
+            </p>
+          </div>
         )}
 
         {/* Prepayment impact */}
-        <p className="text-sm" style={mid}>
-          💡 After refinancing, your annual lump sum allowance{" "}
-          {lumpNew !== lumpCurr
-            ? <>changes from <span className="font-semibold" style={ink}>{formatCurrency(lumpCurr, 0, true)}</span> to <span className="font-semibold" style={ink}>{formatCurrency(lumpNew, 0, true)}</span></>
-            : <>stays at <span className="font-semibold" style={ink}>{formatCurrency(lumpNew, 0, true)}</span></>
-          }{" "}and your payment increase ceiling drops from{" "}
-          <span className="font-semibold" style={ink}>+{formatCurrency(pmtIncCurr, 0)}/mo</span> to{" "}
-          <span className="font-semibold" style={ink}>+{formatCurrency(pmtIncSame, 0)}/mo</span>.{" "}
-          <span style={faint}>(Based on a 20% prepayment privilege — check your contract.)</span>
-        </p>
+        <div className="flex gap-3 text-sm">
+          <span className="w-1.5 h-1.5 rounded-full shrink-0 mt-1.5" style={{ background: "var(--green)" }} />
+          <p style={mid}>
+            Your annual lump sum allowance{" "}
+            {lumpNew !== lumpCurr
+              ? <>changes from <span className="font-semibold" style={ink}>{formatCurrency(lumpCurr, 0, true)}</span> to <span className="font-semibold" style={ink}>{formatCurrency(lumpNew, 0, true)}</span></>
+              : <>stays at <span className="font-semibold" style={ink}>{formatCurrency(lumpNew, 0, true)}</span></>
+            }{" "}and your payment increase ceiling drops from{" "}
+            <span className="font-semibold" style={ink}>+{formatCurrency(pmtIncCurr, 0)}/mo</span> to{" "}
+            <span className="font-semibold" style={ink}>+{formatCurrency(pmtIncSame, 0)}/mo</span>.{" "}
+            <span style={faint}>(Based on 20% prepayment privilege — check your contract.)</span>
+          </p>
+        </div>
       </div>
 
       {/* Footer */}

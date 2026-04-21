@@ -743,8 +743,8 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
               </div>
 
               <SelectField id="new-amort-refi" label="New amortization"
-                tip="Change this to model extending or shortening your payoff timeline. Shorter = more interest saved. Longer = lower monthly payment."
-                value={inputs.amortizationYears} onChange={(v) => setField("amortizationYears", Number(v))}>
+                tip="Leave at default to match your calculated remaining amortization. Extend to lower your payment, shorten to build equity faster."
+                value={inputs.amortizationYears > 0 ? inputs.amortizationYears : 25} onChange={(v) => setField("amortizationYears", Number(v))}>
                 {AMORTIZATION_OPTIONS.map((y) => <option key={y} value={y}>{y} yrs</option>)}
               </SelectField>
 

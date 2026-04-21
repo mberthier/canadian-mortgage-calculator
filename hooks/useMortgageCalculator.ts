@@ -127,7 +127,7 @@ function freshRefinance(overrides: Partial<MortgageInputs> = {}): MortgageInputs
     cashOutAmount: 0,
     monthsRemainingInTerm: 0, lenderType: "bank" as const, knownPenalty: 0, refiScenario: "rate" as const,
     interestRate:      overrides.interestRate      ?? 0,
-    amortizationYears: overrides.amortizationYears ?? DEFAULTS.amortizationYears,
+    amortizationYears: overrides.amortizationYears ?? 0, // 0 = use calculated remaining from widget
     termYears:         overrides.termYears         ?? DEFAULTS.termYears,
     paymentFrequency:  overrides.paymentFrequency  ?? DEFAULTS.paymentFrequency,
     propertyTax: 0, condoFees: 0, heatingCost: 0, homeInsurance: 0,
