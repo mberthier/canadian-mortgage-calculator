@@ -585,6 +585,38 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
       ══════════════════════════════════════════════════════════════ */}
       {mode === "refinance" && (
         <>
+          {/* ── SCENARIO SELECTOR ─────────────────────────── */}
+          <div>
+            <label className={lbl}>What do you want to do?</label>
+            <div className="space-y-2">
+              {([
+                { key: "rate",     label: "Lower my rate",    sub: "Same payoff timeline, better rate" },
+                { key: "cashflow", label: "Lower my payment", sub: "Extend to 25 years, free up cashflow" },
+                { key: "equity",   label: "Access equity",    sub: "Pull cash out for reno, invest, or debt" },
+              ] as const).map(({ key, label, sub }) => (
+                <button key={key} type="button"
+                  onClick={() => setField("refiScenario", key)}
+                  className="w-full flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium border transition-all text-left"
+                  style={inputs.refiScenario === key || (!inputs.refiScenario && key === "rate") ? {
+                    background: "var(--green-light)", color: "var(--green)", borderColor: "var(--green-border)",
+                  } : {
+                    background: "#fff", color: "var(--ink-mid)", borderColor: "#e7e5e4",
+                  }}>
+                  <div>
+                    <p className="font-semibold text-sm">{label}</p>
+                    <p className="text-xs mt-0.5" style={{ color: "var(--ink-faint)" }}>{sub}</p>
+                  </div>
+                  {(inputs.refiScenario === key || (!inputs.refiScenario && key === "rate")) && (
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <circle cx="8" cy="8" r="7" fill="var(--green)"/>
+                      <path d="M5 8l2 2 4-4" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* ── ESSENTIAL ──────────────────────────────────── */}
           <CurrencyInput id="home-value" label="Home value"
             tip="Current market value. Refinances are capped at 80% loan-to-value."

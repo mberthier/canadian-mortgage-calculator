@@ -27,6 +27,7 @@ export interface MortgageInputs {
   monthsRemainingInTerm: number; // refinance: months left in current term
   lenderType:          "bank" | "broker"; // refinance: affects IRD calculation
   knownPenalty:        number;   // refinance: user-supplied break penalty (overrides estimate)
+  refiScenario:        "rate" | "cashflow" | "equity"; // refinance: selected scenario
 
   // Common
   interestRate:       number;

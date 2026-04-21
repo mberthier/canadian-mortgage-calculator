@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { MortgageInputs, MortgageOutputs } from "@/lib/types";
 import { formatCurrency } from "@/lib/formatters";
 import { calculateMortgagePayment } from "@/lib/mortgageMath";
@@ -53,7 +53,7 @@ function runPath(balance: number, rate: number, payment: number, months: number)
 
 export default function RefinanceBreakEven({ inputs, outputs, setField }: Props) {
   const [showBreakdown, setShowBreakdown] = useState(false);
-  const [activeReason, setActiveReason] = useState<"rate" | "cashflow" | "equity">("rate");
+  const activeReason = inputs.refiScenario || "rate";
 
   const {
     currentBalance, currentRate, interestRate, currentMonthlyPayment,
@@ -206,42 +206,6 @@ export default function RefinanceBreakEven({ inputs, outputs, setField }: Props)
 
       {/* ── Section 1: The answer ── */}
       <div className="px-6 pt-5 pb-5" style={divider}>
-
-        {/* Three reasons — always visible at top */}
-        <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={faint}>
-          Why are you considering refinancing?
-        </p>
-        <div className="grid grid-cols-3 gap-2 mb-4">
-          {([
-            { key: "rate",      label: "Lower my rate",      desc: "Same payoff timeline, lower interest." },
-            { key: "cashflow",  label: "Lower my payment",   desc: "Extend to 25yr to free up cashflow." },
-            { key: "equity",    label: "Access equity",      desc: "Pull cash out for reno, invest, or debt." },
-          ] as const).map(({ key, label, desc }) => (
-            <button key={key} type="button"
-              onClick={() => {
-                setActiveReason(key);
-                if (key === "rate" && a) {
-                  setField("amortizationYears", Math.round(a.sameAmort));
-                } else if (key === "cashflow") {
-                  setField("amortizationYears", 25);
-                } else if (key === "equity" && a) {
-                  setField("amortizationYears", Math.round(a.sameAmort));
-                }
-              }}
-              className="rounded-xl px-3 py-2.5 text-left transition-all"
-              style={activeReason === key ? {
-                background: "var(--green-light)",
-                border: "1.5px solid var(--green-border)",
-              } : {
-                background: "#fafaf8",
-                border: "1px solid rgba(0,0,0,0.06)",
-              }}>
-              <p className="text-xs font-semibold"
-                style={{ color: activeReason === key ? "var(--green)" : "var(--ink)" }}>{label}</p>
-              <p className="text-xs mt-0.5 leading-snug" style={faint}>{desc}</p>
-            </button>
-          ))}
-        </div>
 
         {/* Cash-out prompt — equity scenario only */}
         {activeReason === "equity" && (
