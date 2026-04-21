@@ -275,6 +275,28 @@ export function calculateBreakPenalty(
   return { threeMonthInterest, ird, penalty, isIRD };
 }
 
+// ─── Remaining amortization solver ───────────────────────────────────────────
+
+export function solveRemainingAmortization(
+  balance: number,
+  annualRate: number,
+  monthlyPayment: number,
+): number | null {
+  if (balance <= 0 || annualRate <= 0 || monthlyPayment <= 0) return null;
+  const minPmt = calculateMortgagePayment(balance, annualRate, 30, "monthly");
+  if (monthlyPayment < minPmt) return null;
+  const maxPmt = calculateMortgagePayment(balance, annualRate, 1, "monthly");
+  if (monthlyPayment >= maxPmt) return 1;
+  let lo = 0.5, hi = 30;
+  for (let i = 0; i < 100; i++) {
+    const mid = (lo + hi) / 2;
+    const pmt = calculateMortgagePayment(balance, annualRate, mid, "monthly");
+    if (Math.abs(pmt - monthlyPayment) < 0.005) return mid;
+    pmt > monthlyPayment ? lo = mid : hi = mid;
+  }
+  return (lo + hi) / 2;
+}
+
 // ─── Main calculation ────────────────────────────────────────────────────────
 
 export function calculateMortgage(
@@ -309,11 +331,17 @@ export function calculateMortgage(
   const isRenewal   = mode === "renewal";
   const isRefinance = mode === "refinance";
 
-  // Renewal uses renewalAmortization directly; purchase/refinance use amortizationYears
-  // Refinance defaults to 25 when amortizationYears=0 (widget will override via useEffect)
+  // Renewal: use renewalAmortization
+  // Refinance: when amortizationYears=0, solve from current balance/rate/payment
+  // Purchase: use amortizationYears directly
+  const solvedRefinanceAmort = isRefinance && amortizationYears === 0 && currentMonthlyPayment > 0
+    ? solveRemainingAmortization(currentBalance, currentRate, currentMonthlyPayment)
+    : null;
   const amortForCalc = isRenewal
     ? (renewalAmortization > 0 ? renewalAmortization : 25)
-    : (amortizationYears > 0 ? amortizationYears : 25);
+    : isRefinance
+      ? (amortizationYears > 0 ? amortizationYears : (solvedRefinanceAmort ?? 25))
+      : amortizationYears;
 
   const minimumDownPayment = isPurchase ? calculateMinimumDownPayment(homePrice) : 0;
   const isValidDownPayment = isPurchase

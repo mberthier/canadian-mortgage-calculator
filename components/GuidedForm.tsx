@@ -16,6 +16,7 @@ interface Props {
     interestSavedByLumpSums: number;
     paymentsSavedByLumpSums: number;
     currentPayment:         number;
+    effectiveAmortizationYears: number;
     ltt: { net: number; provincial: number; municipal: number; firstTimeBuyerRebate: number };
     gstHst: { net: number };
   };
@@ -742,11 +743,18 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
                 )}
               </div>
 
-              <SelectField id="new-amort-refi" label="New amortization"
-                tip="Leave at default to match your calculated remaining amortization. Extend to lower your payment, shorten to build equity faster."
-                value={inputs.amortizationYears > 0 ? inputs.amortizationYears : 25} onChange={(v) => setField("amortizationYears", Number(v))}>
-                {AMORTIZATION_OPTIONS.map((y) => <option key={y} value={y}>{y} yrs</option>)}
-              </SelectField>
+              <div>
+                <label htmlFor="new-amort-refi" className={`${lbl} flex items-center`}>
+                  New amortization
+                  <Tooltip content="Leave at default to match your calculated remaining amortization. Extend to lower your payment, shorten to build equity faster." />
+                </label>
+                <select id="new-amort-refi"
+                  className={sel}
+                  value={inputs.amortizationYears > 0 ? inputs.amortizationYears : Math.round(outputs.effectiveAmortizationYears) || 25}
+                  onChange={(e) => setField("amortizationYears", Number(e.target.value))}>
+                  {AMORTIZATION_OPTIONS.map((y) => <option key={y} value={y}>{y} yrs</option>)}
+                </select>
+              </div>
 
               <CurrencyInput id="cash-out" label="Cash-out amount"
                 tip="Equity to access for renovation, investment, or debt consolidation. Total loan cannot exceed 80% of home value."

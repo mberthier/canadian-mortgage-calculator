@@ -3,7 +3,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { MortgageInputs, MortgageOutputs } from "@/lib/types";
 import { formatCurrency } from "@/lib/formatters";
-import { calculateMortgagePayment } from "@/lib/mortgageMath";
+import { calculateMortgagePayment, solveRemainingAmortization } from "@/lib/mortgageMath";
 
 interface Props {
   inputs:   MortgageInputs;
@@ -12,21 +12,6 @@ interface Props {
 }
 
 // ── Math helpers ─────────────────────────────────────────────────────────────
-
-function solveRemainingAmortization(balance: number, rate: number, payment: number): number | null {
-  const minPmt = calculateMortgagePayment(balance, rate, 30, "monthly");
-  if (payment < minPmt) return null;
-  const maxPmt = calculateMortgagePayment(balance, rate, 1, "monthly");
-  if (payment >= maxPmt) return 1;
-  let lo = 0.5, hi = 30;
-  for (let i = 0; i < 100; i++) {
-    const mid = (lo + hi) / 2;
-    const pmt = calculateMortgagePayment(balance, rate, mid, "monthly");
-    if (Math.abs(pmt - payment) < 0.005) return mid;
-    pmt > payment ? lo = mid : hi = mid;
-  }
-  return (lo + hi) / 2;
-}
 
 function estimatePenalty(balance: number, currentRate: number, newRate: number, months: number, lenderType: "bank" | "broker") {
   const threeMonth   = Math.round(balance * (currentRate / 100) / 12 * 3);
@@ -134,6 +119,18 @@ export default function RefinanceBreakEven({ inputs, outputs, setField }: Props)
   }, [currentBalance, currentRate, interestRate, currentMonthlyPayment,
       monthsRemainingInTerm, lenderType, knownPenalty, cashOutAmount,
       amortizationYears, paymentFrequency, homeValue]);
+
+  // For cashflow scenario: set amortizationYears=25 so mortgageMath uses it
+  // For rate/equity: keep amortizationYears=0 so mortgageMath uses the solver
+  useEffect(() => {
+    if (!a) return;
+    if (activeReason === "cashflow" && inputs.amortizationYears !== 25) {
+      setField("amortizationYears", 25);
+    } else if ((activeReason === "rate" || activeReason === "equity") && inputs.amortizationYears !== 0) {
+      setField("amortizationYears", 0);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeReason]);
 
   if (!a) return null;
 

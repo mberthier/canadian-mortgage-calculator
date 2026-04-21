@@ -406,6 +406,7 @@ export default function Home() {
                     interestSavedByLumpSums: outputs.interestSavedByLumpSums,
                     paymentsSavedByLumpSums: outputs.paymentsSavedByLumpSums,
                     currentPayment: outputs.currentPayment,
+                    effectiveAmortizationYears: outputs.effectiveAmortizationYears,
                     ltt: outputs.ltt,
                     gstHst: outputs.gstHst,
                   }}

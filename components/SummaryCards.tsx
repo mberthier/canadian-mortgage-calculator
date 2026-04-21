@@ -83,7 +83,12 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
       const cashOut = inputs.cashOutAmount > 0
         ? ` incl. ${formatCurrency(inputs.cashOutAmount, 0)} cash-out`
         : "";
-      return `${formatCurrency(outputs.loanAmount, 0, true)} refinanced${cashOut} · ${rate}% · ${amort} years`;
+      const effAmort  = outputs.effectiveAmortizationYears;
+      const totalMonths = Math.round(effAmort * 12);
+      const y = Math.floor(totalMonths / 12);
+      const m = totalMonths % 12;
+      const amortLabel = m === 0 ? `${y} years` : `${y}y ${m}mo`;
+      return `${formatCurrency(outputs.loanAmount, 0, true)} refinanced${cashOut} · ${rate}% · ${amortLabel}`;
     }
     return "";
   })();
@@ -367,7 +372,7 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
             <Metric label="Principal paid" value={formatCurrency(termPrincipal, 0, true)} sub={`This ${inputs.termYears}-yr term`} tip="How much of your refinanced balance you pay down during this term." />
             <Metric label="Interest paid" value={formatCurrency(termInterest, 0, true)} sub={`This ${inputs.termYears}-yr term`} tip="Total interest charges during this new term." />
             <Metric label="Balance at renewal" value={formatCurrency(outputs.termEndBalance, 0, true)} sub={`After ${inputs.termYears}-yr term`} tip="What you will owe when this new term ends." />
-            <Metric label="Total interest" value={formatCurrency(outputs.totalInterest, 0, true)} sub={`Over ${inputs.amortizationYears} years`} tip="Total interest on the refinanced mortgage over the full amortization." highlight />
+            <Metric label="Total interest" value={formatCurrency(outputs.totalInterest, 0, true)} sub={`Over ${Math.round(outputs.effectiveAmortizationYears * 10) / 10} years`} tip="Total interest on the refinanced mortgage over the full amortization." highlight />
           </div>
         )}
       </div>
