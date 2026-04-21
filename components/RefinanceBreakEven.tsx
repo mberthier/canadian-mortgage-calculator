@@ -213,12 +213,21 @@ export default function RefinanceBreakEven({ inputs, outputs, setField }: Props)
         </p>
         <div className="grid grid-cols-3 gap-2 mb-4">
           {([
-            { key: "rate",      label: "Lower my rate",      desc: "Break early to get a better rate and save on interest." },
-            { key: "cashflow",  label: "Lower my payment",   desc: "Extend your amortization to free up monthly cashflow." },
-            { key: "equity",    label: "Access equity",      desc: "Pull out equity for renovation, investment, or debt." },
+            { key: "rate",      label: "Lower my rate",      desc: "Same payoff timeline, lower interest." },
+            { key: "cashflow",  label: "Lower my payment",   desc: "Extend to 25yr to free up cashflow." },
+            { key: "equity",    label: "Access equity",      desc: "Pull cash out for reno, invest, or debt." },
           ] as const).map(({ key, label, desc }) => (
             <button key={key} type="button"
-              onClick={() => setActiveReason(key)}
+              onClick={() => {
+                setActiveReason(key);
+                if (key === "rate" && a) {
+                  setField("amortizationYears", Math.round(a.sameAmort));
+                } else if (key === "cashflow") {
+                  setField("amortizationYears", 25);
+                } else if (key === "equity" && a) {
+                  setField("amortizationYears", Math.round(a.sameAmort));
+                }
+              }}
               className="rounded-xl px-3 py-2.5 text-left transition-all"
               style={activeReason === key ? {
                 background: "var(--green-light)",
@@ -233,6 +242,55 @@ export default function RefinanceBreakEven({ inputs, outputs, setField }: Props)
             </button>
           ))}
         </div>
+
+        {/* Cash-out prompt — equity scenario only */}
+        {activeReason === "equity" && (
+          <div className="mb-4 rounded-xl p-4"
+            style={{ background: "#fafaf8", border: "1px solid rgba(0,0,0,0.06)" }}>
+            <p className="text-xs font-semibold mb-2" style={{ color: "var(--ink)" }}>
+              How much equity do you want to access?
+            </p>
+            {inputs.homeValue > 0 && (
+              <p className="text-xs mb-3" style={faint}>
+                Maximum available:{" "}
+                <span className="font-semibold" style={{ color: "var(--green)" }}>
+                  {formatCurrency(Math.max(0, inputs.homeValue * 0.8 - currentBalance), 0, true)}
+                </span>
+                {" "}(80% of home value − current balance)
+              </p>
+            )}
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm"
+                style={{ color: "var(--ink-faint)" }}>$</span>
+              <input
+                type="text"
+                inputMode="numeric"
+                value={inputs.cashOutAmount > 0 ? inputs.cashOutAmount.toLocaleString("en-CA") : ""}
+                onChange={(e) => {
+                  const v = parseFloat(e.target.value.replace(/,/g, ""));
+                  setField("cashOutAmount", isNaN(v) ? 0 : v);
+                }}
+                placeholder="e.g. 50,000"
+                className="w-full pl-7 pr-3 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2"
+                style={{
+                  borderColor: "rgba(0,0,0,0.12)",
+                  background: "#fff",
+                  color: "var(--ink)",
+                }}
+              />
+            </div>
+            {inputs.homeValue > 0 && inputs.cashOutAmount > 0 && inputs.cashOutAmount > Math.max(0, inputs.homeValue * 0.8 - currentBalance) && (
+              <p className="text-xs mt-2" style={{ color: "#ef4444" }}>
+                Exceeds 80% LTV cap. Reduce the amount or check your home value.
+              </p>
+            )}
+            {inputs.cashOutAmount > 0 && (
+              <p className="text-xs mt-2" style={{ color: "var(--green)" }}>
+                New mortgage balance: {formatCurrency(currentBalance + inputs.cashOutAmount, 0, true)}
+              </p>
+            )}
+          </div>
+        )}
 
         {/* Rate context */}
         <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={faint}>
