@@ -445,7 +445,7 @@ export default function Home() {
 
               {/* Break-even analysis — refinance only */}
               {isRefinance && (
-                <RefinanceBreakEven inputs={inputs} outputs={outputs} />
+                <RefinanceBreakEven inputs={inputs} outputs={outputs} setField={setField} />
               )}
 
               <InsightsPanel inputs={inputs} outputs={outputs} />

@@ -6,8 +6,9 @@ import { formatCurrency } from "@/lib/formatters";
 import { calculateMortgagePayment } from "@/lib/mortgageMath";
 
 interface Props {
-  inputs:  MortgageInputs;
-  outputs: MortgageOutputs;
+  inputs:    MortgageInputs;
+  outputs:   MortgageOutputs;
+  setField:  <K extends keyof MortgageInputs>(key: K, value: MortgageInputs[K]) => void;
 }
 
 function solveRemainingAmortization(balance: number, annualRate: number, monthlyPayment: number): number | null {
@@ -46,7 +47,7 @@ function runPath(balance: number, annualRate: number, payment: number, months: n
   return { interest: Math.round(interest), principal: Math.round(principal), endBalance: Math.round(bal) };
 }
 
-export default function RefinanceBreakEven({ inputs }: Props) {
+export default function RefinanceBreakEven({ inputs, setField }: Props) {
   const {
     currentBalance, currentRate, interestRate, currentMonthlyPayment,
     monthsRemainingInTerm, lenderType, knownPenalty, cashOutAmount,
@@ -109,6 +110,14 @@ export default function RefinanceBreakEven({ inputs }: Props) {
       amortizationYears, paymentFrequency]);
 
   if (!a) return null;
+
+  // Which scenario is currently selected — drives highlight + button state
+  const selectedScenario = (() => {
+    const cur = inputs.amortizationYears;
+    if (!cur || Math.abs(cur - a.sameAmort) < 0.5) return "same";
+    if (a.showExt && Math.abs(cur - a.extAmort) < 0.5) return "ext";
+    return "same"; // default
+  })();
 
   const {
     months, remainingAmort, sameAmort, extAmort, showExt,
@@ -181,12 +190,17 @@ export default function RefinanceBreakEven({ inputs }: Props) {
           <p className="text-xs font-semibold uppercase tracking-wide text-center" style={mid}>Stay</p>
           <div className="text-center">
             <p className="text-xs font-semibold uppercase tracking-wide"
-              style={{ color: savingSame > 0 ? "var(--green)" : "var(--ink-mid)" }}>Break</p>
+              style={{ color: selectedScenario === "same" ? "var(--green)" : savingSame > 0 ? "var(--green)" : "var(--ink-mid)" }}>
+              Break{selectedScenario === "same" ? " ✓" : ""}
+            </p>
             <p className="text-xs mt-0.5" style={faint}>{Math.round(sameAmort * 10) / 10}yr amort</p>
           </div>
           {showExt && (
             <div className="text-center">
-              <p className="text-xs font-semibold uppercase tracking-wide" style={mid}>Break</p>
+              <p className="text-xs font-semibold uppercase tracking-wide"
+                style={{ color: selectedScenario === "ext" ? "var(--green)" : "var(--ink-mid)" }}>
+                Break{selectedScenario === "ext" ? " ✓" : ""}
+              </p>
               <p className="text-xs mt-0.5" style={faint}>{extAmort}yr amort</p>
             </div>
           )}
@@ -293,6 +307,49 @@ export default function RefinanceBreakEven({ inputs }: Props) {
           {showExt && <p className="text-sm font-semibold text-center">{fmtBe(beExt)}</p>}
         </div>
       </div>
+
+        {/* Select scenario buttons */}
+        <div className={`grid ${cols} px-6 py-4 items-center`}
+          style={{ background: "#fafaf8", borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
+          <p className="text-xs font-semibold uppercase tracking-wide" style={faint}>Select scenario</p>
+          <p className="text-sm text-center" style={faint}>—</p>
+
+          {/* Same amort select */}
+          <div className="flex justify-center">
+            {selectedScenario === "same" ? (
+              <span className="text-xs px-3 py-1.5 rounded-lg font-semibold"
+                style={{ background: "var(--green)", color: "#fff" }}>
+                Selected ✓
+              </span>
+            ) : (
+              <button
+                onClick={() => setField("amortizationYears", Math.round(sameAmort))}
+                className="text-xs px-3 py-1.5 rounded-lg font-medium transition-colors"
+                style={{ background: "rgba(0,0,0,0.05)", color: "var(--ink-mid)" }}>
+                Select
+              </button>
+            )}
+          </div>
+
+          {/* Ext amort select */}
+          {showExt && (
+            <div className="flex justify-center">
+              {selectedScenario === "ext" ? (
+                <span className="text-xs px-3 py-1.5 rounded-lg font-semibold"
+                  style={{ background: "var(--green)", color: "#fff" }}>
+                  Selected ✓
+                </span>
+              ) : (
+                <button
+                  onClick={() => setField("amortizationYears", extAmort)}
+                  className="text-xs px-3 py-1.5 rounded-lg font-medium transition-colors"
+                  style={{ background: "rgba(0,0,0,0.05)", color: "var(--ink-mid)" }}>
+                  Select
+                </button>
+              )}
+            </div>
+          )}
+        </div>
 
       {/* Verdict */}
       <div className="px-6 py-4" style={divider}>
