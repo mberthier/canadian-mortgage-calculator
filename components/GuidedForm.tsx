@@ -658,17 +658,17 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
             <div className="relative">
               <input
                 id="months-remaining"
-                type="number"
-                min="1" max="120"
+                type="text"
                 inputMode="numeric"
                 value={inputs.monthsRemainingInTerm || ""}
                 onChange={(e) => {
-                  const v = parseInt(e.target.value);
+                  const v = parseInt(e.target.value.replace(/\D/g, ""));
                   if (!isNaN(v) && v >= 1 && v <= 120) setField("monthsRemainingInTerm", v);
                   else if (e.target.value === "") setField("monthsRemainingInTerm", 0);
                 }}
                 placeholder="e.g. 36"
                 className={inp}
+                style={{ paddingRight: "2.5rem" }}
               />
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs"
                 style={{ color: "var(--ink-faint)" }}>mo</span>
@@ -746,19 +746,38 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
               <div>
                 <label htmlFor="new-amort-refi" className={`${lbl} flex items-center`}>
                   New amortization
-                  <Tooltip content="Leave at default to match your calculated remaining amortization. Extend to lower your payment, shorten to build equity faster." />
+                  <Tooltip content="Defaults to your calculated remaining amortization. Change to extend (lower payment) or shorten (save interest)." />
                 </label>
-                <select id="new-amort-refi"
-                  className={sel}
-                  value={inputs.amortizationYears > 0 ? inputs.amortizationYears : Math.round(outputs.effectiveAmortizationYears) || 25}
-                  onChange={(e) => setField("amortizationYears", Number(e.target.value))}>
-                  {AMORTIZATION_OPTIONS.map((y) => <option key={y} value={y}>{y} yrs</option>)}
-                </select>
+                {inputs.amortizationYears === 0 && outputs.effectiveAmortizationYears > 0 ? (
+                  <div className="relative">
+                    <div className={`${inp} flex items-center justify-between cursor-pointer`}
+                      onClick={() => setField("amortizationYears", Math.round(outputs.effectiveAmortizationYears) || 25)}>
+                      <span>
+                        {(() => {
+                          const tot = Math.round(outputs.effectiveAmortizationYears * 12);
+                          const y = Math.floor(tot / 12);
+                          const m = tot % 12;
+                          return m === 0 ? `${y} years` : `${y}y ${m}mo`;
+                        })()}
+                      </span>
+                      <span className="text-xs" style={{ color: "var(--ink-faint)" }}>calculated · tap to override</span>
+                    </div>
+                  </div>
+                ) : (
+                  <select id="new-amort-refi"
+                    className={sel}
+                    value={inputs.amortizationYears > 0 ? inputs.amortizationYears : 25}
+                    onChange={(e) => setField("amortizationYears", Number(e.target.value))}>
+                    {AMORTIZATION_OPTIONS.map((y) => <option key={y} value={y}>{y} yrs</option>)}
+                  </select>
+                )}
               </div>
 
-              <CurrencyInput id="cash-out" label="Cash-out amount"
-                tip="Equity to access for renovation, investment, or debt consolidation. Total loan cannot exceed 80% of home value."
-                value={inputs.cashOutAmount} onChange={(v) => setField("cashOutAmount", v)} />
+              {(inputs.refiScenario === "equity" || !inputs.refiScenario) && (
+                <CurrencyInput id="cash-out" label="Cash-out amount"
+                  tip="Equity to access for renovation, investment, or debt consolidation. Total loan cannot exceed 80% of home value."
+                  value={inputs.cashOutAmount} onChange={(v) => setField("cashOutAmount", v)} />
+              )}
             </div>
           )}
         </>
