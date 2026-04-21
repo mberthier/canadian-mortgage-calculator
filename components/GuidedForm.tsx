@@ -608,7 +608,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
           {errors.ltv && <p className="text-xs text-red-600">{errors.ltv}</p>}
 
           <RateInput id="current-rate-refi" label="Current rate"
-            tip="Your existing contracted rate. Used to estimate your break penalty and calculate what you're giving up."
+            tip="Your existing contracted rate — on your mortgage statement or commitment letter."
             value={inputs.currentRate} onChange={(v) => setField("currentRate", v)} />
 
           <CurrencyInput id="current-payment-refi" label="Current monthly payment"
@@ -646,7 +646,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
           <div>
             <label className={`${lbl} flex items-center`}>
               Lender type
-              <Tooltip content="Bank mortgages use posted rates for IRD, which inflates the penalty significantly. Broker lenders (First National, MCAP, etc.) use a fairer calculation. If you got your mortgage through a broker, choose Broker lender." />
+              <Tooltip content="Bank mortgages use posted rates for IRD, which typically inflates the penalty 2–3×. Broker lenders (First National, MCAP, etc.) use a fairer calculation. If you got your mortgage through a broker, choose Broker lender." />
             </label>
             <div className="grid grid-cols-2 gap-2">
               {(["bank", "broker"] as const).map((t) => (
@@ -664,36 +664,6 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
             </div>
           </div>
 
-          {/* Known penalty — optional override */}
-          <div>
-            <label className={`${lbl} flex items-center`}>
-              Break penalty
-              <span className="ml-1.5 text-xs font-normal" style={{ color: "var(--ink-faint)" }}>(optional)</span>
-              <Tooltip content="If your lender has already given you an exact penalty amount, enter it here. Otherwise we'll estimate it." />
-            </label>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm"
-                style={{ color: "var(--ink-faint)" }}>$</span>
-              <input
-                id="known-penalty"
-                type="text"
-                inputMode="numeric"
-                value={inputs.knownPenalty > 0 ? inputs.knownPenalty.toLocaleString("en-CA") : ""}
-                onChange={(e) => {
-                  const v = parseFloat(e.target.value.replace(/,/g, ""));
-                  setField("knownPenalty", isNaN(v) ? 0 : v);
-                }}
-                placeholder="Leave blank to estimate"
-                className={`${inp} pl-7`}
-              />
-            </div>
-            {inputs.knownPenalty > 0 && (
-              <p className="text-xs mt-1" style={{ color: "var(--green)" }}>
-                Using your lender's quoted penalty
-              </p>
-            )}
-          </div>
-
           <RateInput id="new-rate-refi" label="New interest rate"
             tip="The rate on the refinanced mortgage."
             value={inputs.interestRate} onChange={(v) => setField("interestRate", v)}
@@ -705,17 +675,48 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
             open={showRefine}
             onToggle={() => setShowRefine(o => !o)}
             label="Refine your estimate"
-            hint="Adjust amortization, term, cash-out, and payment frequency" />
+            hint="Add penalty, adjust amortization, cash-out, and frequency" />
 
           {showRefine && (
             <div className="space-y-4 pt-1">
+
+              {/* Break penalty — optional override */}
+              <div>
+                <label className={`${lbl} flex items-center`}>
+                  Break penalty
+                  <span className="ml-1.5 text-xs font-normal" style={{ color: "var(--ink-faint)" }}>(optional)</span>
+                  <Tooltip content="If your lender has given you an exact penalty amount, enter it here and we'll use it instead of estimating." />
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm"
+                    style={{ color: "var(--ink-faint)" }}>$</span>
+                  <input
+                    id="known-penalty"
+                    type="text"
+                    inputMode="numeric"
+                    value={inputs.knownPenalty > 0 ? inputs.knownPenalty.toLocaleString("en-CA") : ""}
+                    onChange={(e) => {
+                      const v = parseFloat(e.target.value.replace(/,/g, ""));
+                      setField("knownPenalty", isNaN(v) ? 0 : v);
+                    }}
+                    placeholder="Leave blank to estimate"
+                    className={`${inp} pl-7`}
+                  />
+                </div>
+                {inputs.knownPenalty > 0 && (
+                  <p className="text-xs mt-1" style={{ color: "var(--green)" }}>
+                    Using your lender's quoted penalty
+                  </p>
+                )}
+              </div>
+
               <div className="grid grid-cols-2 gap-3">
                 <SelectField id="new-term-refi" label="New term"
                   value={inputs.termYears} onChange={(v) => setField("termYears", Number(v))}>
                   {TERM_OPTIONS.map((y) => <option key={y} value={y}>{y} yr{y !== 1 ? "s" : ""}</option>)}
                 </SelectField>
-                <SelectField id="new-amort-refi" label="Amortization"
-                  tip="Resetting to a longer amortization lowers payments but increases total interest charges."
+                <SelectField id="new-amort-refi" label="New amortization"
+                  tip="Defaults to your calculated remaining amortization — a pure rate comparison. Extend to lower your payment, shorten to build equity faster."
                   value={inputs.amortizationYears} onChange={(v) => setField("amortizationYears", Number(v))}>
                   {AMORTIZATION_OPTIONS.map((y) => <option key={y} value={y}>{y} yrs</option>)}
                 </SelectField>
