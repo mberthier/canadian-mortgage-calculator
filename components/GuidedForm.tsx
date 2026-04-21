@@ -675,7 +675,7 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
             open={showRefine}
             onToggle={() => setShowRefine(o => !o)}
             label="Refine your estimate"
-            hint="Add penalty, adjust amortization, cash-out, and frequency" />
+            hint="Enter your penalty, adjust amortization, or add cash-out" />
 
           {showRefine && (
             <div className="space-y-4 pt-1">
@@ -710,29 +710,15 @@ export default function GuidedForm({ inputs, errors, outputs, setHomePrice, setD
                 )}
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <SelectField id="new-term-refi" label="New term"
-                  value={inputs.termYears} onChange={(v) => setField("termYears", Number(v))}>
-                  {TERM_OPTIONS.map((y) => <option key={y} value={y}>{y} yr{y !== 1 ? "s" : ""}</option>)}
-                </SelectField>
-                <SelectField id="new-amort-refi" label="New amortization"
-                  tip="Defaults to your calculated remaining amortization — a pure rate comparison. Extend to lower your payment, shorten to build equity faster."
-                  value={inputs.amortizationYears} onChange={(v) => setField("amortizationYears", Number(v))}>
-                  {AMORTIZATION_OPTIONS.map((y) => <option key={y} value={y}>{y} yrs</option>)}
-                </SelectField>
-              </div>
+              <SelectField id="new-amort-refi" label="New amortization"
+                tip="Change this to model extending or shortening your payoff timeline. Shorter = more interest saved. Longer = lower monthly payment."
+                value={inputs.amortizationYears} onChange={(v) => setField("amortizationYears", Number(v))}>
+                {AMORTIZATION_OPTIONS.map((y) => <option key={y} value={y}>{y} yrs</option>)}
+              </SelectField>
 
               <CurrencyInput id="cash-out" label="Cash-out amount"
-                tip="Additional equity to access. Total loan cannot exceed 80% of home value."
+                tip="Equity to access for renovation, investment, or debt consolidation. Total loan cannot exceed 80% of home value."
                 value={inputs.cashOutAmount} onChange={(v) => setField("cashOutAmount", v)} />
-
-              <SelectField id="freq-refi" label="Payment frequency"
-                value={inputs.paymentFrequency}
-                onChange={(v) => setField("paymentFrequency", v as PaymentFrequency)}>
-                {(Object.entries(FREQUENCY_LABELS) as [PaymentFrequency, string][]).map(([k, v]) => (
-                  <option key={k} value={k}>{v}</option>
-                ))}
-              </SelectField>
             </div>
           )}
         </>

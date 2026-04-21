@@ -45,8 +45,8 @@ const MODES: {
   {
     value:   "refinance",
     label:   "Refinance",
-    tagline: "Access equity or lower your rate",
-    desc:    "Access your home equity, lower your rate, or consolidate debt. Run the numbers including break penalty costs before making any decisions.",
+    tagline: "Break your mortgage early — is it worth it?",
+    desc:    "Lower your rate mid-term, free up monthly cashflow, or access home equity. We calculate your break penalty, monthly saving, and exactly how long until you come out ahead.",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
         strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

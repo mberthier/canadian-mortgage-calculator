@@ -53,6 +53,7 @@ function runPath(balance: number, rate: number, payment: number, months: number)
 
 export default function RefinanceBreakEven({ inputs, outputs, setField }: Props) {
   const [showBreakdown, setShowBreakdown] = useState(false);
+  const [activeReason, setActiveReason] = useState<"rate" | "cashflow" | "equity">("rate");
 
   const {
     currentBalance, currentRate, interestRate, currentMonthlyPayment,
@@ -164,15 +165,37 @@ export default function RefinanceBreakEven({ inputs, outputs, setField }: Props)
 
   // Verdict text — plain language
   const verdictText = (() => {
-    if (!beSame) return `With no monthly saving, breaking doesn't make financial sense. Wait for your renewal in ${months} months.`;
+    if (!beSame) return `With no monthly saving at this rate, breaking doesn't make financial sense. Wait for your renewal in ${months} months.`;
     const withinTerm = beSame <= months;
+
+    if (activeReason === "cashflow") {
+      const be = beExt ?? beSame;
+      const saving = showExt ? monthlySavingExt : monthlySavingSame;
+      const withinExt = be ? be <= months : false;
+      if (saving > 0 && withinExt) {
+        return `Your payment drops by ${formatCurrency(saving, 0)}/month — that's ${formatCurrency(saving * 12, 0, true)} freed up every year. You recover the ${formatCurrency(penaltyAmt, 0, true)} penalty in ${fmtBe(be)}.`;
+      }
+      if (saving > 0) {
+        return `Your payment drops by ${formatCurrency(saving, 0)}/month but you'd need ${fmtBe(be)} to recover the penalty — beyond your term end. The cashflow benefit is real but the penalty timing is unfavourable.`;
+      }
+    }
+
+    if (activeReason === "equity") {
+      const available = inputs.homeValue > 0
+        ? Math.max(0, inputs.homeValue * 0.8 - currentBalance)
+        : 0;
+      if (available <= 0) return `Your current mortgage is already at or above 80% of your home value. You don't have accessible equity to refinance for cash.`;
+      return `You can access up to ${formatCurrency(available, 0, true)} in equity. The ${formatCurrency(penaltyAmt, 0, true)} break penalty is the upfront cost — weigh it against what you'd do with the cash. ${withinTerm ? `You recover the penalty in ${fmtBe(beSame)} through lower interest.` : "Consider timing this at renewal to avoid the penalty."}`;
+    }
+
+    // Default: rate scenario
     if (worthBreaking && withinTerm) {
-      return `You recover the ${formatCurrency(penaltyAmt, 0, true)} penalty in ${fmtBe(beSame)}, then save ${formatCurrency(monthlySavingSame, 0)} every month after that. Over your remaining ${months} months, you come out ${formatCurrency(savingSame, 0, true)} ahead.`;
+      return `You recover the ${formatCurrency(penaltyAmt, 0, true)} penalty in ${fmtBe(beSame)}, then save ${formatCurrency(monthlySavingSame, 0)} every month after that. Over your remaining ${months} months, you come out ${formatCurrency(savingSame, 0, true)} ahead in interest.`;
     }
     if (worthBreaking && !withinTerm) {
-      return `You'd recover the penalty in ${fmtBe(beSame)} — after your term ends. Breaking costs more than it saves over your remaining ${months} months. Consider waiting for renewal.`;
+      return `You'd recover the penalty in ${fmtBe(beSame)} — after your term ends. Breaking costs more than it saves over the remaining ${months} months. Consider waiting for renewal.`;
     }
-    return `After the ${formatCurrency(penaltyAmt, 0, true)} penalty, the interest savings over ${months} months don't cover the cost. Consider waiting for renewal.`;
+    return `After the ${formatCurrency(penaltyAmt, 0, true)} penalty, the interest savings over ${months} months don't cover the cost. Consider waiting until renewal.`;
   })();
 
   const cols = showExt ? "grid-cols-4" : "grid-cols-3";
@@ -183,6 +206,33 @@ export default function RefinanceBreakEven({ inputs, outputs, setField }: Props)
 
       {/* ── Section 1: The answer ── */}
       <div className="px-6 pt-5 pb-5" style={divider}>
+
+        {/* Three reasons — always visible at top */}
+        <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={faint}>
+          Why are you considering refinancing?
+        </p>
+        <div className="grid grid-cols-3 gap-2 mb-4">
+          {([
+            { key: "rate",      label: "Lower my rate",      desc: "Break early to get a better rate and save on interest." },
+            { key: "cashflow",  label: "Lower my payment",   desc: "Extend your amortization to free up monthly cashflow." },
+            { key: "equity",    label: "Access equity",      desc: "Pull out equity for renovation, investment, or debt." },
+          ] as const).map(({ key, label, desc }) => (
+            <button key={key} type="button"
+              onClick={() => setActiveReason(key)}
+              className="rounded-xl px-3 py-2.5 text-left transition-all"
+              style={activeReason === key ? {
+                background: "var(--green-light)",
+                border: "1.5px solid var(--green-border)",
+              } : {
+                background: "#fafaf8",
+                border: "1px solid rgba(0,0,0,0.06)",
+              }}>
+              <p className="text-xs font-semibold"
+                style={{ color: activeReason === key ? "var(--green)" : "var(--ink)" }}>{label}</p>
+              <p className="text-xs mt-0.5 leading-snug" style={faint}>{desc}</p>
+            </button>
+          ))}
+        </div>
 
         {/* Rate context */}
         <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={faint}>
@@ -200,18 +250,41 @@ export default function RefinanceBreakEven({ inputs, outputs, setField }: Props)
           )}
         </p>
 
-        {/* Three key numbers */}
+        {/* Three key numbers — context-aware */}
         <div className="grid grid-cols-3 gap-3 mb-4">
-          <div className="rounded-xl p-4" style={{ background: "var(--green-light)", border: "1px solid var(--green-border)" }}>
-            <p className="text-xs mb-1.5" style={faint}>Monthly saving</p>
-            <p className="text-xl font-semibold" style={green}>
-              {monthlySavingSame > 0 ? `+${formatCurrency(monthlySavingSame, 0)}/mo` : "None"}
-            </p>
-            <p className="text-xs mt-1" style={faint}>
-              {formatCurrency(currentMonthlyPayment, 0)} → {formatCurrency(pmtSame, 0)}
-            </p>
-          </div>
 
+          {/* Card 1: varies by reason */}
+          {activeReason === "rate" && (
+            <div className="rounded-xl p-4" style={{ background: "var(--green-light)", border: "1px solid var(--green-border)" }}>
+              <p className="text-xs mb-1.5" style={faint}>Rate reduction</p>
+              <p className="text-xl font-semibold" style={green}>−{rateReduction}%</p>
+              <p className="text-xs mt-1" style={faint}>{currentRate}% → {interestRate}%</p>
+            </div>
+          )}
+          {activeReason === "cashflow" && (
+            <div className="rounded-xl p-4" style={{ background: "var(--green-light)", border: "1px solid var(--green-border)" }}>
+              <p className="text-xs mb-1.5" style={faint}>Monthly saving</p>
+              <p className="text-xl font-semibold" style={green}>
+                {monthlySavingExt > 0 ? `+${formatCurrency(monthlySavingExt, 0)}/mo` : monthlySavingSame > 0 ? `+${formatCurrency(monthlySavingSame, 0)}/mo` : "None"}
+              </p>
+              <p className="text-xs mt-1" style={faint}>
+                {formatCurrency(monthlySavingExt * 12, 0, true)}/yr freed up
+              </p>
+            </div>
+          )}
+          {activeReason === "equity" && (
+            <div className="rounded-xl p-4" style={{ background: "var(--green-light)", border: "1px solid var(--green-border)" }}>
+              <p className="text-xs mb-1.5" style={faint}>Equity available</p>
+              <p className="text-xl font-semibold" style={green}>
+                {inputs.homeValue > 0
+                  ? formatCurrency(Math.max(0, inputs.homeValue * 0.8 - currentBalance), 0, true)
+                  : "—"}
+              </p>
+              <p className="text-xs mt-1" style={faint}>at 80% LTV max</p>
+            </div>
+          )}
+
+          {/* Card 2: penalty — always */}
           <div className="rounded-xl p-4" style={{ background: "#fafaf8", border: "1px solid rgba(0,0,0,0.06)" }}>
             <p className="text-xs mb-1.5" style={faint}>
               {knownPenalty > 0 ? "Penalty (quoted)" : "Est. penalty"}
@@ -224,16 +297,38 @@ export default function RefinanceBreakEven({ inputs, outputs, setField }: Props)
             </p>
           </div>
 
-          <div className="rounded-xl p-4" style={{ background: "#fafaf8", border: "1px solid rgba(0,0,0,0.06)" }}>
-            <p className="text-xs mb-1.5" style={faint}>Penalty payback</p>
-            <p className="text-xl font-semibold"
-              style={{ color: beSame && beSame <= months ? "var(--green)" : "var(--ink)" }}>
-              {fmtBe(beSame)}
-            </p>
-            <p className="text-xs mt-1" style={{ color: beSame && beSame <= months ? "var(--green)" : "var(--ink-faint)" }}>
-              {beSame && beSame <= months ? "✓ within your term" : beSame ? "✗ beyond your term" : "—"}
-            </p>
-          </div>
+          {/* Card 3: varies by reason */}
+          {activeReason === "rate" && (
+            <div className="rounded-xl p-4" style={{ background: "#fafaf8", border: "1px solid rgba(0,0,0,0.06)" }}>
+              <p className="text-xs mb-1.5" style={faint}>Interest saved</p>
+              <p className="text-xl font-semibold"
+                style={{ color: savingSame > 0 ? "var(--green)" : "var(--ink)" }}>
+                {savingSame > 0 ? formatCurrency(savingSame, 0, true) : "None"}
+              </p>
+              <p className="text-xs mt-1" style={faint}>over {months} months</p>
+            </div>
+          )}
+          {activeReason === "cashflow" && (
+            <div className="rounded-xl p-4" style={{ background: "#fafaf8", border: "1px solid rgba(0,0,0,0.06)" }}>
+              <p className="text-xs mb-1.5" style={faint}>Penalty payback</p>
+              <p className="text-xl font-semibold"
+                style={{ color: beExt && beExt <= months ? "var(--green)" : "var(--ink)" }}>
+                {fmtBe(beExt ?? beSame)}
+              </p>
+              <p className="text-xs mt-1" style={{ color: beExt && beExt <= months ? "var(--green)" : "var(--ink-faint)" }}>
+                {(beExt ?? beSame) && (beExt ?? beSame)! <= months ? "✓ within your term" : "✗ beyond your term"}
+              </p>
+            </div>
+          )}
+          {activeReason === "equity" && (
+            <div className="rounded-xl p-4" style={{ background: "#fafaf8", border: "1px solid rgba(0,0,0,0.06)" }}>
+              <p className="text-xs mb-1.5" style={faint}>Equity after refi</p>
+              <p className="text-xl font-semibold" style={ink}>
+                {equityPct !== null ? `${equityPct.toFixed(0)}%` : "—"}
+              </p>
+              <p className="text-xs mt-1" style={faint}>of home value</p>
+            </div>
+          )}
         </div>
 
         {/* Verdict */}

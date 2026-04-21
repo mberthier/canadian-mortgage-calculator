@@ -208,12 +208,9 @@ export default function SummaryCards({ outputs, inputs, shareURL }: Props) {
           </p>
           {hasCurrent && Math.abs(diff) > 1 && (
             <p className="text-xs mt-2 pt-2" style={{ color: "var(--ink-muted)", borderTop: "1px solid rgba(0,0,0,0.05)" }}>
-              Payment {diff > 0 ? "increases" : "drops"} by{" "}
-              <span className="font-medium" style={{ color: "var(--ink)" }}>
-                {formatCurrency(Math.abs(diff), 0)}/{freqLow}
-              </span>{" "}
-              vs your current rate. This term you will pay{" "}
-              <span className="font-medium" style={{ color: "var(--ink)" }}>{termInt}</span> in interest.
+              This term you will pay{" "}
+              <span className="font-medium" style={{ color: "var(--ink)" }}>{termInt}</span>{" "}
+              in interest on your refinanced mortgage.
             </p>
           )}
         </>
