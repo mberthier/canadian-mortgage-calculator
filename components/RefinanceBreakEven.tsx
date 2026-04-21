@@ -60,7 +60,13 @@ export default function RefinanceBreakEven({ inputs, setField }: Props) {
     const months      = monthsRemainingInTerm;
     const remainingAmort = solveRemainingAmortization(currentBalance, currentRate, currentMonthlyPayment);
     const sameAmort   = remainingAmort ?? 25;
-    const extAmort    = amortizationYears > 0 ? amortizationYears : 25;
+    // extAmort: use amortizationYears only if it differs meaningfully from
+    // sameAmort — i.e. user set it in Refine, not via the Select button.
+    // Selecting same amort sets amortizationYears ≈ sameAmort, so we fall
+    // back to 25yr to keep the third column visible.
+    const userOverride = amortizationYears > 0 && Math.abs(amortizationYears - sameAmort) >= 0.5
+      ? amortizationYears : null;
+    const extAmort    = userOverride ?? 25;
     const showExt     = Math.abs(extAmort - sameAmort) >= 0.5;
     const newBal      = currentBalance + (cashOutAmount || 0);
 
