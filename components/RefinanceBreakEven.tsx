@@ -106,6 +106,22 @@ export default function RefinanceBreakEven({ inputs, outputs, setField }: Props)
     const lumpCurr   = Math.round(currentBalance * 0.20);
     const lumpNew    = Math.round(newBal * 0.20);
 
+    // Threshold analysis (simple linear approximation — O(1), no loops)
+    // Penalty threshold: the interest you'd save if penalty were zero
+    const penaltyThreshold = Math.max(0, Math.round(pathA.interest - pathBsame.interest));
+
+    // Rate threshold: rate at which interest saving = penalty
+    // interest_saved ≈ (currentRate - newRate)/100 × balance × months/12
+    // → newRate = currentRate - (penalty × 100) / (balance × months/12)
+    const rateThreshold: number | null = (() => {
+      if (savingSame > 0 || !currentBalance || !months) return null;
+      const rateDropNeeded = (penaltyAmt * 100) / (currentBalance * months / 12);
+      const threshold = Math.round((currentRate - rateDropNeeded) * 100) / 100;
+      // Only show if threshold is meaningfully below current rate and above 0
+      if (threshold <= 0 || threshold >= currentRate || threshold < interestRate - 2) return null;
+      return threshold;
+    })();
+
     return {
       months, remainAmort, sameAmort, extAmort, showExt, newBal,
       pmtSame, pmtExt, penaltyAmt, penaltyEst,
@@ -115,6 +131,7 @@ export default function RefinanceBreakEven({ inputs, outputs, setField }: Props)
       beSame, beExt, selectedScenario,
       samePayAmort, cashOutInterestCost, equityPct,
       pmtIncCurr, pmtIncSame, lumpCurr, lumpNew,
+      rateThreshold, penaltyThreshold,
     };
   }, [currentBalance, currentRate, interestRate, currentMonthlyPayment,
       monthsRemainingInTerm, lenderType, knownPenalty, cashOutAmount,
@@ -143,15 +160,23 @@ export default function RefinanceBreakEven({ inputs, outputs, setField }: Props)
     beSame, beExt, selectedScenario,
     samePayAmort, cashOutInterestCost, equityPct,
     pmtIncCurr, pmtIncSame, lumpCurr, lumpNew,
+    rateThreshold, penaltyThreshold,
   } = a;
 
   const rateReduction = (currentRate - interestRate).toFixed(2);
   const worthBreaking = savingSame > 0;
 
+  // Convert months to "Xy Zmo" format
+  const fmtMo = (months: number) => {
+    const y = Math.floor(months / 12);
+    const m = Math.round(months % 12);
+    if (y === 0) return `${m} month${m !== 1 ? "s" : ""}`;
+    if (m === 0) return `${y} year${y !== 1 ? "s" : ""}`;
+    return `${y}y ${m}mo`;
+  };
   const fmtBe = (be: number | null) => {
     if (!be || be <= 0) return "N/A";
-    if (be < 12) return `${Math.ceil(be)} months`;
-    return `${(be / 12).toFixed(1)} years`;
+    return fmtMo(be);
   };
 
   const divider = { borderBottom: "1px solid rgba(0,0,0,0.05)" };
@@ -161,8 +186,10 @@ export default function RefinanceBreakEven({ inputs, outputs, setField }: Props)
   const green   = { color: "var(--green)" };
 
   // Verdict text — plain language
+  const termLabel = fmtMo(months);
+
   const verdictText = (() => {
-    if (!beSame) return `With no monthly saving at this rate, breaking doesn't make financial sense. Wait for your renewal in ${months} months.`;
+    if (!beSame) return `Your new rate doesn't save enough to cover the penalty. Wait for renewal in ${termLabel}.`;
     const withinTerm = beSame <= months;
 
     if (activeReason === "cashflow") {
@@ -170,10 +197,10 @@ export default function RefinanceBreakEven({ inputs, outputs, setField }: Props)
       const saving = showExt ? monthlySavingExt : monthlySavingSame;
       const withinExt = be ? be <= months : false;
       if (saving > 0 && withinExt) {
-        return `Your payment drops by ${formatCurrency(saving, 0)}/month — that's ${formatCurrency(saving * 12, 0, true)} freed up every year. You recover the ${formatCurrency(penaltyAmt, 0, true)} penalty in ${fmtBe(be)}.`;
+        return `Your payment drops by ${formatCurrency(saving, 0)}/month — ${formatCurrency(saving * 12, 0, true)} freed up every year. You recover the ${formatCurrency(penaltyAmt, 0, true)} penalty in ${fmtBe(be)}, within your remaining ${termLabel}.`;
       }
       if (saving > 0) {
-        return `Your payment drops by ${formatCurrency(saving, 0)}/month but you'd need ${fmtBe(be)} to recover the penalty — beyond your term end. The cashflow benefit is real but the penalty timing is unfavourable.`;
+        return `Your payment drops by ${formatCurrency(saving, 0)}/month. However, at ${formatCurrency(penaltyAmt, 0, true)}, the penalty takes ${fmtBe(be)} to recover — longer than your remaining ${termLabel}. The cashflow relief is real but the timing is unfavourable.`;
       }
     }
 
@@ -181,18 +208,21 @@ export default function RefinanceBreakEven({ inputs, outputs, setField }: Props)
       const available = inputs.homeValue > 0
         ? Math.max(0, inputs.homeValue * 0.8 - currentBalance)
         : 0;
-      if (available <= 0) return `Your current mortgage is already at or above 80% of your home value. You don't have accessible equity to refinance for cash.`;
-      return `You can access up to ${formatCurrency(available, 0, true)} in equity. The ${formatCurrency(penaltyAmt, 0, true)} break penalty is the upfront cost — weigh it against what you'd do with the cash. ${withinTerm ? `You recover the penalty in ${fmtBe(beSame)} through lower interest.` : "Consider timing this at renewal to avoid the penalty."}`;
+      if (available <= 0) return `Your mortgage is already at or above 80% of your home value — no equity available to access.`;
+      const penaltyNote = withinTerm
+        ? `You recover the penalty in ${fmtBe(beSame)} through lower interest.`
+        : `Consider timing this at renewal to avoid the ${formatCurrency(penaltyAmt, 0, true)} penalty.`;
+      return `You can access up to ${formatCurrency(available, 0, true)} in equity. ${penaltyNote}`;
     }
 
-    // Default: rate scenario
+    // Rate scenario
     if (worthBreaking && withinTerm) {
-      return `You recover the ${formatCurrency(penaltyAmt, 0, true)} penalty in ${fmtBe(beSame)}, then save ${formatCurrency(monthlySavingSame, 0)} every month after that. Over your remaining ${months} months, you come out ${formatCurrency(savingSame, 0, true)} ahead in interest.`;
+      return `Breaking saves ${formatCurrency(savingSame, 0, true)} in interest over your remaining ${termLabel}, even after the ${formatCurrency(penaltyAmt, 0, true)} penalty. You recover the penalty in ${fmtBe(beSame)}.`;
     }
     if (worthBreaking && !withinTerm) {
-      return `You'd recover the penalty in ${fmtBe(beSame)} — after your term ends. Breaking costs more than it saves over the remaining ${months} months. Consider waiting for renewal.`;
+      return `The penalty takes ${fmtBe(beSame)} to recover — your term ends in ${termLabel}. Breaking costs more than it saves before renewal.`;
     }
-    return `After the ${formatCurrency(penaltyAmt, 0, true)} penalty, the interest savings over ${months} months don't cover the cost. Consider waiting until renewal.`;
+    return `After the ${formatCurrency(penaltyAmt, 0, true)} penalty, breaking costs ${formatCurrency(Math.abs(savingSame), 0, true)} more than staying for your remaining ${termLabel}.`;
   })();
 
   const cols = showExt ? "grid-cols-4" : "grid-cols-3";
@@ -361,6 +391,37 @@ export default function RefinanceBreakEven({ inputs, outputs, setField }: Props)
             {verdictText}
           </p>
         </div>
+
+        {/* Threshold insight — when breaking doesn't make sense yet */}
+        {activeReason === "rate" && !worthBreaking && (penaltyThreshold > 0 || rateThreshold !== null) && (
+          <div className="mt-3 pt-3" style={{ borderTop: "1px solid rgba(0,0,0,0.05)" }}>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={faint}>
+              When would breaking make sense?
+            </p>
+            <div className="space-y-1.5">
+              {rateThreshold !== null && (
+                <div className="flex gap-2 text-sm">
+                  <span className="w-1.5 h-1.5 rounded-full shrink-0 mt-1.5" style={{ background: "var(--ink-faint)" }} />
+                  <p style={mid}>
+                    If rates drop to{" "}
+                    <span className="font-semibold" style={ink}>{rateThreshold}% or below</span>
+                    {" "}— at that rate the interest saving would cover the penalty.
+                  </p>
+                </div>
+              )}
+              {penaltyThreshold > 0 && (
+                <div className="flex gap-2 text-sm">
+                  <span className="w-1.5 h-1.5 rounded-full shrink-0 mt-1.5" style={{ background: "var(--ink-faint)" }} />
+                  <p style={mid}>
+                    If your penalty is under{" "}
+                    <span className="font-semibold" style={ink}>{formatCurrency(penaltyThreshold, 0, true)}</span>
+                    {" "}— call your lender for the exact figure.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Bank warning */}
         {penaltyEst.bankWarning && knownPenalty === 0 && (
