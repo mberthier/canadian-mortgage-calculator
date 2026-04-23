@@ -71,7 +71,8 @@ export default function RefinanceBreakEven({ inputs, outputs, setField }: Props)
     const pathBsame = runPath(newBal, interestRate, pmtSame, months);
     const pathBext  = runPath(newBal, interestRate, pmtExt, months);
 
-    const savingSame = Math.round(pathA.interest - (pathBsame.interest + penaltyAmt));
+    const rawInterestSaved = Math.round(pathA.interest - pathBsame.interest); // before penalty
+    const savingSame = Math.round(rawInterestSaved - penaltyAmt); // after penalty
     const savingExt  = Math.round(pathA.interest - (pathBext.interest + penaltyAmt));
 
     const monthlySavingSame = Math.round(currentMonthlyPayment - pmtSame);
@@ -117,8 +118,9 @@ export default function RefinanceBreakEven({ inputs, outputs, setField }: Props)
       if (savingSame > 0 || !currentBalance || !months) return null;
       const rateDropNeeded = (penaltyAmt * 100) / (currentBalance * months / 12);
       const threshold = Math.round((currentRate - rateDropNeeded) * 100) / 100;
-      // Only show if threshold is meaningfully below current rate and above 0
-      if (threshold <= 0 || threshold >= currentRate || threshold < interestRate - 2) return null;
+      // Only meaningful if strictly below the new rate the user already entered
+      // and above zero — otherwise the message would make no sense
+      if (threshold <= 0 || threshold >= interestRate - 0.05 || threshold >= currentRate) return null;
       return threshold;
     })();
 
@@ -126,7 +128,7 @@ export default function RefinanceBreakEven({ inputs, outputs, setField }: Props)
       months, remainAmort, sameAmort, extAmort, showExt, newBal,
       pmtSame, pmtExt, penaltyAmt, penaltyEst,
       pathA, pathBsame, pathBext,
-      savingSame, savingExt,
+      rawInterestSaved, savingSame, savingExt,
       monthlySavingSame, monthlySavingExt,
       beSame, beExt, selectedScenario,
       samePayAmort, cashOutInterestCost, equityPct,
@@ -155,7 +157,7 @@ export default function RefinanceBreakEven({ inputs, outputs, setField }: Props)
     months, remainAmort, sameAmort, extAmort, showExt,
     pmtSame, pmtExt, penaltyAmt, penaltyEst,
     pathA, pathBsame, pathBext,
-    savingSame, savingExt,
+    rawInterestSaved, savingSame, savingExt,
     monthlySavingSame, monthlySavingExt,
     beSame, beExt, selectedScenario,
     samePayAmort, cashOutInterestCost, equityPct,
@@ -304,10 +306,12 @@ export default function RefinanceBreakEven({ inputs, outputs, setField }: Props)
 
           {/* Card 1: varies by reason */}
           {activeReason === "rate" && (
-            <div className="rounded-xl p-4" style={{ background: "var(--green-light)", border: "1px solid var(--green-border)" }}>
-              <p className="text-xs mb-1.5" style={faint}>Rate reduction</p>
-              <p className="text-xl font-semibold" style={green}>−{rateReduction}%</p>
-              <p className="text-xs mt-1" style={faint}>{currentRate}% → {interestRate}%</p>
+            <div className="rounded-xl p-4" style={{ background: rawInterestSaved > 0 ? "var(--green-light)" : "#fafaf8", border: `1px solid ${rawInterestSaved > 0 ? "var(--green-border)" : "rgba(0,0,0,0.06)"}` }}>
+              <p className="text-xs mb-1.5" style={faint}>Interest saved</p>
+              <p className="text-xl font-semibold" style={{ color: rawInterestSaved > 0 ? "var(--green)" : "var(--ink)" }}>
+                {rawInterestSaved > 0 ? formatCurrency(rawInterestSaved, 0, true) : "None"}
+              </p>
+              <p className="text-xs mt-1" style={faint}>over {fmtMo(months)} · before penalty</p>
             </div>
           )}
           {activeReason === "cashflow" && (
@@ -348,13 +352,19 @@ export default function RefinanceBreakEven({ inputs, outputs, setField }: Props)
 
           {/* Card 3: varies by reason */}
           {activeReason === "rate" && (
-            <div className="rounded-xl p-4" style={{ background: "#fafaf8", border: "1px solid rgba(0,0,0,0.06)" }}>
-              <p className="text-xs mb-1.5" style={faint}>Interest saved</p>
+            <div className="rounded-xl p-4" style={{ background: worthBreaking ? "var(--green-light)" : "#fff7ed", border: `1px solid ${worthBreaking ? "var(--green-border)" : "#fed7aa"}` }}>
+              <p className="text-xs mb-1.5" style={faint}>Net after penalty</p>
               <p className="text-xl font-semibold"
-                style={{ color: savingSame > 0 ? "var(--green)" : "var(--ink)" }}>
-                {savingSame > 0 ? formatCurrency(savingSame, 0, true) : "None"}
+                style={{ color: worthBreaking ? "var(--green)" : "#c2410c" }}>
+                {savingSame > 0
+                  ? `+${formatCurrency(savingSame, 0, true)}`
+                  : savingSame === 0 ? "Break even"
+                  : `−${formatCurrency(Math.abs(savingSame), 0, true)}`}
               </p>
-              <p className="text-xs mt-1" style={faint}>over {months} months</p>
+              <p className="text-xs font-semibold mt-1"
+                style={{ color: worthBreaking ? "var(--green)" : "#c2410c" }}>
+                {worthBreaking ? "Break ✓" : "Stay"}
+              </p>
             </div>
           )}
           {activeReason === "cashflow" && (
